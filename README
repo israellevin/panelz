@@ -1,0 +1,4 @@
+Panelz takes specifically structured instructions from an HTML5 document and parses it graphically as panels of text on a web page.
+
+Panels have the following attributes:
+

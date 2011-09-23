@@ -1,0 +1,20 @@
+*
+{
+    margin: 0px;
+    padding: 0px;
+}
+
+div.panel
+{
+    display: none;
+    border: 2px solid black;
+    border-radius: 10px;
+    background: white;
+}
+
+span.chunk
+{
+    display: none;
+    padding: 10px;
+    display: block;
+}
