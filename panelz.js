@@ -1,65 +1,124 @@
-function place(panel){
-    var x = panel.attr('data-pos-x');
-    var y = panel.attr('data-pos-y');
+var STORY = [
+    '-p',
+    '-c:Sumeria: 747AD',
+    '-d:The inside of a cheap motel, a black telephone rings in the dark',
+    '-b:Hello?',
+    '-p',
+    '-c:Now:',
+    '-b:Is there anybody?',
+    '-p',
+    'c:Sumeria: 747AD',
+    'd:The inside of a cheap motel, a black telephone rings in the dark',
+    'b:Hello?',
+    '-p',
+    'c:Now:',
+    'b:Is there anybody?',
+    '-p',
+    'c:Sumeria: 747AD',
+    'd:The inside of a cheap motel, a black telephone rings in the dark',
+    'b:Hello?',
+    '-p',
+    'c:Now:',
+    'b:Is there anybody?',
+    '-p',
+    'c:Sumeria: 747AD',
+    'd:The inside of a cheap motel, a black telephone rings in the dark',
+    'b:Hello?',
+    '-p',
+    'c:Now:',
+    'b:Is there anybody?',
+    '-p',
+    'c:Sumeria: 747AD',
+    'd:The inside of a cheap motel, a black telephone rings in the dark',
+    'b:Hello?',
+    '-p',
+    'c:Now:',
+    'b:Is there anybody?',
+    '-p',
+    'c:Sumeria: 747AD',
+    'd:The inside of a cheap motel, a black telephone rings in the dark',
+    'b:Hello?',
+    '-p',
+    'c:Now:',
+    'b:Is there anybody?',
+    '-p',
+    'c:Sumeria: 747AD',
+    'd:The inside of a cheap motel, a black telephone rings in the dark',
+    'b:Hello?',
+    '-p',
+    'c:Now:',
+    'b:Is there anybody?',
+    '-p',
+    'c:Sumeria: 747AD',
+    'd:The inside of a cheap motel, a black telephone rings in the dark',
+    'b:Hello?',
+    '-p',
+    'c:Now:',
+    'b:Is there anybody?',
+    '-p',
+    'c:Sumeria: 747AD',
+    'd:The inside of a cheap motel, a black telephone rings in the dark',
+    'b:Hello?',
+    '-p',
+    'c:Now:',
+    'b:Is there anybody?',
+];
 
-    if('undefined' === typeof(x) && 'undefined' === typeof(y)){
-        x = 105;
-        y = 0;
-    }else{
-        if('undefined' === typeof(x)){
-            x = 0;
-        }else if('' === x){
-            x = 105;
-        }
-        if('undefined' === typeof(y)){
-            y = 0;
-        }else if('' === y){
-            y = 105;
-        }
-    }
-
-    var c;
-    var e = panel.prev();
-    if(0 === e.length){
-        e = $(window);
-        c = [(e.width() / 2), e.height() / 2];
-
-        x = x * (((e.width() / 2) - (panel.outerWidth() / 2)) / 100);
-        y = y * (((e.height() / 2) - (panel.outerHeight() / 2)) / 100);
-
-        x = x - (panel.outerWidth() / 2) + c[0];
-        y = y - (panel.outerHeight() / 2) + c[1];
-    }else{
-        c = [e.offset().left + (e.outerWidth() / 2), e.offset().top + (e.outerHeight() / 2)];
-
-        x = x * (((e.outerWidth() / 2) + (panel.outerWidth() / 2)) / 100);
-        y = y * (((e.outerHeight() / 2) + (panel.outerHeight() / 2)) / 100);
-
-        x = x - (panel.outerWidth() / 2) + c[0];
-        y = y - (panel.outerHeight() / 2) + c[1];
-    }
-
-    panel.css('left', x);
-    panel.css('top', y);
-
-    panel.css('position', 'absolute');
-    panel.css('display', 'block');
+var CLASSES = {
+    c: 'caption',
+    d: 'description',
+    b: 'balloon',
 };
 
-function next(){
-    place($('div.panel:hidden').first());
-//    $('div.panel:hidden').first().css('display', 'block');
-//    $('span.chunk:hidden').first().css('display', 'block');
+// The current position in the story
+var cur = false;
+
+// Add a panel
+function panel(autoadd){
+    var p = {};
+    p.prev = cur;
+    p.cur = false;
+    p.div = $('<div class="panel"/>');
+    p.add = function(){$('#panelz').append(p.div);};
+    if(autoadd) p.add();
+    return cur = p;
 }
 
+function chunk(clss, text, autoadd){
+    var c = {};
+    c.panel = cur;
+    c.prev = c.panel.cur;
+    c.div = $('<div class="' + clss + '">' + text + '</div>');
+    c.add = function(){c.panel.div.append(c.div);};
+    if(autoadd) c.add();
+    return c.panel.cur = c;
+}
+
+// Offscreen buffer
+var buffer = [];
+
+// When the page is done loading
 $(document).ready(function(){
-//    $('div.panel').each(function(){
-//        place($(this));
-//    });
-//
-//    curpanel = $('div.panel').first();
-//    curchunk = curpanel.find('span.chunk').first();
-    $(document).keypress(function(){
-        next();
-    });
+    ;
+// When a key is pressed
+}).keydown(function(){
+    var draw = true;
+    var c = STORY.shift();
+    if('-' == c[0]){
+        c = c.slice(1);
+        draw = false;
+    }
+    if('p' == c[0]){
+        buffer.push(panel());
+    }else{
+        buffer.push(chunk(CLASSES[c[0]], c.slice(c.indexOf(':') + 1)));
+    }
+    if(draw){
+        $.each(buffer, function(i, e){
+            e.add();
+        });
+        buffer = [];
+    }else{
+        $(document).keydown();
+    }
 });

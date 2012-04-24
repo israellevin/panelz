@@ -1,51 +1,34 @@
-*
+body
 {
+    background-color: black;
+    color: white;
     margin: 0em;
     padding: 0em;
 }
 
-div.page
-{
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
 div.panel
 {
-    width: 25em;
-    min-height: 15em;
-    border: 0.1em solid black;
-    border-radius: 1em;
-    background: white;
+    width: 15em;
+    height: 15em;
+    border: 0.2em solid white;
+    margin: 0.5em;
     float: left;
-    margin: 0.3em;
-}
-
-div.fullpage
-{
-    position: absolute;
-    bottom: 2em;
-    right: 2em;
-    width: 90%;
-    height: 90%;
-    z-index: 100;
-    border: 0.3em solid black;
-    border-radius: 1em;
-    background: none;
 
 }
 
-div.bottomright
+div.caption
 {
-    position: absolute;
-    bottom: 1em;
-    right: 1em;
-    background: white;
+    color: yellow;
+    border-bottom: 0.2em solid yellow;
 }
 
-div.chunk
+div.description
 {
-    padding: 0.5em;
+    color: white;
+}
+
+div.balloon
+{
+    color: #ffeeee;
+    border: 0.2em dashed green;
 }
