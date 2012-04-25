@@ -6,6 +6,24 @@ body
     padding: 0em;
 }
 
+div#panelz
+{
+    position: relative;
+    overflow: hidden;
+    width: 50em;
+    height: 50em;
+    border: 1em solid white;
+}
+
+div.canvas
+{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+}
+
 div.panel
 {
     width: 15em;
@@ -13,13 +31,12 @@ div.panel
     border: 0.2em solid white;
     margin: 0.5em;
     float: left;
-
 }
 
 div.caption
 {
     color: yellow;
-    border-bottom: 0.2em solid yellow;
+    border-bottom: 0.1em solid yellow;
 }
 
 div.description
@@ -30,5 +47,5 @@ div.description
 div.balloon
 {
     color: #ffeeee;
-    border: 0.2em dashed green;
+    border: 0.1em dashed green;
 }
