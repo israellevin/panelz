@@ -81,6 +81,8 @@ $(document).ready(function(){
 
     // Offscreen buffer
     canvas.buffer = [];
+    canvas.rightmost = 0;
+    canvas.bottomost = 0;
 
     // The current position in the story
     canvas.cur = false;
@@ -134,21 +136,20 @@ $(document).ready(function(){
 
     // Drag to pan canvas
     frame.mousedown(function(e){
-        var oldx = e.clientX;
-        var oldy = e.clientY;
-        var down = true;
-        frame.mouseup(function(e){
-            frame.unbind('mousemove');
+        var p = canvas.position();
+        var l = p.left;
+        var t = p.top;
+        var difx = e.clientX - l;
+        var dify = e.clientY - t;
+        frame.one('mouseup', function(e){
+            frame.off('mousemove');
             return false;
         }).mousemove(function(e){
-            var curx = e.clientX;
-            var cury = e.clientY;
-            var pos = canvas.position();
-            pos.left -= oldx - curx;
-            pos.top -= oldy - cury;
-            canvas.css({top: pos.top, left: pos.left});
-            oldx = curx;
-            oldy = cury;
+            var x = e.clientX;
+            var y = e.clientY;
+            x = parseInt(x - difx, 10) + 'px';
+            y = parseInt(y - dify, 10) + 'px';
+            canvas.css({left: x, top: y});
             return false;
         });
         return false;
