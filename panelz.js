@@ -1,5 +1,42 @@
 // List of panelz commands that form the story
 var STORY = [
+    'p',
+    'c:It\'s me.',
+    'c:I\'m the ONLY one seeing this.',
+    'c:Perhaps the shrooms weren\'t a good idea.',
+    '-p',
+    'c:...It all starts a few months ago, sometime in the near future...',
+    'd:Close up on Deaderman talking. A gentle face. Bad skin. Thick glasses.',
+    'b:You\'ll need to sign NDAs and crap before I can even tell you about it.',
+    '-p',
+    'c:I like to consider myself a gentleman of leisure, but it\'s the 21 century.',
+    'c:At best, people consider me a talented bum.',
+    'd:Camera moves back a bit. Deaderman is waving his arms enthusiastically behind a little cloud of cigarette smoke.',
+    'b:And you need to get tagged too. Just to enter the facility.',
+    '-p',
+    'c:Still, I have my principles.',
+    'b:Fuck that heart of darkness shit. You know I don\'t do proprietary.',
+    'd:Close up on Deaderman frowning.',
+    'b:Your morals are irrelevant. This project NEEDS you. You will never forgive yourself if you skip this one. Trust my superior intellect.',
+    '-p',
+    'c:A great salesman he isn\'t, but he IS a genius. No one knows machine learning better than the big D. If HE makes a fuss about it it\'s worth checking out.',
+    'c: So I sign.',
+    'd:Deaderman from behind, walking towards a hi־tech reinforced door.',
+    'b:Right. Blow my mind.',
+    '-p',
+    'd:Deaderman turns to me as he opens the door.',
+    'b:Virtual reality. Neurointerface all the way. No goggles no nothing, the real deal.',
+    'b:How real?',
+    'b:Like reality.',
+    '-p',
+    'd:Deaderman goes through the door and motions me to come along',
+    'b:Not nearly as complex, but totaly real. The Matrix.',
+    'b:This I NEED to see.',
+    'b:That\'s precisely what I told you.',
+    '-p',
+    'd:Deaderman is spreading his arms wide.',
+    'b:This is it. This is the machine.',
+
     '-p',
     'c:Sumeria: 747AD',
     'd:The inside of a cheap motel, a black telephone rings in the dark',
@@ -84,8 +121,6 @@ function posit(left, top){
 var canvas = $('<div class="canvas"/>');{
     // Offscreen buffer
     canvas.buffer = [];
-    canvas.rightmost = 0;
-    canvas.bottomost = 0;
 
     // The current position in the story
     canvas.cur = false;
@@ -100,6 +135,8 @@ var canvas = $('<div class="canvas"/>');{
         // Append it to canvas
         p.add = function(){
             canvas.append(p.div);
+            var pos = p.div.position();
+            if(canvas.innerWidth() - pos.left < 1000) canvas.width(canvas.width() + 1000);
         };
 
         // Add a chunk of text
