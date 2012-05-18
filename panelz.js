@@ -1,7 +1,7 @@
 // List of panelz commands that form the story
 var STORY = [
-    'p',
-    'c:It\'s me.',
+    'p red',
+    'c green:It\'s me.',
     'c:I\'m the ONLY one seeing this.',
     'c:Perhaps the shrooms weren\'t a good idea.',
     '-p',
@@ -102,12 +102,8 @@ var STORY = [
     'b:Is there anybody?',
 ];
 
-// Names of CSS classes for chunks of text within panels
-var CLASSES = {
-    c: 'caption',
-    d: 'description',
-    b: 'balloon',
-};
+// TODO: get bookmark into a cookie
+var bookmark = 1;
 
 // Objectify two numbers into a CSS compatible position
 function posit(left, top){
@@ -126,11 +122,11 @@ var canvas = $('<div class="canvas"/>');{
     canvas.cur = false;
 
     // Create a panel
-    canvas.panel = function(){
+    canvas.panel = function(clss){
         var p = {};
         p.prev = canvas.cur;
         p.cur = false;
-        p.div = $('<div class="panel"/>');
+        p.div = $('<div class="panel ' + clss + '"/>');
 
         // Append it to canvas
         p.add = function(){
@@ -212,8 +208,10 @@ $(document).ready(function(){
         return false;
     });
 
-    // Start story
-    frame.keydown();
+    // Page to current location
+    for(var i = 0; i < bookmark; i++){
+        frame.keydown();
+    }
 
 // When a key is pressed
 }).keydown(function(){
@@ -228,11 +226,12 @@ $(document).ready(function(){
 
     // New panel
     if('p' == c[0]){
-        canvas.panel();
+        canvas.panel(c.slice(1));
 
     // New chunk
     }else{
-        canvas.cur.chunk(CLASSES[c[0]], c.slice(c.indexOf(':') + 1));
+        c = c.split(':', 2);
+        canvas.cur.chunk(c[0], c[1]);
     }
 
     // Draw if needed, otherwise advance story

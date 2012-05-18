@@ -33,20 +33,31 @@ div.panel
     float: left;
 }
 
-div.caption
+div.c
 {
     color: yellow;
     border-bottom: 0.1em solid yellow;
 }
 
-div.description
+div.d
 {
     color: white;
 }
 
-div.balloon
+div.b
 {
     color: #ffeeee;
     border: 0.1em dashed green;
     margin: 0.5em;
+}
+
+div.red
+{
+    border-color: red;
+}
+
+div.green
+{
+    color: green;
+    font-size: 3em;
 }
