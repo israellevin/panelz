@@ -1,10 +1,11 @@
 // List of panelz commands that form the story
 var STORY = [
-    'p red',
-    'c green:It\'s me.',
+    'p',
+    'c:It\'s me.',
     'c:I\'m the ONLY one seeing this.',
-    'c:Perhaps the shrooms weren\'t a good idea.',
     '-p',
+    'c:Perhaps the shrooms weren\'t a good idea.',
+    '-p newline',
     'c:...It all starts a few months ago, sometime in the near future...',
     'd:Close up on Deaderman talking. A gentle face. Bad skin. Thick glasses.',
     'b:You\'ll need to sign NDAs and crap before I can even tell you about it.',
@@ -18,7 +19,7 @@ var STORY = [
     'b:Fuck that heart of darkness shit. You know I don\'t do proprietary.',
     'd:Close up on Deaderman frowning.',
     'b:Your morals are irrelevant. This project NEEDS you. You will never forgive yourself if you skip this one. Trust my superior intellect.',
-    '-p',
+    '-p newline',
     'c:A great salesman he isn\'t, but he IS a genius. No one knows machine learning better than the big D. If HE makes a fuss about it it\'s worth checking out.',
     'c: So I sign.',
     'd:Deaderman from behind, walking towards a hi־tech reinforced door.',
@@ -33,9 +34,9 @@ var STORY = [
     'b:Not nearly as complex, but totaly real. The Matrix.',
     'b:This I NEED to see.',
     'b:That\'s precisely what I told you.',
-    '-p',
-    'd:Deaderman is spreading his arms wide.',
-    'b:This is it. This is the machine.',
+    '-p fullpage',
+    '-d right:Deaderman is spreading his arms wide.',
+    ':pan 0 0:b right:This is it. This is the machine.',
 
     '-p',
     'c:Sumeria: 747AD',
@@ -103,7 +104,7 @@ var STORY = [
 ];
 
 // TODO: get bookmark into a cookie
-var bookmark = 1;
+var bookmark = 27;
 
 // Objectify two numbers into a CSS compatible position
 function posit(left, top){
@@ -126,7 +127,7 @@ var canvas = $('<div class="canvas"/>');{
         var p = {};
         p.prev = canvas.cur;
         p.cur = false;
-        p.div = $('<div class="panel ' + clss + '"/>');
+        p.div = $('<div class="panel' + clss + '"/>');
 
         // Append it to canvas
         p.add = function(){
@@ -164,6 +165,11 @@ var canvas = $('<div class="canvas"/>');{
         });
     };
 
+    // Pan canvas
+    canvas.pan = function(l, t){
+        canvas.animate(posit(l, t), {queue: false});
+    }
+
     // Center current panel
     canvas.center = function(){
         var p = canvas.cur.div.position();
@@ -174,7 +180,7 @@ var canvas = $('<div class="canvas"/>');{
         p = frame.position();
         l = p.left - l + (w / 2);
         t = p.top - t + (h / 2);
-        canvas.animate(posit(l, t), {queue: false});
+        canvas.pan(l, t);
     };
 }
 
@@ -215,29 +221,42 @@ $(document).ready(function(){
 
 // When a key is pressed
 }).keydown(function(){
-    var draw = true;
-    var c = STORY.shift();
 
-    // No need to draw
-    if('-' == c[0]){
-        c = c.slice(1);
+    // Get the next line in the story
+    var line = STORY.shift();
+
+    // Default drawing action
+    var draw = ['center'];
+
+    // Lines that start with a colon contain a custom draw command
+    if(':' == line[0]){
+        line = line.slice(1);
+        line = line.split(':');
+        draw = line.shift().split(' ');
+        line = line.join(':');
+    }
+
+    // Lines that start with a dash are buffered instead of drawn
+    else if('-' == line[0]){
+        line = line.slice(1);
         draw = false;
     }
 
     // New panel
-    if('p' == c[0]){
-        canvas.panel(c.slice(1));
+    if('p' == line[0]){
+        canvas.panel(line.slice(1));
 
     // New chunk
     }else{
-        c = c.split(':', 2);
-        canvas.cur.chunk(c[0], c[1]);
+        line = line.split(':');
+        canvas.cur.chunk(line.shift(), line.join(':'));
     }
 
     // Draw if needed, otherwise advance story
-    if(draw){
+    if(false !== draw){
         canvas.draw();
-        canvas.center();
+        if('center' === draw[0]) canvas.center();
+        else if('pan' === draw[0]) canvas.pan(draw[1], draw[2]);
     }else{
         $(document).keydown();
     }

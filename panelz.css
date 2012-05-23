@@ -10,9 +10,9 @@ div#panelz
 {
     position: relative;
     overflow: hidden;
-    width: 50em;
+    width: 80em;
     height: 50em;
-    border: 1em solid white;
+    border: 0.5em solid white;
 }
 
 div.canvas
@@ -20,13 +20,13 @@ div.canvas
     position: absolute;
     width: 100%;
     height: 100%;
-    left: 0px;
-    top: 0px;
+    left: 0em;
+    top: 0em;
 }
 
 div.panel
 {
-    width: 15em;
+    width: 16em;
     min-height: 15em;
     border: 0.2em solid white;
     margin: 0.5em;
@@ -51,13 +51,23 @@ div.b
     margin: 0.5em;
 }
 
-div.red
+div.newline
 {
-    border-color: red;
+    clear: left;
 }
 
-div.green
+div.fullpage
 {
-    color: green;
-    font-size: 3em;
+    position: absolute;
+    top: 0em;
+    left: 0em;
+    width: 79em;
+    height: 48em;
+}
+
+div.right
+{
+    position: relative;
+    float: right;
+    clear: both;
 }
