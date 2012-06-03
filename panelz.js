@@ -8,35 +8,35 @@ var STORY = [
     '-p newline',
     'c:...It all starts a few months ago, sometime in the near future...',
     'd:Close up on Deaderman talking. A gentle face. Bad skin. Thick glasses.',
-    'b:You\'ll need to sign NDAs and crap before I can even tell you about it.',
+    'b deaderman bleft:You\'ll need to sign NDAs and crap before I can even tell you about it.',
     '-p',
     'c:I like to consider myself a gentleman of leisure, but it\'s the 21 century.',
     'c:At best, people consider me a talented bum.',
     'd:Camera moves back a bit. Deaderman is waving his arms enthusiastically behind a little cloud of cigarette smoke.',
-    'b:And you need to get tagged too. Just to enter the facility.',
+    'b deaderman bleft:And you need to get tagged too. Just to enter the facility.',
     '-p',
     'c:Still, I have my principles.',
-    'b:Fuck that heart of darkness shit. You know I don\'t do proprietary.',
+    'b narator bright:Fuck that heart of darkness shit. You know I don\'t do proprietary.',
     'd:Close up on Deaderman frowning.',
-    'b:Your morals are irrelevant. This project NEEDS you. You will never forgive yourself if you skip this one. Trust my superior intellect.',
+    'b deaderman bleft:Your morals are irrelevant. This project NEEDS you. You will never forgive yourself if you skip this one. Trust my superior intellect.',
     '-p newline',
     'c:A great salesman he isn\'t, but he IS a genius. No one knows machine learning better than the big D. If HE makes a fuss about it it\'s worth checking out.',
     'c: So I sign.',
     'd:Deaderman from behind, walking towards a hi־tech reinforced door.',
-    'b:Right. Blow my mind.',
+    'b narator bright:Right. Blow my mind.',
     '-p',
     'd:Deaderman turns to me as he opens the door.',
-    'b:Virtual reality. Neurointerface all the way. No goggles no nothing, the real deal.',
-    'b:How real?',
-    'b:Like reality.',
+    'b deaderman bleft:Virtual reality. Neurointerface all the way. No goggles no nothing, the real deal.',
+    'b narator bright:How real?',
+    'b deaderman bleft:Like reality.',
     '-p',
     'd:Deaderman goes through the door and motions me to come along',
-    'b:Not nearly as complex, but totaly real. The Matrix.',
-    'b:This I NEED to see.',
-    'b:That\'s precisely what I told you.',
+    'b deaderman bleft:Not nearly as complex, but totaly real. The Matrix.',
+    'b narator bright:This I NEED to see.',
+    'b deaderman bleft:That\'s precisely what I told you.',
     '-p fullpage',
     '-d right:Deaderman is spreading his arms wide.',
-    ':pan 0 0:b right:This is it. This is the machine.',
+    ':pan 0 0:b deaderamn bright right:This is it. This is the machine.',
 
     '-p',
     'c:Sumeria: 747AD',
@@ -104,7 +104,7 @@ var STORY = [
 ];
 
 // TODO: get bookmark into a cookie
-var bookmark = 27;
+var bookmark = 1;//27;
 
 // Objectify two numbers into a CSS compatible position
 function posit(left, top){

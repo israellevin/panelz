@@ -27,33 +27,76 @@ div.canvas
 div.panel
 {
     width: 16em;
-    min-height: 15em;
-    border: 0.2em solid white;
-    margin: 0.5em;
+    min-height: 10em;
+    border: 0.1em solid white;
+    margin: 0.3em;
     float: left;
 }
 
 div.c
 {
     color: yellow;
+    padding: 0.3em;
     border-bottom: 0.1em solid yellow;
 }
 
 div.d
 {
+    padding: 0.3em;
     color: white;
 }
 
 div.b
 {
-    color: #ffeeee;
-    border: 0.1em dashed green;
-    margin: 0.5em;
+    position: relative;
+    color: #dddddd;
+    padding: 0.5em;
+    margin: 0.5em 1em 0.5em 1em;
+    border: 0.1em dashed #dddddd;
+    -moz-border-radius: 7%;
+    -webkit-border-radius: 7%;
+    border-radius: 7%;
+}
+
+div.bleft:before
+{
+   position: absolute;
+   content:"";
+   width: 0;
+   height: 0;
+   right: 100%;
+   top: 10%;
+   border-top: .3em solid transparent;
+   border-right: 0.8em solid #dddddd;
+   border-bottom: .1em solid transparent;
+}
+
+div.bright:after
+{
+   position: absolute;
+   content:"";
+   width: 0;
+   height: 0;
+   left: 100%;
+   top: 10%;
+   border-top: .3em solid transparent;
+   border-left: 0.8em solid #dddddd;
+   border-bottom: .1em solid transparent;
 }
 
 div.newline
 {
     clear: left;
+}
+
+div.deaderman
+{
+    color: #00ff44;
+}
+
+div.narator
+{
+    color: grey;
 }
 
 div.fullpage
