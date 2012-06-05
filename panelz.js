@@ -182,6 +182,54 @@ var canvas = $('<div class="canvas"/>');{
         t = p.top - t + (h / 2);
         canvas.pan(l, t);
     };
+
+    // Move story forward
+    canvas.forward = function(){
+
+        // Get the next line in the story
+        var line = STORY.shift();
+
+        // Default drawing action
+        var draw = ['center'];
+
+        // Lines that start with a colon contain a custom draw command
+        if(':' == line[0]){
+            line = line.slice(1);
+            line = line.split(':');
+            draw = line.shift().split(' ');
+            line = line.join(':');
+        }
+
+        // Lines that start with a dash are buffered instead of drawn
+        else if('-' == line[0]){
+            line = line.slice(1);
+            draw = false;
+        }
+
+        // New panel
+        if('p' == line[0]){
+            canvas.panel(line.slice(1));
+
+        // New chunk
+        }else{
+            line = line.split(':');
+            canvas.cur.chunk(line.shift(), line.join(':'));
+        }
+
+        // Draw if needed, otherwise advance story
+        if(false !== draw){
+            canvas.draw();
+            if('center' === draw[0]) canvas.center();
+            else if('pan' === draw[0]) canvas.pan(draw[1], draw[2]);
+        }else{
+            canvas.forward();
+        }
+    };
+
+    // Move story forward
+    canvas.backward = function(){
+        console.log('Not yet implemented, need to make a better bookmark');
+    };
 }
 
 // Existing frame
@@ -216,49 +264,23 @@ $(document).ready(function(){
 
     // Page to current location
     for(var i = 0; i < bookmark; i++){
-        frame.keydown();
+        canvas.forward();
     }
 
 // When a key is pressed
-}).keydown(function(){
+}).keydown(function(e){
 
-    // Get the next line in the story
-    var line = STORY.shift();
+    // Right arrow and space go forward
+    if(39 === e.which || 32 === e.which){
+        canvas.forward();
 
-    // Default drawing action
-    var draw = ['center'];
+    // Left arrow goes back
+    }else if(37 === e.which){
+        canvas.backward();
 
-    // Lines that start with a colon contain a custom draw command
-    if(':' == line[0]){
-        line = line.slice(1);
-        line = line.split(':');
-        draw = line.shift().split(' ');
-        line = line.join(':');
-    }
-
-    // Lines that start with a dash are buffered instead of drawn
-    else if('-' == line[0]){
-        line = line.slice(1);
-        draw = false;
-    }
-
-    // New panel
-    if('p' == line[0]){
-        canvas.panel(line.slice(1));
-
-    // New chunk
     }else{
-        line = line.split(':');
-        canvas.cur.chunk(line.shift(), line.join(':'));
-    }
-
-    // Draw if needed, otherwise advance story
-    if(false !== draw){
-        canvas.draw();
-        if('center' === draw[0]) canvas.center();
-        else if('pan' === draw[0]) canvas.pan(draw[1], draw[2]);
-    }else{
-        $(document).keydown();
+        console.log(e.which);
+        return true;
     }
     return false;
 });
