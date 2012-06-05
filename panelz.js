@@ -104,22 +104,16 @@ var STORY = [
 ];
 
 // TODO: get bookmark into a cookie
-var bookmark = 1;//27;
-
-// Objectify two numbers into a CSS compatible position
-function posit(left, top){
-    return {
-        left: parseInt(left, 10) + 'px',
-        top: parseInt(top, 10) + 'px'
-    };
-}
+var bookmark = 0;//27;
 
 // Dynamic drawing area
 var canvas = $('<div class="canvas"/>');{
+
     // Offscreen buffer
     canvas.buffer = [];
 
     // The current position in the story
+    canvas.idx = -1;
     canvas.cur = false;
 
     // Create a panel
@@ -160,9 +154,7 @@ var canvas = $('<div class="canvas"/>');{
 
     // Draw the buffer
     canvas.draw = function(){
-        $.each(canvas.buffer, function(i, e){
-            e.add();
-        });
+        while(canvas.buffer.length > 0) canvas.buffer.shift().add();
     };
 
     // Pan canvas
@@ -187,7 +179,7 @@ var canvas = $('<div class="canvas"/>');{
     canvas.forward = function(){
 
         // Get the next line in the story
-        var line = STORY.shift();
+        var line = STORY[++canvas.idx];
 
         // Default drawing action
         var draw = ['center'];
@@ -226,9 +218,25 @@ var canvas = $('<div class="canvas"/>');{
         }
     };
 
-    // Move story forward
+    // Move story backward
     canvas.backward = function(){
-        console.log('Not yet implemented, need to make a better bookmark');
+        if(canvas.cur.cur){
+            canvas.cur.cur.div.remove();
+            canvas.cur.cur = canvas.cur.cur.prev;
+        }else if(canvas.cur){
+            canvas.cur.div.remove();
+            canvas.cur = canvas.cur.prev;
+        }
+
+        // Get the prev line in the story
+        var line = STORY[--canvas.idx];
+
+        // Lines that start with a dash were buffered, so keep going
+        if('-' == line[0]){
+            canvas.backward();
+        }else{
+            canvas.center();
+        }
     };
 }
 
@@ -262,10 +270,8 @@ $(document).ready(function(){
         return false;
     });
 
-    // Page to current location
-    for(var i = 0; i < bookmark; i++){
-        canvas.forward();
-    }
+    // Page forward to current location
+    while(canvas.idx < bookmark) canvas.forward();
 
 // When a key is pressed
 }).keydown(function(e){
@@ -284,3 +290,12 @@ $(document).ready(function(){
     }
     return false;
 });
+
+// Objectify two numbers into a CSS compatible position
+function posit(left, top){
+    return {
+        left: parseInt(left, 10) + 'px',
+        top: parseInt(top, 10) + 'px'
+    };
+}
+
