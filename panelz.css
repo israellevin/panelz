@@ -26,8 +26,8 @@ div.canvas
 
 div.panel
 {
-    width: 16em;
-    min-height: 10em;
+    width: 15em;
+    min-height: 6em;
     border: 0.1em solid white;
     margin: 0.3em;
     float: left;
@@ -94,7 +94,7 @@ div.deaderman
     color: #00ff44;
 }
 
-div.narator
+div.narrator
 {
     color: grey;
 }
@@ -105,12 +105,11 @@ div.fullpage
     top: 0em;
     left: 0em;
     width: 79em;
-    height: 48em;
+    height: 49em;
 }
 
 div.right
 {
-    position: relative;
     float: right;
-    clear: both;
+    margin-top: 2em;
 }
