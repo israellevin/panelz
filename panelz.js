@@ -1,116 +1,66 @@
-// List of panelz commands that form the story
-var STORY = [
-    'p',
-    'c:It\'s me.',
-    'c:I\'m the ONLY one seeing this.',
-    '-p newline',
-    'c:...It starts some months ago, sometime in the near future...',
-    'd:Close up on Deaderman talking. A gentle face. Bad skin. Thick glasses.',
-    'b deaderman bright:You\'ll need to sign the NDA before I can even tell you about it.',
-    'd deaderman right:*cough*',
-    '-p',
-    'c:I like to consider myself a gentleman of leisure, but it\'s the 21 century.',
-    'c:Other people consider me a talented bum. At best.',
-    'd:Camera moves back a bit. Deaderman is waving his arms enthusiastically behind a little cloud of cigarette smoke.',
-    'b deaderman bright:And you need to get tagged before you enter the lab.',
-    '-p',
-    'c:Still, I have my principles.',
-    'b narrator bleft:Fuck that heart of darkness shit. You know I don\'t do proprietary.',
-    'd:Close up on Deaderman frowning.',
-    'b deaderman bright:This is beyond your morals – you will NEVER forgive yourself if you skip this one. Trust my superior intellect.',
-    '-p newline',
-    'c:A great salesman he isn\'t, but he IS a genius. No one groks machine learning like the big D. If HE makes a fuss about it, it\'s worth checking out.',
-    'c: So I sign.',
-    'd:Deaderman from behind, approaching a hi־tech reinforced door.',
-    'b narrator bleft:Right. Blow my mind.',
-    '-p',
-    'd:Deaderman turning to the camera as he fumbles with a key־card.',
-    'b deaderman bright:It\'s right here. Full neuro. No goggles no nothing.',
-    'b narrator bleft:And you say it feels real. Like...',
-    'b deaderman bright:Like reality.',
-    '-p',
-    'd:Deaderman goes through the door and motions me to come along',
-    'b deaderman bright:Not nearly as complex, but totally real.',
-    'b narrator bleft: Like the Matrix.',
-    'b deaderman bright:Like the Matrix.',
-    '-p',
-    'c: You can\'t say technology hasn\'t been going in that direction for a while, but still – about fucking time.',
-    'd:Beyond the open door there is a large space, almost a hangar, with several workstations around a hospital bed with wires dangling about it.',
-    '-p',
-    'c: Deaderman standing beside the bed, laying a hand on the mattress.',
-    'b narrator bleft:This I NEED to see.',
-    'b deaderman bright:That\'s precisely what I told you.',
-    '-p fullpage',
-    '-d right:Deaderman is spreading his arms wide.',
-    ':pan 0 0:b deaderamn bright right:This is it. This is the machine.',
+// Parser for panelz commands.
+// Panel: [-]:[classes][(direction,distance)][(effect)]
+// Chunk: [-][classes:][text]
+function parseLine(l){
+    var cls = '';
+    var eff = 'center';
 
-    '-p',
-    'c:Sumeria: 747AD',
-    'd:The inside of a cheap motel, a black telephone rings in the dark',
-    'b:Hello?',
-    '-p',
-    '-c:Now:',
-    '-b:Is there anybody?',
-    '-p',
-    'c:Sumeria: 747AD',
-    'd:The inside of a cheap motel, a black telephone rings in the dark',
-    'b:Hello?',
-    '-p',
-    'c:Now:',
-    'b:Is there anybody?',
-    '-p',
-    'c:Sumeria: 747AD',
-    'd:The inside of a cheap motel, a black telephone rings in the dark',
-    'b:Hello?',
-    '-p',
-    'c:Now:',
-    'b:Is there anybody?',
-    '-p',
-    'c:Sumeria: 747AD',
-    'd:The inside of a cheap motel, a black telephone rings in the dark',
-    'b:Hello?',
-    '-p',
-    'c:Now:',
-    'b:Is there anybody?',
-    '-p',
-    'c:Sumeria: 747AD',
-    'd:The inside of a cheap motel, a black telephone rings in the dark',
-    'b:Hello?',
-    '-p',
-    'c:Now:',
-    'b:Is there anybody?',
-    '-p',
-    'c:Sumeria: 747AD',
-    'd:The inside of a cheap motel, a black telephone rings in the dark',
-    'b:Hello?',
-    '-p',
-    'c:Now:',
-    'b:Is there anybody?',
-    '-p',
-    'c:Sumeria: 747AD',
-    'd:The inside of a cheap motel, a black telephone rings in the dark',
-    'b:Hello?',
-    '-p',
-    'c:Now:',
-    'b:Is there anybody?',
-    '-p',
-    'c:Sumeria: 747AD',
-    'd:The inside of a cheap motel, a black telephone rings in the dark',
-    'b:Hello?',
-    '-p',
-    'c:Now:',
-    'b:Is there anybody?',
-    '-p',
-    'c:Sumeria: 747AD',
-    'd:The inside of a cheap motel, a black telephone rings in the dark',
-    'b:Hello?',
-    '-p',
-    'c:Now:',
-    'b:Is there anybody?',
-];
+    // Will the item be drawn immediately or buffered?
+    var draw = true;
+    if('-' === l[0]){
+        draw = false;
+        l = l.slice(1);
+    }
+
+    // Panel
+    if(':' === l[0]){
+        var dir = 3;
+        var dis = 3;
+        var tuple;
+
+        // Panels are buffered by default
+        draw = !draw;
+
+        // Classes
+        l = l.match(/.([^(]*)(.*)/);
+        cls = l[1];
+        l = l[2];
+
+        // Positioning and effects
+        while('(' === l[0]){
+            l = l.match(/.([^)]*)\)(.*)/);
+
+            // Direction may be specified without distance
+            tuple = l[1].match(/([0-9.]+)(,([0-9]+))?/);
+            if(tuple){
+                dir = tuple[1];
+                if(tuple[3]) dis = tuple[3];
+            }else{
+                eff = l[1];
+            }
+            l = l[2];
+        }
+
+    // Chunk
+    }else{
+        l = l.match(/(([^:]*):)?(.*)/);
+        cls = l[2];
+        l = l[3];
+    }
+
+    return {
+        draw: draw,
+        cls: cls,
+        dir: dir,
+        dis: dis,
+        eff: eff,
+        txt: l
+    }
+}
 
 // TODO: get bookmark into a cookie
 var bookmark = 0;
+var story;
 
 // Dynamic drawing area
 var canvas = $('<div class="canvas"/>');{
@@ -123,25 +73,48 @@ var canvas = $('<div class="canvas"/>');{
     canvas.cur = false;
 
     // Create a panel
-    canvas.panel = function(clss){
+    canvas.panel = function(line){
         var p = {};
         p.prev = canvas.cur;
         p.cur = false;
-        p.div = $('<div class="panel' + clss + '"/>');
+        p.div = $('<div class="panel ' + line.cls + '"/>');
 
         // Append it to canvas
         p.add = function(){
             canvas.append(p.div);
+
+//            // Anchored location
+//            var acls = p.div.attr('class').match(/\bbuoy-([^ ]*)/);
+//            if(acls && acls[1]){
+//                var a = p.prev;
+//                while(a){
+//                    if(a.div.hasClass('anchor-' + acls[1])){
+//                        break;
+//                    }else{
+//                        a = a.prev;
+//                    }
+//                }
+//                if(a){
+//                    var offset = p.div.css('top');
+//                    if('auto' !== offset){
+//                        console.log('top');
+//                    }
+//                }
+//            }
+
+            // Make sure we have enough margin on the right
             var pos = p.div.position();
             if(canvas.innerWidth() - pos.left < 1000) canvas.width(canvas.width() + 1000);
         };
 
         // Add a chunk of text
-        p.chunk = function(clss, text){
+        p.chunk = function(line){
             var c = {};
             c.panel = p;
             c.prev = p.cur;
-            c.div = $('<div class="' + clss + '">' + text + '</div>');
+            p
+            p
+            c.div = $('<div class="' + line.cls + '">' + line.txt + '</div>');
 
             // Append it to panel
             c.add = function(){
@@ -185,40 +158,24 @@ var canvas = $('<div class="canvas"/>');{
     canvas.forward = function(){
 
         // Get the next line in the story
-        var line = STORY[++canvas.idx];
-
-        // Default drawing action
-        var draw = ['center'];
-
-        // Lines that start with a colon contain a custom draw command
-        if(':' == line[0]){
-            line = line.slice(1);
-            line = line.split(':');
-            draw = line.shift().split(' ');
-            line = line.join(':');
-        }
-
-        // Lines that start with a dash are buffered instead of drawn
-        else if('-' == line[0]){
-            line = line.slice(1);
-            draw = false;
-        }
+        var line = story[++canvas.idx];
 
         // New panel
-        if('p' == line[0]){
-            canvas.panel(line.slice(1));
+        if('undefined' !== typeof line.dir){
+            canvas.panel(line);
 
         // New chunk
         }else{
-            line = line.split(':');
-            canvas.cur.chunk(line.shift(), line.join(':'));
+            canvas.cur.chunk(line);
         }
 
         // Draw if needed, otherwise advance story
-        if(false !== draw){
+        if(false !== line.draw){
             canvas.draw();
-            if('center' === draw[0]) canvas.center();
-            else if('pan' === draw[0]) canvas.pan(draw[1], draw[2]);
+            if(line.eff){
+                if('center' === line.eff[0]) canvas.center();
+                else if('pan' === line.eff[0]) canvas.pan(line.eff[1], line.eff[2]);
+            }
         }else{
             canvas.forward();
         }
@@ -235,7 +192,7 @@ var canvas = $('<div class="canvas"/>');{
         }
 
         // Get the prev line in the story
-        var line = STORY[--canvas.idx];
+        var line = story[--canvas.idx];
 
         // Lines that start with a dash were buffered, so keep going
         if('-' == line[0]){
@@ -252,6 +209,9 @@ var frame;
 // When the page is done loading
 $(document).ready(function(){
     frame = $('#panelz');
+    story = $.map(frame.find('textarea').text().split("\n"), function(l){
+        return parseLine(l);
+    });
     frame.append(canvas);
 
     // Drag in frame to pan canvas
