@@ -18,21 +18,17 @@ canvas.create = function(text){
     canvas.idx = -1;
     canvas.cur = false;
 
-    // Create a panel
+    // Draw a panel
     canvas.panel = function(clss, posi){
         var p = {};
         p.prev = canvas.cur;
         p.cur = false;
         p.div = $('<div class="panel ' + clss + '"/>');
+        canvas.append(p.div);
 
-        // Append it to canvas
-        p.add = function(){
-            canvas.append(p.div);
-
-            // Make sure we have enough margin on the right
-            var pos = p.div.position();
-            if(canvas.innerWidth() - pos.left < 1000) canvas.width(canvas.width() + 1000);
-        };
+        // Make sure we have enough margin on the right
+        var pos = p.div.position();
+        if(canvas.innerWidth() - pos.left < 1000) canvas.width(canvas.width() + 1000);
 
         // Add a chunk of text
         p.chunk = function(clss, text){
@@ -42,25 +38,14 @@ canvas.create = function(text){
             c.div = $('<div class="' + clss + '">' + text + '</div>');
 
             // Append it to panel
-            c.add = function(){
-                p.div.append(c.div);
-            };
+            p.div.append(c.div);
 
-            canvas.buffer.push(c);
             p.cur = c;
             return c;
         }
 
-        canvas.buffer.push(p);
         canvas.cur = p;
         return p;
-    };
-
-    // Draw the buffer
-    canvas.draw = function(){
-        while(canvas.buffer.length > 0){
-            console.log('draw', canvas.buffer.shift());
-        }
     };
 
     // Pan canvas
@@ -85,7 +70,6 @@ canvas.create = function(text){
 
         // Get the next line in the story
         if('undefined' === typeof canvas.story[++canvas.idx]){
-            console.log(text[canvas.idx]);
             canvas.story[canvas.idx] = parseLine(text[canvas.idx]);
         }
         var l = canvas.story[canvas.idx];
@@ -94,8 +78,19 @@ canvas.create = function(text){
         if('draw' !== l.type){
             canvas.buffer.push(l);
             canvas.forward();
+
+        // Draw the buffer
         }else{
-            canvas.draw();
+            while(canvas.buffer.length > 0){
+                l = canvas.buffer.shift();
+                if('panel' === l.type){
+                    canvas.panel(l.clss, l.posi);
+                }else if('chunk' === l.type){
+                    canvas.cur.chunk(l.clss, l.text);
+                }else if('effect' === l.type){
+                    console.log(l);
+                }
+            }
         }
     };
 
@@ -113,6 +108,7 @@ canvas.create = function(text){
         }
 
         // Keep going back till we hit a draw command
+        // TODO undo effects
         if('draw' !== l.type){
             canvas.backward();
         }else{
