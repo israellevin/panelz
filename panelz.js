@@ -1,61 +1,85 @@
 // Parser for panelz commands.
-// Panel: [-]:[classes][(direction,distance)][(effect)]
-// Chunk: [-][classes:][text]
 function parseLine(l){
-    var cls = '';
-    var eff = 'center';
+    var m;
 
-    // Will the item be drawn immediately or buffered?
-    var draw = true;
-    if('-' === l[0]){
-        draw = false;
-        l = l.slice(1);
+    // Draw: empty line
+    m = l.match(/^\s*$/);
+    if(m !== null){
+        return{
+            type: 'draw'
+        };
     }
 
-    // Panel
-    if(':' === l[0]){
-        var dir = 3;
-        var dis = 3;
-        var tuple;
-
-        // Panels are buffered by default
-        draw = !draw;
-
-        // Classes
-        l = l.match(/.([^(]*)(.*)/);
-        cls = l[1];
-        l = l[2];
-
-        // Positioning and effects
-        while('(' === l[0]){
-            l = l.match(/.([^)]*)\)(.*)/);
-
-            // Direction may be specified without distance
-            tuple = l[1].match(/([0-9.]+)(,([0-9]+))?/);
-            if(tuple){
-                dir = tuple[1];
-                if(tuple[3]) dis = tuple[3];
-            }else{
-                eff = l[1];
-            }
-            l = l[2];
-        }
-
-    // Chunk
-    }else{
-        l = l.match(/(([^:]*):)?(.*)/);
-        cls = l[2];
-        l = l[3];
+    // Panel: literal ] followed by an optional list of classes (space
+    // separated names) and optional positioning instructions (comma
+    // separated numbers) separated by a colon.
+    m = l.match(/^]([^:]*)?:?((?:-?[0-9.]+,?){0,4})?$/);
+    if(m !== null){
+        return{
+            type: 'panel',
+            clss: m[1] || '',
+            posi: $.map(m[2].split(','), function(x){return x;})
+        };
     }
 
-    return {
-        draw: draw,
-        cls: cls,
-        dir: dir,
-        dis: dis,
-        eff: eff,
-        txt: l
-    }
+//    if(']' === l[0]){
+//        r.type = 'panel';
+//        r.draw = ('+' === l[1]) ? true : false;
+//        l = l.slice(1);
+//    }else if('~' === l[0]){
+//        r.type = 'effect';
+//        r.draw = ('+' === l[1]) ? true : false;
+//        l = l.slice(1);
+//    }else{
+//        r.type = 'chunk';
+//        r.draw = true;
+//    }
+//
+//
+//    // Panel
+//    if(']' === l[0]){
+//        var dir = 3;
+//        var dis = 3;
+//        var tuple;
+//
+//        // Panels are buffered by default
+//        draw = !draw;
+//
+//        // Classes
+//        l = l.match(/^.([^(]*)(.*)/);
+//        cls = l[1];
+//        l = l[2];
+//
+//        // Positioning and effects
+//        while('(' === l[0]){
+//            l = l.match(/^.([^)]*)\)(.*)/);
+//
+//            // Direction may be specified without distance
+//            tuple = l[1].match(/^([0-9.]+)(,([0-9]+))?/);
+//            if(tuple){
+//                dir = tuple[1];
+//                if(tuple[3]) dis = tuple[3];
+//            }else{
+//                eff = l[1].split(' ');;
+//            }
+//            l = l[2];
+//        }
+//
+//    // Chunk
+//    }else{
+//        l = l.match(/^(([^:]*):)?(.*)/);
+//        cls = l[2];
+//        l = l[3];
+//    }
+//
+//    return {
+//        draw: draw,
+//        cls: cls,
+//        dir: dir,
+//        dis: dis,
+//        eff: eff,
+//        txt: l
+//    }
 }
 
 // TODO: get bookmark into a cookie
@@ -148,9 +172,8 @@ var canvas = $('<div class="canvas"/>');{
         var t = p.top;
         var w = frame.innerWidth() - canvas.cur.div.width();
         var h = frame.innerHeight() - canvas.cur.div.height();
-        p = frame.position();
-        l = p.left - l + (w / 2);
-        t = p.top - t + (h / 2);
+        l = l + (w / 2);
+        t = t + (h / 2);
         canvas.pan(l, t);
     };
 
@@ -209,25 +232,25 @@ var frame;
 // When the page is done loading
 $(document).ready(function(){
     frame = $('#panelz');
-    story = $.map(frame.find('textarea').text().split("\n"), function(l){
-        return parseLine(l);
-    });
+    story = $.map(frame.find('textarea').detach().text().split("\n"),
+        function(l){
+            return parseLine(l);
+        }
+    );
     frame.append(canvas);
 
     // Drag in frame to pan canvas
     frame.mousedown(function(e){
 
         // Get starting position
-        var p = canvas.position();
-        var l = p.left;
-        var t = p.top;
-        var difx = e.clientX - l;
-        var dify = e.clientY - t;
+        var startx = e.pageX;
+        var starty = e.pageY;
+        var o = canvas.position();
+        var x = o.left - startx;
+        var y = o.top - starty;
 
         frame.mousemove(function(e){
-            var l = e.clientX - difx;
-            var t = e.clientY - dify;
-            canvas.css(posit(l, t));
+            canvas.offset(posit(x + e.clientX, y + e.clientY));
             return false;
         }).one('mouseup', function(e){
             frame.off('mousemove');
@@ -260,8 +283,8 @@ $(document).ready(function(){
 // Objectify two numbers into a CSS compatible position
 function posit(left, top){
     return {
-        left: parseInt(left, 10) + 'px',
-        top: parseInt(top, 10) + 'px'
+        left: parseInt(left, 10),
+        top: parseInt(top, 10)
     };
 }
 
