@@ -1,93 +1,15 @@
-// Parser for panelz commands.
-function parseLine(l){
-    var m;
-
-    // Draw: empty line
-    m = l.match(/^\s*$/);
-    if(m !== null){
-        return{
-            type: 'draw'
-        };
-    }
-
-    // Panel: literal ] followed by an optional list of classes (space
-    // separated names) and optional positioning instructions (comma
-    // separated numbers) separated by a colon.
-    m = l.match(/^]([^:]*)?:?((?:-?[0-9.]+,?){0,4})?$/);
-    if(m !== null){
-        return{
-            type: 'panel',
-            clss: m[1] || '',
-            posi: $.map(m[2].split(','), function(x){return x;})
-        };
-    }
-
-//    if(']' === l[0]){
-//        r.type = 'panel';
-//        r.draw = ('+' === l[1]) ? true : false;
-//        l = l.slice(1);
-//    }else if('~' === l[0]){
-//        r.type = 'effect';
-//        r.draw = ('+' === l[1]) ? true : false;
-//        l = l.slice(1);
-//    }else{
-//        r.type = 'chunk';
-//        r.draw = true;
-//    }
-//
-//
-//    // Panel
-//    if(']' === l[0]){
-//        var dir = 3;
-//        var dis = 3;
-//        var tuple;
-//
-//        // Panels are buffered by default
-//        draw = !draw;
-//
-//        // Classes
-//        l = l.match(/^.([^(]*)(.*)/);
-//        cls = l[1];
-//        l = l[2];
-//
-//        // Positioning and effects
-//        while('(' === l[0]){
-//            l = l.match(/^.([^)]*)\)(.*)/);
-//
-//            // Direction may be specified without distance
-//            tuple = l[1].match(/^([0-9.]+)(,([0-9]+))?/);
-//            if(tuple){
-//                dir = tuple[1];
-//                if(tuple[3]) dis = tuple[3];
-//            }else{
-//                eff = l[1].split(' ');;
-//            }
-//            l = l[2];
-//        }
-//
-//    // Chunk
-//    }else{
-//        l = l.match(/^(([^:]*):)?(.*)/);
-//        cls = l[2];
-//        l = l[3];
-//    }
-//
-//    return {
-//        draw: draw,
-//        cls: cls,
-//        dir: dir,
-//        dis: dis,
-//        eff: eff,
-//        txt: l
-//    }
-}
+// The existing panelz frame
+var frame;
 
 // TODO: get bookmark into a cookie
 var bookmark = 0;
-var story;
 
-// Dynamic drawing area
-var canvas = $('<div class="canvas"/>');{
+// Dynamic drawing area, filled up on ready
+var canvas = $('<div class="canvas"/>');
+canvas.create = function(text){
+
+    // Parsed instructions
+    canvas.story = {};
 
     // Offscreen buffer
     canvas.buffer = [];
@@ -97,34 +19,15 @@ var canvas = $('<div class="canvas"/>');{
     canvas.cur = false;
 
     // Create a panel
-    canvas.panel = function(line){
+    canvas.panel = function(clss, posi){
         var p = {};
         p.prev = canvas.cur;
         p.cur = false;
-        p.div = $('<div class="panel ' + line.cls + '"/>');
+        p.div = $('<div class="panel ' + clss + '"/>');
 
         // Append it to canvas
         p.add = function(){
             canvas.append(p.div);
-
-//            // Anchored location
-//            var acls = p.div.attr('class').match(/\bbuoy-([^ ]*)/);
-//            if(acls && acls[1]){
-//                var a = p.prev;
-//                while(a){
-//                    if(a.div.hasClass('anchor-' + acls[1])){
-//                        break;
-//                    }else{
-//                        a = a.prev;
-//                    }
-//                }
-//                if(a){
-//                    var offset = p.div.css('top');
-//                    if('auto' !== offset){
-//                        console.log('top');
-//                    }
-//                }
-//            }
 
             // Make sure we have enough margin on the right
             var pos = p.div.position();
@@ -132,13 +35,11 @@ var canvas = $('<div class="canvas"/>');{
         };
 
         // Add a chunk of text
-        p.chunk = function(line){
+        p.chunk = function(clss, text){
             var c = {};
             c.panel = p;
             c.prev = p.cur;
-            p
-            p
-            c.div = $('<div class="' + line.cls + '">' + line.txt + '</div>');
+            c.div = $('<div class="' + clss + '">' + text + '</div>');
 
             // Append it to panel
             c.add = function(){
@@ -157,7 +58,9 @@ var canvas = $('<div class="canvas"/>');{
 
     // Draw the buffer
     canvas.draw = function(){
-        while(canvas.buffer.length > 0) canvas.buffer.shift().add();
+        while(canvas.buffer.length > 0){
+            console.log('draw', canvas.buffer.shift());
+        }
     };
 
     // Pan canvas
@@ -181,31 +84,26 @@ var canvas = $('<div class="canvas"/>');{
     canvas.forward = function(){
 
         // Get the next line in the story
-        var line = story[++canvas.idx];
-
-        // New panel
-        if('undefined' !== typeof line.dir){
-            canvas.panel(line);
-
-        // New chunk
-        }else{
-            canvas.cur.chunk(line);
+        if('undefined' === typeof canvas.story[++canvas.idx]){
+            console.log(text[canvas.idx]);
+            canvas.story[canvas.idx] = parseLine(text[canvas.idx]);
         }
+        var l = canvas.story[canvas.idx];
 
-        // Draw if needed, otherwise advance story
-        if(false !== line.draw){
-            canvas.draw();
-            if(line.eff){
-                if('center' === line.eff[0]) canvas.center();
-                else if('pan' === line.eff[0]) canvas.pan(line.eff[1], line.eff[2]);
-            }
-        }else{
+        // Buffer lines till it's time to draw
+        if('draw' !== l.type){
+            canvas.buffer.push(l);
             canvas.forward();
+        }else{
+            canvas.draw();
         }
     };
 
     // Move story backward
     canvas.backward = function(){
+
+        // Remove and relink
+        var l = canvas.story[--canvas.idx];
         if(canvas.cur.cur){
             canvas.cur.cur.div.remove();
             canvas.cur.cur = canvas.cur.cur.prev;
@@ -214,11 +112,8 @@ var canvas = $('<div class="canvas"/>');{
             canvas.cur = canvas.cur.prev;
         }
 
-        // Get the prev line in the story
-        var line = story[--canvas.idx];
-
-        // Lines that start with a dash were buffered, so keep going
-        if('-' == line[0]){
+        // Keep going back till we hit a draw command
+        if('draw' !== l.type){
             canvas.backward();
         }else{
             canvas.center();
@@ -226,18 +121,12 @@ var canvas = $('<div class="canvas"/>');{
     };
 }
 
-// Existing frame
-var frame;
-
 // When the page is done loading
 $(document).ready(function(){
-    frame = $('#panelz');
-    story = $.map(frame.find('textarea').detach().text().split("\n"),
-        function(l){
-            return parseLine(l);
-        }
-    );
-    frame.append(canvas);
+    frame = $('#panelz').append(canvas);
+
+    // Fix up the canvas
+    canvas.create(frame.find('textarea').detach().text().split("\n"));
 
     // Drag in frame to pan canvas
     frame.mousedown(function(e){
@@ -280,11 +169,60 @@ $(document).ready(function(){
     return false;
 });
 
-// Objectify two numbers into a CSS compatible position
+// Parser for panelz commands.
+function parseLine(l){
+    var m;
+
+    // Draw: empty line
+    m = l.match(/^\s*$/);
+    if(m !== null){
+        return{
+            type: 'draw'
+        };
+    }
+
+    // Panel: starts with the character ']', followed by an optional
+    // list of classes (space separated) and an optional colon with up
+    // to 4 optional comma separated positioning instructions: x offset,
+    // y offset, origin and destination (floating point numbers).
+    m = l.match(/^]([^:]*)?:?(?:(-?[0-9.]+)(?:,(-?[0-9.]+)(?:,(-?[0-9.]+)(?:,(-?[0-9.]+))?)?)?)?$/);
+    if(m !== null){
+        return{
+            type: 'panel',
+            clss: m[1] || '',
+            posi: $.map(m.slice(2), function(n){
+                if(!isNaN(n)) return parseFloat(n, 10);
+            })
+        };
+    }
+
+    // Effect: starts with the character '~', followed by a commands
+    // and optional arguments (space separated).
+    m = l.match(/^~(\S*)\s+(.*)$/);
+    if(m !== null){
+        return{
+            type: 'effect',
+            command: m[1],
+            arguments: m[2] && m[2].split(/\s+/)
+        };
+    }
+
+    // Chunk: a optional list of classes (space separated) separated by
+    // a colon from the optional free text of the chunk.
+    m = l.match(/^(?:([^:]*):)?(.*)$/);
+    if(m !== null){
+        return{
+            type: 'chunk',
+            clss: m[1] || '',
+            text: m[2]
+        };
+    }
+}
+
+// Objectify two numbers into jquery's position format
 function posit(left, top){
     return {
         left: parseInt(left, 10),
         top: parseInt(top, 10)
     };
 }
-
