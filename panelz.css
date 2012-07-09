@@ -6,6 +6,7 @@ body
 
 div#panelz
 {
+    position: relative;
     overflow: hidden;
     width: 80em;
     height: 50em;
