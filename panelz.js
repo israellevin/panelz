@@ -1,11 +1,15 @@
-// The existing panelz frame
+// Let's see if I can make the comments tell the story.
+
+// We start with the frame of our story, which will, when the document is ready, be an existing div in the DOM.
 var frame;
 
-// TODO: get bookmark into a cookie
+// We also have a bookmark, so I don't have to page from the beginning every time. TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea.
 var bookmark = 0;
 
-// Dynamic drawing area, filled up on ready
+// And east, we have the canvas, a dynamic drawing area that's currently just a div,
 var canvas = $('<div class="canvas"/>');
+
+// but once the document is ready we get the text of the script and create() it anew, filled with all of the functions and references that it needs. It is possible that frame and bookmark should also be part of it (and maybe the auxiliarry functions at the bottom). We will see.
 canvas.create = function(text){
 
     // Parsed instructions
