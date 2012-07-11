@@ -19,43 +19,118 @@ canvas.create = function(text){
 
     // We save the index of the current line
     canvas.idx = -1;
-    // and a reference to the current panel.
-    canvas.cur = false;
+    // and a reference to the current panel which, at this early point, , is initialized to a dummy panel that always returns position and size of 0 (this is done so that we have a starting position).
+    canvas.cur = {
+        position: function(){return posit(0, 0);},
+        outerWidth: function(){return 0;},
+        outerHeight: function(){return 0;},
+        point: function(){return {left: 0, top: 0};}
+    };
 
     // When it's time to draw a panel, we use this function which takes a string of space separated classes, which defines how the panel looks, and an array of up to four numbers which determines where it will be drawn (x offset, y offset, origin and destination).
     canvas.panel = function(clss, posi){
 
-        // The panel object is a jquery div
-        var p = $('<div class="panel ' + clss + '"/>');
+        // The panel object is a jquery div which we append to the canvas
+        var p = $('<div class="panel ' + clss + '"/>').appendTo(canvas);
         // with a reference to its predecessor
         p.prev = canvas.cur;
         // and its current chunk of text.
         p.cur = false;
-        //And it gets appended to the canvas.
-        canvas.append(p);
 
-        // We make sure the panel has enough margin on the right. TODO This will be replaced with the positioning bit.
-        var pos = p.position();
-        if(canvas.innerWidth() - pos.left < 1000) canvas.width(canvas.width() + 1000);
+        // Panels are positioned relative to an anchor panel. Currently the only possible anchor panel is the previous one (TODO In the future we will have labels and this default will stop being the only option).
+        p.anchor = p.prev;
+
+        // But the anchor doesn't have to be the top-left corner of the panel (as is the CSS default). Instead, the corners are numbered clockwise from 0 to 3 starting at the top-left. Fractions are used to refer to points between the corners and all negative numbers refer to the center of the panel, just in case you ever wanna go there. Since this corner annotation is used both on the anchor panel and on the panel that is anchored to it (AKA "buoy panel"), we supply a function that translates it into CSS compatible coordinates.
+        p.point = function(corner) {
+
+            // Get position and size of element.
+            var o = p.position();
+            var w = p.outerWidth();
+            var h = p.outerHeight();
+
+            // A rectangle has only four corners.
+            corner %= 4;
+
+            // Negative numbers denote the middle of the element.
+            if(corner < 0){
+                o.left += w / 2;
+                o.top += h / 2;
+
+            // 0 to 1 is the top edge.
+            }else if(corner < 1){
+                o.left += corner * w;
+
+            // 1 to 2 is the right edge.
+            }else if(corner < 2){
+                o.left += w;
+                o.top += (corner - 1) * h;
+
+            // 2 to 3 is the bottom edge.
+            }else if(corner < 3){
+                o.left += (1 - corner + 2) * w;
+                o.top += h;
+
+            // 3 to 4 is the left edge.
+            }else if(corner < 4){
+                o.top += (1 - corner + 3) * h;
+            }
+
+            return o;
+        };
+
+        // By default, the new panel will be 3 pixels (FIXME this should be measured in ems, really) to the left of the anchor point
+        p.left = 3;
+        // while keeping the same height.
+        p.top = 0;
+        // The default anchor point is 1, which is the top-right corner,
+        p.o = 1;
+        // and the default destination point on the new ("buoy", remember?) panel defaults to 0, which is the top-left corner.
+        p.d = 0;
+
+        // But we override those defaults if we are supplied with arguments.
+        if('undefined' !== typeof posi[0]){
+            p.left = posi[0];
+            if('undefined' !== typeof posi[1]){
+                p.top = posi[1];
+                if('undefined' !== typeof posi[2]){
+                    p.o = posi[2];
+                    if('undefined' !== typeof posi[3]){
+                        p.d = posi[3];
+                    }
+                }
+            }
+        }
+        // Now we can calculate the desired left and top properties of the panel. This is a function because we will do it again every time the involved panels change, but don't worry, we will also call it as soon as we finish defining it.
+        p.place = function(){
+
+            // We get the origin coordinates
+            var o = p.anchor.point(p.o);
+            // and the offset between the destination point and the 0 point (top-left corner) of the new panel.
+            var d = p.point(p.d);
+            // and we can set the position of the panel.
+            p.css({
+                'left': (o.left + p.left - d.left) + 'px',
+                'top': (o.top + p.top - d.top) + 'px'
+            });
+        }
+        p.place();
 
         // When we want to add a chunk of text to the panel we use this function, which takes a string of space separated classes, which define how the chunk looks, and a string of text.
         p.chunk = function(clss, text){
 
-            // The chunk is also a jquery div
-            var c = $('<div class="' + clss + '">' + text + '</div>');
+            // The chunk is a jquery div which we add to the panel
+            var c = $('<div class="' + clss + '">' + text + '</div>').appendTo(p);
             // with a reference to its containing panel
             c.panel = p;
             // and the chunk that preceded it.
             c.prev = p.cur;
-            // And it gets appended to the panel.
-            p.append(c);
 
-            // All that remains it to set the chunk we created as the current chunk and return it.
+            // All that remains it to set the new panel as the current chunk and return it.
             p.cur = c;
             return c;
         }
 
-        // All that remains it to set the panel we created as the current panel and return it.
+        // All that remains it to set the chunk we created as the current panel and return it.
         canvas.cur = p;
         return p;
     };
@@ -68,15 +143,13 @@ canvas.create = function(text){
     // Only slightly more complex is this animation, which centers the current panel. This is the default effect.
     canvas.center = function(){
 
-        // We obtain the current position of the canvas in the frame
+        // We obtain the position of the current panel in the frame
         var p = canvas.cur.position();
         var l = p.left;
         var t = p.top;
-        // add to it the size of the frame minus the size of the current panel both divided in two. TODO Maybe in the future this should center on the current chunk, if there is one.
-        var w = frame.innerWidth() - canvas.cur.width();
-        var h = frame.innerHeight() - canvas.cur.height();
-        l += w / 2;
-        t += h / 2;
+        // and subtract it from half a frame minus half a panel.
+        l = (0.5 * (frame.innerWidth() - canvas.cur.outerWidth())) - l;
+        t = (0.5 * (frame.innerHeight() - canvas.cur.outerHeight())) - t;
         canvas.pan(l, t);
     };
 
@@ -220,7 +293,7 @@ $(document).ready(function(){
 
     // Anything else will log itself, to make it easier for me to bind new keys to new functions, and return true so that someone else will handle it.
     }else{
-        console.log(e.which);
+        console.log('unknown key', e.which);
         return true;
     }
 
@@ -244,7 +317,8 @@ function parseLine(l){
     // list of classes (space separated) and an optional colon with up
     // to 4 optional comma separated positioning instructions: x offset,
     // y offset, origin and destination (floating point numbers).
-    m = l.match(/^]([^:]*)?:?(?:(-?[0-9.]+)(?:,(-?[0-9.]+)(?:,(-?[0-9.]+)(?:,(-?[0-9.]+))?)?)?)?$/);
+    m = l.match(/^]([^:]*)?(?::(-?[0-9.]+)(?:,(-?[0-9.]+)(?:,(-?[0-9.]+)(?:,(-?[0-9.]+))?)?)?)?$/);
+
     if(m !== null){
         return{
             type: 'panel',
@@ -284,4 +358,17 @@ function posit(left, top){
         left: parseInt(left, 10),
         top: parseInt(top, 10)
     };
+}
+
+// FIXME figure out if we need this crap.
+// As panelz is so very text oriented, all sizes and measurements are done with ems, so we have a zoom-aware object that converts between pixels and ems.
+var ruler = {
+
+    // To find the current rate of pixels to ems we create an invisible div and measure it. This needs to be redone on every resize.
+    init: function(){
+        var d = $('<div style="width: 1em; background-color: red;">lala</div>');
+        $('body').append(d);
+        return 'this';
+//var h, $d = $('<div style="display: none; font-size: 1em; margin: 0; padding:0; height: auto; line-height: 1; border:0;">&nbsp;</div>').appendTo($e);
+    }
 }
