@@ -27,8 +27,11 @@ canvas.create = function(text){
         point: function(){return {left: 0, top: 0};}
     };
 
+    // We also maintain a dictionary of labeled panels, which can be referenced later for all sorts of cool stuff.
+    canvas.labels = {};
+
     // When it's time to draw a panel, we use this function which takes a string of space separated classes, which defines how the panel looks, and an array of up to four numbers which determines where it will be drawn (x offset, y offset, origin and destination).
-    canvas.panel = function(clss, posi){
+    canvas.panel = function(labl, clss, posi, ancr){
 
         // The panel object is a jquery div which we append to the canvas
         var p = $('<div class="panel ' + clss + '"/>').appendTo(canvas);
@@ -37,8 +40,11 @@ canvas.create = function(text){
         // and its current chunk of text.
         p.cur = false;
 
-        // Panels are positioned relative to an anchor panel. Currently the only possible anchor panel is the previous one (TODO In the future we will have labels and this default will stop being the only option).
-        p.anchor = p.prev;
+        // If it is labeled, we should keep it in the dictionary.
+        if('undefined' !== typeof labl) canvas.labels[labl] = p;
+
+        // Panels are positioned relative to an anchor panel. By default this is the previous panel.
+        p.anchor = ancr && canvas.labels[ancr] || p.prev;
 
         // But the anchor doesn't have to be the top-left corner of the panel (as is the CSS default). Instead, the corners are numbered clockwise from 0 to 3 starting at the top-left. Fractions are used to refer to points between the corners and all negative numbers refer to the center of the panel, just in case you ever wanna go there. Since this corner annotation is used both on the anchor panel and on the panel that is anchored to it (AKA "buoy panel"), we supply a function that translates it into CSS compatible coordinates.
         p.point = function(corner) {
@@ -180,7 +186,7 @@ canvas.create = function(text){
                 l = canvas.buffer.shift();
                 // If it's a panel, create a panel,
                 if('panel' === l.type){
-                    canvas.panel(l.clss, l.posi);
+                    canvas.panel(l.labl, l.clss, l.posi, l.ancr);
                 // if it's a chunk, create a chunk,
                 }else if('chunk' === l.type){
                     canvas.cur.chunk(l.clss, l.text);
@@ -313,19 +319,17 @@ function parseLine(l){
         };
     }
 
-    // Panel: starts with the character ']', followed by an optional
-    // list of classes (space separated) and an optional colon with up
-    // to 4 optional comma separated positioning instructions: x offset,
-    // y offset, origin and destination (floating point numbers).
-    m = l.match(/^]([^:]*)?(?::(-?[0-9.]+)(?:,(-?[0-9.]+)(?:,(-?[0-9.]+)(?:,(-?[0-9.]+))?)?)?)?$/);
-
+    // Panel: starts with an optional label followed by the character ']', followed by an optional list of space separated classes and, optionally, by a colon followed by optional space separated positioning instructions: x offset, y offset, origin point, destination point, and the character '[' followed by the label of a previous panel to be used as anchor.
+    m = l.match(/^(?:(.*))?]([^:]*)?(?::(-?[0-9.]+)?(?: (-?[0-9.]+)(?: (-?[0-9.]+)(?: (-?[0-9.]+))?)?)?(?:\s*\[(.*))?)?$/);
     if(m !== null){
         return{
             type: 'panel',
-            clss: m[1] || '',
-            posi: $.map(m.slice(2), function(n){
+            labl: m[1],
+            clss: m[2] || '',
+            posi: $.map(m.slice(3,7), function(n){
                 if(!isNaN(n)) return parseFloat(n, 10);
-            })
+            }),
+            ancr: m[7]
         };
     }
 
@@ -340,8 +344,7 @@ function parseLine(l){
         };
     }
 
-    // Chunk: a optional list of classes (space separated) separated by
-    // a colon from the optional free text of the chunk.
+    // Chunk: a optional list of classes (space separated) separated by a colon from the optional free text of the chunk.
     m = l.match(/^(?:([^:]*):)?(.*)$/);
     if(m !== null){
         return{
