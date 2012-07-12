@@ -24,7 +24,8 @@ canvas.create = function(text){
         position: function(){return posit(0, 0);},
         outerWidth: function(){return 0;},
         outerHeight: function(){return 0;},
-        point: function(){return {left: 0, top: 0};}
+        point: function(){return {left: 0, top: 0};},
+        chunk: function(clss, text){return canvas.panel('','','',[]).chunk(clss, text);}
     };
 
     // We also maintain a dictionary of labeled panels, which can be referenced later for all sorts of cool stuff.
@@ -49,12 +50,14 @@ canvas.create = function(text){
         // But the anchor doesn't have to be the top-left corner of the panel (as is the CSS default). Instead, the corners are numbered clockwise from 0 to 3 starting at the top-left. Fractions are used to refer to points between the corners and all negative numbers refer to the center of the panel, just in case you ever wanna go there. Since this corner annotation is used both on the anchor panel and on the panel that is anchored to it (AKA "buoy panel"), we supply a function that translates it into CSS compatible coordinates.
         p.point = function(corner) {
 
-            // Get position and size of element.
-            var o = p.position();
+            // First we need the size of the panel.
             var w = p.outerWidth();
             var h = p.outerHeight();
 
-            // A rectangle has only four corners.
+            // Now we start with the base CSS location (top-left corner, which we call 0) and work from there.
+            var o = {left: 0, top: 0};
+
+            // Just remember a rectangle has 4 corners and you will be OK.
             corner %= 4;
 
             // Negative numbers denote the middle of the element.
@@ -106,17 +109,20 @@ canvas.create = function(text){
                 }
             }
         }
+
         // Now we can calculate the desired left and top properties of the panel. This is a function because we will do it again every time the involved panels change, but don't worry, we will also call it as soon as we finish defining it.
         p.place = function(){
 
-            // We get the origin coordinates
-            var o = p.anchor.point(p.o);
+            // We get the position of the anchor panel,
+            var o = p.anchor.position();
+            // the position on that panel
+            var a = p.anchor.point(p.o);
             // and the offset between the destination point and the 0 point (top-left corner) of the new panel.
             var d = p.point(p.d);
             // and we can set the position of the panel.
             p.css({
-                'left': (o.left + p.left - d.left) + 'px',
-                'top': (o.top + p.top - d.top) + 'px'
+                'left': (o.left + a.left + p.left - d.left) + 'px',
+                'top': (o.top + a.top + p.top - d.top) + 'px'
             });
         }
         p.place();
@@ -131,7 +137,10 @@ canvas.create = function(text){
             // and the chunk that preceded it.
             c.prev = p.cur;
 
-            // All that remains it to set the new panel as the current chunk and return it.
+            // We tell the containing panel to reposition itself. TODO This should probably be propageted to a chain of buoy panels.
+            p.place();
+
+            // And all that remains it to set the new panel as the current chunk and return it.
             p.cur = c;
             return c;
         }
@@ -233,7 +242,9 @@ canvas.create = function(text){
             }else if('chunk' === l.type){
                 // we remove it
                 canvas.cur.cur.remove();
-                // and set the previous chunk as current.
+                // (which means it could change size, so we better reposition it - TODO this should really be in some resize event)
+                canvas.cur.place();
+                // and set the previous chunk as current
                 canvas.cur.cur = canvas.cur.cur.prev;
             // And if it's a panel
             }else if('panel' === l.type){
