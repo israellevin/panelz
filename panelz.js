@@ -156,15 +156,27 @@ canvas.create = function(text){
     }
 
     // Only slightly more complex is this animation, which centers the current panel. This is the default effect.
-    canvas.center = function(){
+    canvas.center = function(anchor){
+
+        console.log(typeof anchor, anchor);
+        // If an anchor was given, we try to get it,
+        if('string' === typeof anchor){
+            anchor = canvas.labels[anchor];
+        }
+        // then we default to the current panel.
+        if('undefined' === typeof anchor){
+            anchor = canvas.cur;
+        }
+
+        console.log(anchor);
 
         // We obtain the position of the current panel in the frame
-        var p = canvas.cur.position();
+        var p = anchor.position();
         var l = p.left;
         var t = p.top;
         // and subtract it from half a frame minus half a panel.
-        l = (0.5 * (frame.innerWidth() - canvas.cur.outerWidth())) - l;
-        t = (0.5 * (frame.innerHeight() - canvas.cur.outerHeight())) - t;
+        l = (0.5 * (frame.innerWidth() - anchor.outerWidth())) - l;
+        t = (0.5 * (frame.innerHeight() - anchor.outerHeight())) - t;
         canvas.pan(l, t);
     };
 
@@ -204,7 +216,7 @@ canvas.create = function(text){
                     if('pan' === l.command){
                         canvas.pan(l.arguments[0], l.arguments[1]);
                     }else if('center' === l.command){
-                        canvas.center();
+                        canvas.center(l.arguments[0]);
                     }
                     // and don't forget to set the flag.
                     pan = true;
