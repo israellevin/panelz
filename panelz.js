@@ -21,8 +21,8 @@ var Story = {
             return (this.cache[idx] = this.parse(this.lines[idx]));
         }
 
-        // Having failed, we realize the futility of the mission and protest in the only way we know.
-        return false;
+        // Having failed, we return a stop command, which means the Story is infinitely padded with stop commands on both sides.
+        return;
     },
 
     // And here we hide the actual parser, which involves regular expressions and is not for the weak of heart or gentle of pallet.
@@ -77,11 +77,11 @@ extend({
 
     // First of all, we need a reference to the current panel. At this early point, it is initialized to a dummy panel that always returns position and size of 0 (so that we have a starting position) and can even automagically create the first panel for you if you try to add a chunk of text to it.
     cur: {
-        position: function(){return posit(0, 0);},
+        position: function(){return {left: 0, top: 0};},
         outerWidth: function(){return 0;},
         outerHeight: function(){return 0;},
         point: function(){return {left: 0, top: 0};},
-        chunk: function(clss, text){return this.panel('','','',[]).chunk(clss, text);}
+        chunk: function(clss, text){return Canvas.panel('','','',[]).chunk(clss, text);}
     },
 
     // And a dictionary of labeled panels, which can be referenced later for all sorts of cool stuff.
@@ -145,7 +145,7 @@ extend({
             return o;
         };
 
-        // By default, the new panel will be 3 pixels (FIXME this should be measured in ems, really) to the left of the anchor point
+        // By default, the new panel will be 3 pixels to the left of the anchor point
         p.left = 3;
         // while keeping the same height.
         p.top = 0;
@@ -197,7 +197,7 @@ extend({
             // and append to the panel.
             }).appendTo(p);
 
-            // Once the chunk has been appended, we tell the containing panel to reposition itself. TODO This should probably be propageted to a chain of buoy panels.
+            // Once the chunk has been appended, we tell the containing panel to reposition itself. TODO This should probably be propagated to a chain of buoy panels.
             p.place();
 
             // And all that remains it to set the new chunk as the current and return it.
@@ -210,29 +210,44 @@ extend({
 
     // We keep our location in the Story
     bookmark: -1,
-    // so that we can advance the story
-    forward: function(){
-        console.log(this.bookmark);
+    // so that we can advance or rewind it till the next (or previous) stop command. Since these two functions are so similar they share a single function with the direction specified as either 1 (forward) or -1 (backward).
+    go: function(dir){
 
         // We keep a flag that sets when pans occur. If none were explicitly stated, we will center the current panel as a default effect.
         var pan = false;
 
-        // We get lines till we run out.
+        // We are currently on a stop command, so we move away from it and keep getting lines till the next (or previous) stop command.
+        this.bookmark += dir;
         var l;
-        while(false !== (l = Story.line(this.bookmark + 1))){
-            this.bookmark++;
+        while('undefined' !== typeof (l = Story.line(this.bookmark))){
+            this.bookmark += dir;
 
-            // Or reach a stop command.
-            if('undefined' === typeof l){
-                break;
-            }
-
-            // If it's a panel, create a panel,
+            // If it's a panel, create it or destory it,
             if('panel' === l.type){
-                this.panel(l.labl, l.clss, l.posi, l.ancr);
-            // if it's a chunk, create a chunk,
+                if(1 === dir){
+                    this.panel(l.labl, l.clss, l.posi, l.ancr);
+                }else if(-1 == dir){
+
+                    // We remove the panel
+                    this.cur.remove();
+                    // and set the previous panel as current.
+                    this.cur = this.cur.prev;
+                }
+
+            // if it's a chunk, create it or destory it,
             }else if('chunk' === l.type){
-                this.cur.chunk(l.clss, l.text);
+                if(1 === dir){
+                    this.cur.chunk(l.clss, l.text);
+                }else if(-1 == dir){
+
+                    // We remove the chunk
+                    this.cur.cur.remove();
+                    // (which means it could change size, so we better reposition it - TODO this should really be in some resize event)
+                    this.cur.place();
+                    // and set the previous chunk as current.
+                    this.cur.cur = this.cur.cur.prev;
+                }
+
             // and if it's an effect, execute it.
             }else if('effect' === l.type){
                 if('pan' === l.command){
@@ -245,60 +260,13 @@ extend({
             }
         }
 
-        // If the flag was not set, we center the current panel.
+        // If no effects were used, we center the current panel.
         if(!pan) this.center();
-        console.log(this.bookmark);
-    },
-    // or rewind it.
-    backward: function(){
-        console.log(this.bookmark);
-
-        // We keep a flag that sets when pans occur. If none were explicitly stated, we will center the current panel as a default effect.
-        var pan = false;
-
-        // We get lines till we run out.
-        var l;
-        while(l = Story.line(this.bookmark - 1)){
-            this.bookmark--;
-
-            // Or reach a stop command.
-            if('undefined' === typeof l){
-                break;
-            }
-
-            // If it's a panel,
-            if('panel' === l.type){
-                // we remove it
-                this.cur.remove();
-                // and set the previous panel as current.
-                this.cur = this.cur.prev;
-            // if it's a chunk,
-            }else if('chunk' === l.type){
-                // we remove it
-                this.cur.cur.remove();
-                // (which means it could change size, so we better reposition it - TODO this should really be in some resize event)
-                this.cur.place();
-                // and set the previous chunk as current
-                this.cur.cur = this.cur.cur.prev;
-            // If it's an effect, we ignore it. TODO In the future we will undo it, if it's an effect worth undoing.
-            }else if('effect' === l.type){
-                // Just don't forget to set the flag.
-                pan = true;
-            }
-        }
-
-        // If the flag was not set, we center the current panel.
-        if(!pan) this.center();
-
-        // FIXME Explain this and fix it to work beyond beginning.
-        this.bookmark--;
-
-        console.log(this.bookmark);
     },
 
-    // The Canvas also has built-in effects. Most basic of which is this animation that slides the Canvas to a new position (given as left and top CSS properties - the Canvas is relatively positioned within the frame).
+    // The Canvas also has built-in effects. Most basic of which is this animation that slides the Canvas to a new position (given as left and top CSS properties - the Canvas is relatively positioned within the Frame).
     pan: function(l, t){
-        this.animate(posit(l,t), {queue: false});
+        this.animate({left: l, top: t}, {queue: false});
     },
 
     // Only slightly more complex is this animation, which centers the current panel. This is the default effect.
@@ -313,31 +281,32 @@ extend({
             anchor = this.cur;
         }
 
-        // We obtain the position of the current panel in the frame
+        // We obtain the position of the current panel in the Frame
         var p = anchor.position();
         var l = p.left;
         var t = p.top;
-        // and subtract it from half a frame (FIXME what's frame doing here?) minus half a panel.
-        l = (0.5 * (frame.innerWidth() - anchor.outerWidth())) - l;
-        t = (0.5 * (frame.innerHeight() - anchor.outerHeight())) - t;
+        // and subtract it from half a Frame minus half a panel.
+        l = (0.5 * (Frame.innerWidth() - anchor.outerWidth())) - l;
+        t = (0.5 * (Frame.innerHeight() - anchor.outerHeight())) - t;
         this.pan(l, t);
     }
 });
 
-// TODO Refactor below, check above
+// And finally, the Frame, which is an existing div in the DOM that will contain the Canvas.
+var Frame;
+// Since it is existing, we wait till the DOM is ready before we play with it.
+$(function(){
+    // we get the Frame div, append the Canvas to it
+    Frame = $('#panelz').append(Canvas).
+    // and detach from it the textarea which contains the script. TODO In the far future we may have an edit mode which brings it back.
+    find('textarea').detach().each(function(){
 
-// We start with the frame of our story, which will, when the document is ready, be an existing div in the DOM.
-var frame;
+        // We split the script into an array of lines with which we initialize the Story.
+        Story.lines = $(this).text().split("\n");
+    }).end().
 
-// When the page is done loading
-$(document).ready(function(){
-    // we get the frame div, append the Canvas to it
-    frame = $('#panelz').append(Canvas);
-    // and initialize the Story with an array of lines containing the text from the textarea in the frame (which we detach). TODO In the far future we may have an edit mode which brings it back.
-    Story.lines = frame.find('textarea').detach().text().split("\n");
-
-    // On mouse down within the frame we get ready for a mouse drag which will pan the Canvas. On all of the events we need to bind here (mousedown, mousemove and mouseup) we return false, to make sure they do not propagate and, e.g., start selecting pieces of the page.
-    frame.mousedown(function(e){
+    // On mouse down within the Frame we get ready for a mouse drag which will pan the Canvas. On all of the events we need to bind here (mousedown, mousemove and mouseup) we return false, to make sure they do not propagate and, e.g., start selecting pieces of the page.
+    mousedown(function(e){
 
         // First we save the starting position of the mouse drag
         var startx = e.pageX;
@@ -348,34 +317,34 @@ $(document).ready(function(){
         var t = o.top;
 
         // Then we bind a function so that when the mouse moves we calculate how much it moved since the drag started and modify the top and left CSS properties of the Canvas to move it along with the pointer.
-        frame.mousemove(function(e){
-            Canvas.offset(posit(
-                    l + (e.pageX - startx),
-                    t + (e.pageY - starty)
-            ));
+        Frame.mousemove(function(e){
+            Canvas.offset({
+                left: l + (e.pageX - startx),
+                top: t + (e.pageY - starty)
+            });
             return false;
 
         // Once the drag ends, we unbind the mouse move function.
         }).one('mouseup', function(e){
-            frame.off('mousemove');
+            Frame.off('mousemove');
             return false;
         });
         return false;
     });
 
-    // And now that we have basic paging defined, we forward the story to a bookmark, so we don't have to page from the beginning every time. TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea. Maybe it will even get its own global object.
-    while(Canvas.bookmark < 0) Canvas.forward();
+    // Lastly we forward the story to a bookmark, so we don't have to page from the beginning every time. TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea. Maybe it will even get its own global object.
+    for(var x = 0; x < 5; x++) Canvas.go(1);
 
-// Other than dragging to pan, all the interface is currently keyboard driven, so when a key is pressed we check if it's a known command.
+// Most of the interface is currently keyboard driven, so when a key is pressed we check if it's a known command and execute it.
 }).keydown(function(e){
 
     // Right arrow and space go forward.
     if(39 === e.which || 32 === e.which){
-        Canvas.forward();
+        Canvas.go(1);
 
     // Left arrow goes back.
     }else if(37 === e.which){
-        Canvas.backward();
+        Canvas.go(-1);
 
     // Anything else will log itself, to make it easier for me to bind new keys to new functions, and return true so that someone else will handle it.
     }else{
@@ -386,24 +355,3 @@ $(document).ready(function(){
     // If the keystroke was recognized as a command and handled, we return false, to stop propagation.
     return false;
 });
-
-
-// Objectify two numbers into jquery's position format.
-function posit(left, top){
-    return {
-        left: parseInt(left, 10),
-        top: parseInt(top, 10)
-    };
-}
-// FIXME figure out if we need this crap.
-// As panelz is so very text oriented, all sizes and measurements are done with ems, so we have a zoom-aware object that converts between pixels and ems.
-var ruler = {
-
-    // To find the current rate of pixels to ems we create an invisible div and measure it. This needs to be redone on every resize.
-    init: function(){
-        var d = $('<div style="width: 1em; background-color: red;">lala</div>');
-        $('body').append(d);
-        return 'this';
-//var h, $d = $('<div style="display: none; font-size: 1em; margin: 0; padding:0; height: auto; line-height: 1; border:0;">&nbsp;</div>').appendTo($e);
-    }
-}
