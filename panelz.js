@@ -1,5 +1,3 @@
-// Let's see if I can make the comments tell the story.
-
 // We start with the Story, which turns an array of script lines into indexed instructions.
 var Story = {
 
@@ -296,7 +294,8 @@ extend({
 var Frame;
 // Since it is existing, we wait till the DOM is ready before we play with it.
 $(function(){
-    // we get the Frame div, append the Canvas to it
+
+    // We get the Frame div, append the Canvas to it
     Frame = $('#panelz').append(Canvas).
     // and detach from it the textarea which contains the script. TODO In the far future we may have an edit mode which brings it back.
     find('textarea').detach().each(function(){
@@ -333,7 +332,7 @@ $(function(){
     });
 
     // Lastly we forward the story to a bookmark, so we don't have to page from the beginning every time. TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea. Maybe it will even get its own global object.
-    for(var x = 0; x < 5; x++) Canvas.go(1);
+    for(var x = 0; x < 0; x++) Canvas.go(1);
 
 // Most of the interface is currently keyboard driven, so when a key is pressed we check if it's a known command and execute it.
 }).keydown(function(e){
