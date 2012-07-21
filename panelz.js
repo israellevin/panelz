@@ -332,7 +332,7 @@ $(function(){
     });
 
     // Lastly we forward the story to a bookmark, so we don't have to page from the beginning every time. TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea. Maybe it will even get its own global object.
-    for(var x = 0; x < 0; x++) Canvas.go(1);
+    for(var x = 0; x < 7; x++) Canvas.go(1);
 
 // Most of the interface is currently keyboard driven, so when a key is pressed we check if it's a known command and execute it.
 }).keydown(function(e){
