@@ -1,7 +1,8 @@
-//Hello, and welcome the javascript code of Panelz, which turns specifically structured instructions strings and parses it graphically as panels of text on a web page. We start, as is usually recommended, by closing everything in an anonymous function, declaring strict mode and defining some vars.
-(function(){'use strict'; var
-
-    // First of all the Frame, which is the existing div in the DOM that will contain the Canvas upon which we will draw the Story. We define it here, but being an existing element, we do not dare touch it till the DOM is ready.
+//Hello, and welcome the javascript code of Panelz, which turns specifically structured instructions strings and parses it graphically as panels of text on a web page. We start with declaring strict mode.
+'use strict';
+// and defining some vars.
+var
+    // First there's the Frame, which is an existing div in the DOM that will contain the Canvas upon which we will draw the Story. We define it here, but being an existing element, we do not dare touch it till the DOM is ready.
     Frame,
 
     // Then there is the Story, which turns an array of script lines into indexed instructions.
@@ -275,7 +276,22 @@
 
         // The Canvas also has built-in effects. Most basic of which is this animation that slides the Canvas to a new position (given as left and top CSS properties - the Canvas is relatively positioned within the Frame).
         pan: function(l, t){
-            this.animate({left: l, top: t}, {queue: false});
+            this.animate({
+
+                // Tried to use jquery's animate() on top and left directly, but it has a bug with zoomed webkit windows (something to do with position() not really working the same way on webkit and mozilla), so had to use fake properties
+                ttop: t,
+                lleft: l
+            },{
+                // and write my own step.
+                step: function(now, fx){
+                    Canvas.css(fx.prop.slice(1), now);
+                },
+
+                // Using the queue here is tempting, since it forces the reader to go through all the right places even if he is paging quickly, but in reality it's just tedious
+                queue: false,
+                // and we do not want to be tedious.
+                duration: 200
+            });
         },
 
         // Only slightly more complex is this animation, which centers the current panel. This is the default effect.
@@ -302,69 +318,66 @@
         }
     });
 
-    // When the DOM is ready, we can put all the parts together.
-    $(function(){
+// When the DOM is ready, we can put all the parts together.
+$(function(){
 
-        // We get the Frame div, append the Canvas to it
-        Frame = $('#panelz').append(Canvas).
-        // And bind the mouse down event within the Frame to enable mouse drag which will pan the Canvas. Note that we return false on all the related events (mousedown, mousemove and mouseup) to make sure they do not propagate and, e.g., select pieces of the page.
-        mousedown(function(e){
+    // We get the Frame div, append the Canvas to it
+    Frame = $('#panelz').append(Canvas).
+    // And bind the mouse down event within the Frame to enable mouse drag which will pan the Canvas. Note that we return false on all the related events (mousedown, mousemove and mouseup) to make sure they do not propagate and, e.g., select pieces of the page.
+    mousedown(function(e){
 
-            // First we save the starting position of the mouse drag and the starting position of the Canvas.
-            var
-                startx = e.pageX,
-                starty = e.pageY,
-                o = Canvas.offset(),
-                l = o.left,
-                t = o.top;
+        // First we save the starting position of the mouse drag and the starting position of the Canvas.
+        var
+            startx = e.pageX,
+            starty = e.pageY,
+            o = Canvas.offset(),
+            l = o.left,
+            t = o.top;
 
-            // Then we bind a function so that when the mouse moves we calculate how much it moved since the drag started and modify the top and left CSS properties of the Canvas to move it along with the pointer.
-            Frame.mousemove(function(e){
-                Canvas.offset({
-                    left: l + (e.pageX - startx),
-                    top: t + (e.pageY - starty)
-                });
-                return false;
-
-            // Once the drag ends, we unbind the mouse move function.
-            }).one('mouseup', function(e){
-                Frame.off('mousemove');
-                return false;
+        // Then we bind a function so that when the mouse moves we calculate how much it moved since the drag started and modify the top and left CSS properties of the Canvas to move it along with the pointer.
+        Frame.mousemove(function(e){
+            Canvas.offset({
+                left: l + (e.pageX - startx),
+                top: t + (e.pageY - starty)
             });
             return false;
+
+        // Once the drag ends, we unbind the mouse move function.
+        }).one('mouseup', function(e){
+            Frame.off('mousemove');
+            return false;
         });
-
-        // Then we initialize the Story.
-        Story.lines =
-
-            // We find and detach the textarea inside the Frame which contains the script (TODO In the far future we may have an edit mode which brings it back)
-            Frame.find('textarea').detach().
-            // and split its text into an array of lines.
-            text().split("\n");
-
-        // Lastly we forward the story to a hard coded bookmark, so we don't have to page from the beginning every time. TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea. Maybe it will even get its own global object.
-        for(var x = 0; x < 14; (x++)) Canvas.go(1);
-
-    // And we bind the keyboard driven interface.
-    }).keydown(function(e){
-
-        // Right arrow and space go forward.
-        if(39 === e.which || 32 === e.which){
-            Canvas.go(1);
-
-        // Left arrow goes back.
-        }else if(37 === e.which){
-            Canvas.go(-1);
-
-        // Anything else will log itself, to make it easier for me to bind new keys to new functions, and return true so that someone else will handle it.
-        }else{
-            console.log('unknown key', e.which);
-            return true;
-        }
-
-        // If the keystroke was recognized as a command and handled, we return false, to stop propagation.
         return false;
     });
 
-// Then we call the anonymous function we just declared and everything should just run. Simple and fun.
-}());
+    // Then we initialize the Story.
+    Story.lines =
+
+        // We find and detach the textarea inside the Frame which contains the script (TODO In the far future we may have an edit mode which brings it back)
+        Frame.find('textarea').detach().
+        // and split its text into an array of lines.
+        text().split("\n");
+
+    // Lastly we forward the story to a hard coded bookmark, so we don't have to page from the beginning every time. TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea. Maybe it will even get its own global object.
+    for(var x = 0; x < 0; (x++)) Canvas.go(1);
+
+// And we bind the keyboard driven interface.
+}).keydown(function(e){
+
+    // Right arrow and space go forward.
+    if(39 === e.which || 32 === e.which){
+        Canvas.go(1);
+
+    // Left arrow goes back.
+    }else if(37 === e.which){
+        Canvas.go(-1);
+
+    // Anything else will log itself, to make it easier for me to bind new keys to new functions, and return true so that someone else will handle it.
+    }else{
+        console.log('unknown key', e.which);
+        return true;
+    }
+
+    // If the keystroke was recognized as a command and handled, we return false, to stop propagation.
+    return false;
+});
