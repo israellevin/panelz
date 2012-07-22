@@ -1,13 +1,12 @@
 body
 {
     background-color: #eeeeee;
-    text-color: black;
+    color: black;
 }
 
 div#panelz
 {
     background-color: #ffeeee;
-    text-color: black;
     position: relative;
     overflow: hidden;
     width: 90%;
@@ -39,20 +38,25 @@ div.panel
 
 /* Chunks */
 
+div.panel div
+{
+    padding: 5px;
+}
+
 div.c
 {
-    background-color: red;
-    border: 0.3em solid red
+    background-color: yellow;
     border-bottom: 2px solid black;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
+    -moz-border-radius: 5.5px 5.5px 0px 0px;
+    -webkit-border-radius: 5.5px 5.5px 0px 0px;
+    border-radius: 5.5px 5.5px 0px 0px;
+    padding: 5px !important;
 }
 
 div.d
 {
-    padding: 0.3em;
-    color: white;
+    color: grey;
+    padding: 2px !important;
 }
 
 /* Balloons */
@@ -60,10 +64,10 @@ div.d
 div.b
 {
     position: relative;
-    color: #dddddd;
-    padding: 0.5em;
-    margin: 0.5em 1em 0.5em 1em;
-    border: 0.1em dashed #dddddd;
+    color: #000022;
+    padding: 5px;
+    margin: 5px 10px 5px 10px;
+    border: 0.1em dashed #000022;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     border-radius: 10px;
@@ -77,9 +81,9 @@ div.bleft:before
    height: 0;
    right: 100%;
    top: 10%;
-   border-top: .3em solid transparent;
-   border-right: 0.8em solid #dddddd;
-   border-bottom: .1em solid transparent;
+   border-top: 6px solid transparent;
+   border-right: 10px solid #000022;
+   border-bottom: 2px solid transparent;
 }
 
 div.bright:after
@@ -90,7 +94,7 @@ div.bright:after
    height: 0;
    left: 100%;
    top: 10%;
-   border-top: .3em solid transparent;
-   border-left: 0.8em solid #dddddd;
-   border-bottom: .1em solid transparent;
+   border-top: 6px solid transparent;
+   border-left: 10px solid #000022;
+   border-bottom: 2px solid transparent;
 }
