@@ -1,18 +1,20 @@
 body
 {
-    background-color: black;
-    color: white;
+    background-color: #eeeeee;
+    text-color: black;
 }
 
 div#panelz
 {
+    background-color: #ffeeee;
+    text-color: black;
     position: relative;
     overflow: hidden;
-    width: 80em;
-    height: 50em;
-    border: 0.5em solid white;
+    width: 90%;
+    height: 800px;
+    border: 10px solid black;
     margin: auto;
-    margin-top: 3em;
+    margin-top: 30px;
 }
 
 div.canvas
@@ -29,21 +31,22 @@ div.panel
     position: absolute;
     width: 15em;
     min-height: 6em;
-    border: 0.1em solid white;
-}
-
-div.large
-{
-    width: 20em;
+    border: 0.3em solid #800000;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
 }
 
 /* Chunks */
 
 div.c
 {
-    color: yellow;
-    padding: 0.3em;
-    border-bottom: 0.1em solid yellow;
+    background-color: red;
+    border: 0.3em solid red
+    border-bottom: 2px solid black;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
 }
 
 div.d
@@ -61,9 +64,9 @@ div.b
     padding: 0.5em;
     margin: 0.5em 1em 0.5em 1em;
     border: 0.1em dashed #dddddd;
-    -moz-border-radius: 7%;
-    -webkit-border-radius: 7%;
-    border-radius: 7%;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
 }
 
 div.bleft:before
