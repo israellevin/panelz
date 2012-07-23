@@ -66,10 +66,24 @@ var
             // Anything else is considered a chunk of text to be printed in the panel, optionally preceded by a space separated, comma terminated list of classes that apply to it.
             m = l.match(/^(?:([^:]*):)?(.*)$/);
             if(m !== null){
+
+                // We default the classes list to empty string, for easier handling.
+                if('undefined' === typeof m[1]){
+                    m[1] = '';
+
+                // If the first class in the classes list is prefixed with a plus sign, we will not create a new chunk, but try to append the text to an existing chunk of the same class.
+                }else{
+                    if('+' === m[1][0]){
+                        m[1] = m[1].slice(1);
+                        m[3] = true;
+                    }
+                }
+
                 return{
                     type: 'chunk',
-                    clss: m[1] || '',
-                    text: m[2]
+                    clss: m[1],
+                    text: m[2],
+                    apnd: m[3]
                 };
             }
         }
@@ -99,8 +113,6 @@ var
             var p = $('<div class="panel ' + clss + '"/>').extend({
                 // with a reference to its predecessor
                 prev: this.cur,
-                // and its current chunk of text,
-                cur: false
             // and append to the Canvas.
             }).appendTo(this);
 
@@ -196,6 +208,8 @@ var
             // The panel creates and draws chunks of text with this function. It takes a string of space separated classes, which define how the chunk looks, and a string of text.
             p.chunk = function(clss, text){
 
+                // In case you forgot, if a class is prefixed with a plus sign, we will try to append the text to a previous chunk of the same class.
+
                 // The chunk is a jquery div which we extend
                 var c = $('<div class="' + clss + '"/>').text(text).extend({
                     // with a reference to its containing panel
@@ -224,18 +238,22 @@ var
             var
                 // We keep a flag that sets when pans occur. If none were explicitly stated, we will center the current panel as a default effect.
                 pan = false,
-                // And we define a variable for the current line.
-                l;
+                // And we define a variable for the current line
+                l,
+                // and one for searching objects.
+                o;
 
             // We are currently on a stop command, so we move away from it and keep getting lines till the next (or previous) stop command.
             this.bookmark += dir;
             while('undefined' !== typeof (l = Story.line(this.bookmark))){
                 this.bookmark += dir;
 
-                // If it's a panel, create it or destory it,
+                // If it's a panel,
                 if('panel' === l.type){
+                    // create it
                     if(1 === dir){
                         this.panel(l.labl, l.clss, l.posi, l.ancr);
+                    // or destroy it.
                     }else if(-1 === dir){
 
                         // We remove the panel
@@ -244,18 +262,48 @@ var
                         this.cur = this.cur.prev;
                     }
 
-                // if it's a chunk, create it or destory it,
+                // If it's a chunk,
                 }else if('chunk' === l.type){
-                    if(1 === dir){
-                        this.cur.chunk(l.clss, l.text);
-                    }else if(-1 === dir){
 
-                        // We remove the chunk
-                        this.cur.cur.remove();
-                        // (which means it could change size, so we better reposition it - TODO this should really be in some resize event)
-                        this.cur.place();
-                        // and set the previous chunk as current.
-                        this.cur.cur = this.cur.cur.prev;
+                    // We check whether the chunk is new or appended.
+                    if(true === l.apnd){
+                        // and whether it can be appended.
+                        o = this.cur.cur;
+                        // For this we go over the previous chunks in the panel and see if one of them has the first class in the classes list.
+                        while('undefined' !== typeof o){
+                            if(o.hasClass(l.clss.split(' ')[0])){
+                                break;
+                            }else{
+                                o = o.prev;
+                            }
+                        }
+                    }
+
+                    // If it's a new chunk,
+                    if('undefined' === typeof o){
+                        // create it
+                        if(1 === dir){
+                            this.cur.chunk(l.clss, l.text);
+                        // or destroy it
+                        }else if(-1 === dir){
+
+                            // We remove the chunk
+                            this.cur.cur.remove();
+                            // (which means it could change size, so we better reposition it - TODO this should really be in some resize event)
+                            this.cur.place();
+                            // and set the previous chunk as current.
+                            this.cur.cur = this.cur.cur.prev;
+                        }
+
+                    // If it's an appendage,
+                    }else{
+                        // append it with all the new classes
+                        if(1 === dir){
+                            o.addClass(l.clss).append(l.text);
+                        // or chop it off.
+                        }else if(-1 === dir){
+                            o.text(o.text().slice(0, -1 * l.text.length));
+                        }
                     }
 
                 // and if it's an effect, execute it.
@@ -359,7 +407,7 @@ $(function(){
         text().split("\n");
 
     // Lastly we forward the story to a hard coded bookmark, so we don't have to page from the beginning every time. TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea. Maybe it will even get its own global object.
-    for(var x = 0; x < 0; (x++)) Canvas.go(1);
+    for(var x = 0; x < 3; (x++)) Canvas.go(1);
 
 // And we bind the keyboard driven interface.
 }).keydown(function(e){
