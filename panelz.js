@@ -42,6 +42,7 @@ var
             // Now we check if it's a valid panel command, which is easily the most complex in the system. It starts with an optional label followed by the character ']', followed by an optional list of space separated classes and, optionally, by a colon followed by optional space separated positioning instructions: x offset, y offset, origin point, destination point, and the character '[' followed by the label of a previous panel to be used as anchor.
             m = l.match(/^(?:(.*))?]([^:]*)?(?::(-?[0-9.]+)?(?: (-?[0-9.]+)(?: (-?[0-9.]+)(?: (-?[0-9.]+))?)?)?(?:\s*\[(.*))?)?$/);
             if(m !== null){
+            console.log(l,m);
                 return{
                     type: 'panel',
                     labl: m[1],
@@ -121,6 +122,7 @@ var
 
             // Panels are positioned relative to an anchor panel. By default this is the previous panel.
             p.anchor = (ancr && this.labels[ancr]) || p.prev;
+            console.log(ancr, this.labels[ancr]);
 
             // But the anchor doesn't have to be the top-left corner of the panel (as is the CSS default). Instead, the corners are numbered clockwise from 0 to 3 starting at the top-left. Fractions are used to refer to points between the corners and all negative numbers refer to the center of the panel, just in case you ever wanna go there. Since this corner annotation is used both on the anchor panel and on the panel that is anchored to it (AKA "buoy panel"), we supply the panel with a function that translates it into CSS compatible coordinates.
             p.point = function(corner) {
@@ -407,7 +409,7 @@ $(function(){
         text().split("\n");
 
     // Lastly we forward the story to a hard coded bookmark, so we don't have to page from the beginning every time. TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea. Maybe it will even get its own global object.
-    for(var x = 0; x < 3; (x++)) Canvas.go(1);
+    for(var x = 0; x < 1; (x++)) Canvas.go(1);
 
 // And we bind the keyboard driven interface.
 }).keydown(function(e){

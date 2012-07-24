@@ -61,16 +61,21 @@ div.d
 
 /* Balloons */
 
-div.b
+div.b, div.thought, div.bleft, div.bright, div.Six, div.Julia, div.Velcro
 {
     position: relative;
     color: #000022;
     padding: 5px;
     margin: 5px 10px 5px 10px;
-    border: 0.1em dashed #000022;
+    border: 0.1em solid #000022;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     border-radius: 10px;
+}
+
+div.thought
+{
+    border: 0.1em dashed #222244;
 }
 
 div.bleft:before
@@ -97,4 +102,18 @@ div.bright:after
    border-top: 6px solid transparent;
    border-left: 10px solid #000022;
    border-bottom: 2px solid transparent;
+}
+
+div.Six
+{
+    color: #330000;
+}
+
+div.Julia
+{
+    color: #003300;
+}
+div.Velcro
+{
+    color: #000033;
 }
