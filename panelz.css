@@ -13,7 +13,7 @@ div#panelz
     height: 800px;
     border: 10px solid black;
     margin: auto;
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 div.canvas
@@ -106,14 +106,15 @@ div.bright:after
 
 div.Six
 {
-    color: #330000;
+    color: #550000;
 }
 
 div.Julia
 {
-    color: #003300;
+    color: #005500;
 }
+
 div.Velcro
 {
-    color: #000033;
+    color: #000055;
 }

@@ -42,12 +42,11 @@ var
             // Now we check if it's a valid panel command, which is easily the most complex in the system. It starts with an optional label followed by the character ']', followed by an optional list of space separated classes and, optionally, by a colon followed by optional space separated positioning instructions: x offset, y offset, origin point, destination point, and the character '[' followed by the label of a previous panel to be used as anchor.
             m = l.match(/^(?:(.*))?]([^:]*)?(?::(-?[0-9.]+)?(?: (-?[0-9.]+)(?: (-?[0-9.]+)(?: (-?[0-9.]+))?)?)?(?:\s*\[(.*))?)?$/);
             if(m !== null){
-            console.log(l,m);
                 return{
                     type: 'panel',
                     labl: m[1],
                     clss: m[2] || '',
-                    posi: $.map(m.slice(3,7), function(n){
+                    posi: $.map(m.slice(3, 7), function(n){
                         if(!isNaN(n)) {return parseFloat(n, 10);}
                     }),
                     ancr: m[7]
@@ -55,7 +54,7 @@ var
             }
 
             // If it's not a panel, maybe it's an effect, which means it starts with a tilde, followed by the name of the effect followed by optional (space separated) arguments.
-            m = l.match(/^~(\S*)\s+(.*)$/);
+            m = l.match(/^~(\S*)(?:\s+(.*))?$/);
             if(m !== null){
                 return{
                     type: 'effect',
@@ -122,7 +121,6 @@ var
 
             // Panels are positioned relative to an anchor panel. By default this is the previous panel.
             p.anchor = (ancr && this.labels[ancr]) || p.prev;
-            console.log(ancr, this.labels[ancr]);
 
             // But the anchor doesn't have to be the top-left corner of the panel (as is the CSS default). Instead, the corners are numbered clockwise from 0 to 3 starting at the top-left. Fractions are used to refer to points between the corners and all negative numbers refer to the center of the panel, just in case you ever wanna go there. Since this corner annotation is used both on the anchor panel and on the panel that is anchored to it (AKA "buoy panel"), we supply the panel with a function that translates it into CSS compatible coordinates.
             p.point = function(corner) {
@@ -165,8 +163,8 @@ var
                 return o;
             };
 
-            // By default, the new panel will be 3 pixels to the left of the anchor point
-            p.left = 3;
+            // By default, the new panel will be 5 pixels to the left of the anchor point
+            p.left = 5;
             // while keeping the same height.
             p.top = 0;
             // The default anchor point is 1, which is the top-right corner,
@@ -310,12 +308,18 @@ var
 
                 // and if it's an effect, execute it.
                 }else if('effect' === l.type){
-                    if('pan' === l.comm){
+
+                    // An empty string means no effect,
+                    if('' === l.comm){
+                        ;
+                    // 'pan' with two numbers pans the Canvas
+                    }else if('pan' === l.comm){
                         this.pan(l.args[0], l.args[1]);
+                    // and 'center' centers a panel.
                     }else if('center' === l.comm){
                         this.center(l.args[0]);
                     }
-                    // And don't forget to set the flag.
+                    // Oh, and don't forget to set the flag.
                     pan = true;
                 }
             }
