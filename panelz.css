@@ -29,7 +29,7 @@ div.panel
 {
     position: absolute;
     width: 15em;
-    min-height: 6em;
+    min-height: 5em;
     border: 0.3em solid #800000;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
@@ -43,20 +43,15 @@ div.panel div
     padding: 5px;
 }
 
-div.c
-{
-    background-color: yellow;
-    border-bottom: 2px solid black;
-    -moz-border-radius: 5.5px 5.5px 0px 0px;
-    -webkit-border-radius: 5.5px 5.5px 0px 0px;
-    border-radius: 5.5px 5.5px 0px 0px;
-    padding: 5px !important;
-}
-
 div.d
 {
     color: grey;
     padding: 2px !important;
+}
+
+div.big
+{
+    font-size: 1.1em;
 }
 
 /* Balloons */
