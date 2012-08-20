@@ -1,17 +1,17 @@
 body
 {
-    background-color: #9B7C79;
-    color: #3A312C;
+    background-color: #9b7c79;
+    color: #3a312c;
 }
 
 div#panelz
 {
-    background-color: #FFF9EF;
+    background-color: #fff9ef;
     position: relative;
     overflow: hidden;
     width: 90%;
     height: 800px;
-    border: 10px solid #3A312C;
+    border: 10px solid #3a312c;
     margin: auto;
     margin-top: 20px;
 }
@@ -30,7 +30,7 @@ div.panel
     position: absolute;
     width: 15em;
     min-height: 5em;
-    border: 0.3em solid #9B7C79;
+    border: 0.3em solid #9b7c79;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     border-radius: 10px;
@@ -46,9 +46,14 @@ div.panel div
 
 div.d
 {
-    color: #3A312C;
-    padding: 2px !important;
-	
+    color: #3a312c;
+    padding: 2px;
+}
+
+div.d-invert
+{
+    background-color: #3a312c;
+    color:#ffffff;
 }
 
 div.big
@@ -58,13 +63,13 @@ div.big
 
 /* Balloons */
 
-div.b, div.thought, div.bleft, div.bright, div.Six, div.Julia, div.Velcro
+div.b, div.thought, div.bleft, div.bright, div.Six, div.Julia, div.Velcro, div.Andrew
 {
     position: relative;
     color: #000022;
     padding: 5px;
     margin: 5px 10px 5px 10px;
-    border: 2px solid #9B7C79;
+    border: 2px solid #9b7c79;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     border-radius: 10px;
@@ -85,7 +90,7 @@ div.bleft:before
    right: 100%;
    top: 10%;
    border-top: 6px solid transparent;
-   border-right: 10px solid #9B7C79;
+   border-right: 10px solid #9b7c79;
    border-bottom: 2px solid transparent;
 }
 
@@ -98,24 +103,24 @@ div.bright:after
    left: 100%;
    top: 50%;
    border-top: 6px solid transparent;
-   border-left: 10px solid #9B7C79;
+   border-left: 10px solid #9b7c79;
    border-bottom: 2px solid transparent;
 }
 
 div.Six
 {
-    border-color:#F4B7B4;
+    border-color:#f4b7b4;
     color: #550000;
 }
 
 div.Six.bright:after, div.Six.bleft:after
 {
-    border-left: 10px solid #F4B7B4;
+    border-left: 10px solid #f4b7b4;
 }
 
 div.Six.bright:before, div.Six.bleft:before
 {
-    border-right: 10px solid #F4B7B4;
+    border-right: 10px solid #f4b7b4;
 }
 
 div.Julia
@@ -126,4 +131,10 @@ div.Julia
 div.Velcro
 {
     color: #000055;
+}
+
+div.Andrew
+{
+    background-color: #3a312c;
+    color:#ffffff;
 }
