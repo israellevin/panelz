@@ -60,7 +60,7 @@ var
                     type: 'effect',
                     comm: m[1],
                     args: m[2] && m[2].split(/\s+/)
-                };
+            };
             }
 
             // Anything else is considered a chunk of text to be printed in the panel, optionally preceded by a space separated, comma terminated list of classes that apply to it.
@@ -220,6 +220,7 @@ var
                 }).appendTo(p);
 
                 // Once the chunk has been appended, we tell the containing panel to reposition itself. TODO This should probably be propagated to a chain of buoy panels.
+
                 p.place();
 
                 // And all that remains it to set the new chunk as the current and return it.
@@ -266,6 +267,7 @@ var
                 }else if('chunk' === l.type){
 
                     // We check whether the chunk is new or appended.
+                    o = false;
                     if(true === l.apnd){
                         // and whether it can be appended.
                         o = this.cur.cur;
@@ -280,7 +282,7 @@ var
                     }
 
                     // If it's a new chunk,
-                    if('undefined' === typeof o){
+                    if('undefined' === typeof o || false === o){
                         // create it
                         if(1 === dir){
                             this.cur.chunk(l.clss, l.text);
@@ -300,6 +302,8 @@ var
                         // append it with all the new classes
                         if(1 === dir){
                             o.addClass(l.clss).append(l.text);
+                            // and update position
+                            Canvas.cur.place();
                         // or chop it off.
                         }else if(-1 === dir){
                             o.text(o.text().slice(0, -1 * l.text.length));
@@ -413,7 +417,7 @@ $(function(){
         text().split("\n");
 
     // Lastly we forward the story to a hard coded bookmark, so we don't have to page from the beginning every time. TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea. Maybe it will even get its own global object.
-    for(var x = 0; x < 30; (x++)) Canvas.go(1);
+    for(var x = 0; x < 741; (x++)) Canvas.go(1);
 
 // And we bind the keyboard driven interface.
 }).keydown(function(e){
