@@ -61,6 +61,12 @@ div.big
     font-size: 1.1em;
 }
 
+div.CLI
+{
+    border-color: green;
+    font-family: monospace;
+}
+
 /* Balloons */
 
 div.b, div.thought, div.bleft, div.bright, div.Six, div.Julia, div.Velcro, div.Andrew
