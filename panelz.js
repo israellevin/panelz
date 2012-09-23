@@ -218,9 +218,6 @@
                 // and append to the panel.
                 }).appendTo(p);
 
-                // Once the chunk has been appended, we tell the containing panel to reposition itself. TODO This should probably be propagated to a chain of buoy panels.
-                p.place();
-
                 // And all that remains it to set the new chunk as the current and return it.
                 return (p.cur = c);
             };
@@ -264,11 +261,9 @@
                 // If it's a chunk,
                 }else if('chunk' === l.type){
 
-                    // We check whether the chunk is new or appended.
+                    // If the chunk is meant to be appended, we go back through the chain of chunks, hoping to find one that shares the first class in the classes list with the chunk we want to add.
                     if(true === l.apnd){
-                        // and whether it can be appended.
                         o = this.cur.cur;
-                        // For this we go over the previous chunks in the panel and see if one of them has the first class in the classes list.
                         while('undefined' !== typeof o){
                             if(o.hasClass(l.clss.split(' ')[0])){
                                 break;
@@ -288,22 +283,25 @@
 
                             // We remove the chunk
                             this.cur.cur.remove();
-                            // (which means it could change size, so we better reposition it - TODO this should really be in some resize event)
-                            this.cur.place();
                             // and set the previous chunk as current.
                             this.cur.cur = this.cur.cur.prev;
                         }
 
-                    // If it's an appendage,
+                    // if it's an appendage,
                     }else{
                         // append it with all the new classes
                         if(1 === dir){
                             o.addClass(l.clss).append(l.text);
-                        // or chop it off.
+                        // or chop it off,
                         }else if(-1 === dir){
                             o.text(o.text().slice(0, -1 * l.text.length));
                         }
+                        // and in any event, reset o.
+                        o = undefined;
                     }
+
+                    // After adding and removing chunks we tell the containing panel to reposition itself. TODO This should probably be propagated to a chain of buoy panels, maybe also on some resize event.
+                    this.cur.place();
 
                 // and if it's an effect, execute it.
                 }else if('effect' === l.type){
@@ -412,7 +410,7 @@
             text().split("\n");
 
         // Lastly we forward the story to a hard coded bookmark, so we don't have to page from the beginning every time. TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea. Maybe it will even get its own global object.
-        for(var x = 0; x < 0; (x++)) Canvas.go(1);
+        for(var x = 0; x < 1; (x++)) Canvas.go(1);
 
     // And we bind the keyboard driven interface.
     }).keydown(function(e){
