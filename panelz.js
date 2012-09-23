@@ -59,7 +59,7 @@
                     type: 'effect',
                     comm: m[1],
                     args: m[2] && m[2].split(/\s+/)
-                };
+            };
             }
 
             // Anything else is considered a chunk of text to be printed in the panel, optionally preceded by a space separated, comma terminated list of classes that apply to it.
@@ -217,6 +217,10 @@
                     prev: p.cur
                 // and append to the panel.
                 }).appendTo(p);
+
+                // Once the chunk has been appended, we tell the containing panel to reposition itself. TODO This should probably be propagated to a chain of buoy panels.
+
+                p.place();
 
                 // And all that remains it to set the new chunk as the current and return it.
                 return (p.cur = c);
@@ -409,8 +413,8 @@
             // and split its text into an array of lines.
             text().split("\n");
 
-        // Lastly we forward the story to a hard coded bookmark, so we don't have to page from the beginning every time. TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea. Maybe it will even get its own global object.
-        for(var x = 0; x < 1; (x++)) Canvas.go(1);
+    // Lastly we forward the story to a hard coded bookmark, so we don't have to page from the beginning every time. TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea. Maybe it will even get its own global object.
+    for(var x = 0; x < 1; (x++)) Canvas.go(1);
 
     // And we bind the keyboard driven interface.
     }).keydown(function(e){
