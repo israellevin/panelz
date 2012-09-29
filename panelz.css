@@ -29,7 +29,7 @@ div.canvas
 div.panel
 {
     position: absolute;
-    width: 15em;
+    min-width: 15em;
     min-height: 5em;
     border: 0.3em solid #9b7c79;
     -moz-border-radius: 10px;
