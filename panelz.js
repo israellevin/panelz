@@ -414,7 +414,7 @@
             text().split("\n");
 
     // Lastly we forward the story to a hard coded bookmark, so we don't have to page from the beginning every time. TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea. Maybe it will even get its own global object.
-    for(var x = 0; x < 1; (x++)) Canvas.go(1);
+    for(var x = 0; x < 8; (x++)) Canvas.go(1);
 
     // And we bind the keyboard driven interface.
     }).keydown(function(e){
