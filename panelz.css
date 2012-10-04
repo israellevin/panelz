@@ -27,6 +27,8 @@ div.noborder
 {
     width: auto !important;
     height: auto !important;
+    min-width: 1em !important;
+    min-height: 1em !important;
     padding: 0em !important;
     margin: 0em !important;
     border: 0em solid #9b7c79 !important;
