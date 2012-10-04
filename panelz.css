@@ -43,7 +43,7 @@ div.panel
 {
     position: absolute;
     width: 15em;
-    height: 10em;
+    min-height: 10em;
     border: 0.2em solid #9b7c79;
     -moz-border-radius: 1em;
     -webkit-border-radius: 1em;
