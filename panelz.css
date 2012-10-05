@@ -1,49 +1,52 @@
 body
 {
-    direction: rtl;
     background-color: #9b7c79;
     color: #3a312c;
 }
 
 div#panelz
 {
-    background-color: #fff9ef;
+    background-color: #e1dfda;
     position: relative;
     overflow: hidden;
     width: 90%;
-    height: 800px;
-    border: 10px solid #3a312c;
+    height: 50em;
+    border: 1em solid #3a312c;
     margin: auto;
-    margin-top: 20px;
+    margin-top: 2em;
 }
 
 div.canvas
 {
-    position: relative;
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 4000px;
+    height: 4000px;
+    background-image: url('bg.png');
 }
 
 /* Panels */
 
 div.panel
 {
+    direction: rtl;
     position: absolute;
-    min-width: 15em;
+    min-width: 25em;
     min-height: 5em;
     border: 0.3em solid #9b7c79;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
     background-color:#ffffff;
 }
 
 div.noborder
 {
-    border: 0px solid black;
-    background-color: #fff9ef;
-    font-size: 2em;
+    border: 0em solid black;
+    background-color: transparent;
     width: 10em;
+    min-width: 15em;
     min-height: 3em;
 }
 
@@ -51,21 +54,31 @@ div.noborder
 
 div.panel div
 {
-    padding: 5px;
+    padding: 0.3em;
 }
 
 /* Balloons */
+
+div.כותרת
+{
+    font-size: 1.5em;
+}
+
+div.מאת
+{
+    font-size: 1em;
+}
 
 div.b, div.thought, div.bleft, div.bright
 {
     position: relative;
     color: #000022;
-    padding: 5px;
-    margin: 5px 10px 5px 10px;
-    border: 2px solid #9b7c79;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
+    padding: 0.3em;
+    margin: 0.3em 0.6em 0.3em 0.6em;
+    border: 0.1em solid #9b7c79;
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
     background-color:#ffffafa;
 }
 
@@ -78,24 +91,24 @@ div.bleft:before
 {
    position: absolute;
    content:"";
-   width: 0;
-   height: 0;
+   width: 0em;
+   height: 0em;
    right: 100%;
    top: 10%;
-   border-top: 6px solid transparent;
-   border-right: 10px solid #9b7c79;
-   border-bottom: 2px solid transparent;
+   border-top: 0.3em solid transparent;
+   border-right: 0.6em solid #9b7c79;
+   border-bottom: 0.1em solid transparent;
 }
 
 div.bright:after
 {
    position: absolute;
    content:"";
-   width: 0;
-   height: 0;
+   width: 0em;
+   height: 0em;
    left: 100%;
    top: 50%;
-   border-top: 6px solid transparent;
-   border-left: 10px solid #9b7c79;
-   border-bottom: 2px solid transparent;
+   border-top: 0.3em solid transparent;
+   border-left: 0.6em solid #9b7c79;
+   border-bottom: 0.1em solid transparent;
 }
