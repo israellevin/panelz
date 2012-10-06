@@ -61,10 +61,20 @@ div.page
     height: 80em;
 }
 
-div.wide
+div.puddle
 {
     width: 40em;
     height: 20em;
+}
+
+div.wide
+{
+    width: 40em;
+}
+
+div.medium
+{
+    width: 25em;
 }
 
 /* Chunks */
