@@ -69,10 +69,15 @@ div.puddle
 
 div.wide
 {
-    width: 40em;
+    width: 45em;
 }
 
 div.medium
+{
+    width: 35em;
+}
+
+div.mediumsmall
 {
     width: 25em;
 }
