@@ -109,11 +109,11 @@
         panel: function(labl, clss, posi, ancr){
 
             // The panel is a jquery div which we extend
-            var p = $('<div class="panel ' + clss + '"/>').extend({
+            var p = $('<div class="panel"/>').extend({
                 // with a reference to its predecessor
                 prev: this.cur
             // and append to the Canvas.
-            }).appendTo(this);
+            }).addClass(clss).appendTo(this);
 
             // If it is labeled, we should keep it in the dictionary.
             if('undefined' !== typeof labl) {this.labels[labl] = p;}
@@ -414,7 +414,7 @@
             text().split("\n");
 
     // Lastly we forward the story to a hard coded bookmark, so we don't have to page from the beginning every time. TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea. Maybe it will even get its own global object.
-    for(var x = 0; x < 23; (x++)) Canvas.go(1);
+    for(var x = 0; x < 46; (x++)) Canvas.go(1);
 
     // And we bind the keyboard driven interface.
     }).keydown(function(e){

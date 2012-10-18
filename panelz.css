@@ -10,7 +10,7 @@ div#panelz
     position: relative;
     overflow: hidden;
     width: 99%;
-    height: 90em;
+    height: 70em;
     border: 0.2em solid #3a312c;
     margin: auto;
     margin-top: 1em;
@@ -131,4 +131,13 @@ div.bright:after
    border-top: 0.6em solid transparent;
    border-left: 1em solid #9b7c79;
    border-bottom: 0.2em solid transparent;
+}
+
+div.panel div.pageoverlay
+{
+    position: absolute;
+    border: 0em solid black;
+    background-color: transparent;
+    left: 25em;
+    width: 12em;
 }
