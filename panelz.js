@@ -329,27 +329,37 @@
             if(!pan) {this.center();}
         },
 
-        // The Canvas also has built-in effects. Most basic of which is this animation that slides the Canvas to a new position (given as left and top CSS properties - the Canvas is relatively positioned within the Frame).
+        // The Canvas also has built-in effects.
+
+        // The most basic effect is sliding the Canvas to a new position (given as left and top CSS properties - the Canvas is relatively positioned within the Frame). I'd love to use jquery's animate for this, but jquery in general does not handle zoomed webkit windows very well, so I found jstween.
         pan: function(l, t){
-            this.animate({
+            var
+                startl = parseFloat(this.css('left').slice(0, -2), 10),
+                startt = parseFloat(this.css('top').slice(0, -2), 10),
+                diffl = Math.abs(startl - l) / 2000.0,
+                difft = Math.abs(startt - t) / 2000.0;
 
-                // Tried to use jquery's animate() on top and left directly, but it has a bug with zoomed webkit windows (something to do with position() not really working the same way on webkit and mozilla), so had to use fake properties
-                ttop: t,
-                lleft: l
-            },{
-                // and write my own step.
-                step: function(now, fx){
-                    Canvas.css(fx.prop.slice(1), now);
+            if(diffl < 0.3) diffl = 0.3;
+            if(difft < 0.3) difft = 0.3;
+
+            this.tween({
+                left: {
+                    start: startl,
+                    stop: l,
+                    duration: diffl,
+                    effect: 'easeInOut'
                 },
-
-                // Using the queue here is tempting, since it forces the reader to go through all the right places even if he is paging quickly, but in reality it's just tedious
-                queue: false,
-                // and we do not want to be tedious.
-                duration: 200
+                top: {
+                    start: startt,
+                    stop: t,
+                    duration: difft,
+                    effect: 'easeInOut'
+                }
             });
+            $.play();
         },
 
-        // Only slightly more complex is this animation, which centers the current panel. This is the default effect.
+        // Only slightly more complex is this animation, which centers a panel (it defaults to the current panel, and centering it is the default effect).
         center: function(anchor){
 
             // If an anchor was given, we try to get it,
@@ -361,12 +371,12 @@
                 anchor = this.cur;
             }
 
-            // We obtain the position of the current panel in the Frame
+            // We obtain the position of the anchor in the Frame
             var
                 p = anchor.position(),
                 l = p.left,
                 t = p.top;
-            // and subtract it from half a Frame minus half a panel.
+            // and subtract it from half a Frame minus half the anchor.
             l = (0.5 * (Frame.innerWidth() - anchor.outerWidth())) - l;
             t = (0.5 * (Frame.innerHeight() - anchor.outerHeight())) - t;
             this.pan(l, t);
@@ -381,19 +391,19 @@
         // And bind the mouse down event within the Frame to enable mouse drag which will pan the Canvas. Note that we return false on all the related events (mousedown, mousemove and mouseup) to make sure they do not propagate and, e.g., select pieces of the page.
         mousedown(function(e){
 
-            // First we save the starting position of the mouse drag and the starting position of the Canvas.
+            // First we save the starting position of the mouse drag and the starting position of the Canvas (I'm trying to avoid jquery here, because it is buggy with offset of zoomed pages).
             var
                 startx = e.pageX,
                 starty = e.pageY,
-                o = Canvas.offset(),
-                l = o.left,
-                t = o.top;
+                cob = Canvas.get(0),
+                l = parseFloat(cob.style.left.slice(0, -2), 10),
+                t = parseFloat(cob.style.top.slice(0, -2), 10);
 
             // Then we bind a function so that when the mouse moves we calculate how much it moved since the drag started and modify the top and left CSS properties of the Canvas to move it along with the pointer.
             Frame.mousemove(function(e){
-                Canvas.offset({
-                    left: l + (e.pageX - startx),
-                    top: t + (e.pageY - starty)
+                Canvas.css({
+                    left: parseFloat(l + (e.pageX - startx), 10) + 'px',
+                    top: parseFloat(t + (e.pageY - starty), 10) + 'px'
                 });
                 return false;
 
@@ -436,6 +446,8 @@
         // If the keystroke was recognized as a command and handled, we return false, to stop propagation.
         return false;
     });
+
+    window.Canvas = Canvas;
 
 // Then we call the anonymous function we just declared and everything should just run. Simple and fun.
 }());
