@@ -109,11 +109,11 @@
         panel: function(labl, clss, posi, ancr){
 
             // The panel is a jquery div which we extend
-            var p = $('<div class="panel"/>').extend({
+            var p = $('<div class="panel ' + clss + '"/>').extend({
                 // with a reference to its predecessor
                 prev: this.cur
             // and append to the Canvas.
-            }).addClass(clss).appendTo(this);
+            }).appendTo(this);
 
             // If it is labeled, we should keep it in the dictionary.
             if('undefined' !== typeof labl) {this.labels[labl] = p;}

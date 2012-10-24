@@ -1,105 +1,123 @@
 body
 {
-    color: #3a312c;
     background-color: #9b7c79;
+    color: #3a312c;
 }
 
 div#panelz
 {
-    background-color: #fff9ef;
+    background-color: #e1dfda;
     position: relative;
     overflow: hidden;
-    width: 99%;
-    height: 70em;
-    border: 0.2em solid #3a312c;
+    width: 90%;
+    height: 50em;
+    border: 1em solid #3a312c;
     margin: auto;
-    margin-top: 1em;
+    margin-top: 2em;
 }
 
 div.canvas
 {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-div.noborder
-{
-    width: auto !important;
-    height: auto !important;
-    min-width: 1em !important;
-    min-height: 1em !important;
-    padding: 0em !important;
-    margin: 0em !important;
-    border: 0em solid #9b7c79 !important;
-}
-
-div.noborder > div
-{
-    margin: 0em !important;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 4000px;
+    height: 4000px;
+    background-image: url('bg.png');
 }
 
 /* Panels */
 
 div.panel
 {
+    direction: rtl;
     position: absolute;
-    width: 15em;
-    min-height: 10em;
-    border: 0.2em solid #9b7c79;
-    -moz-border-radius: 1em;
-    -webkit-border-radius: 1em;
-    border-radius: 1em;
-    background-color:#ffffff;
+    min-width: 25em;
+    min-height: 5em;
 }
 
-div.page
+div.noborder
 {
-    border: 0.5em solid black;
-    background-color: #fff9ef;
-    width: 50em;
-    height: 80em;
+    border: 0em solid black;
+    background-color: transparent;
+    width: 10em;
+    min-width: 15em;
+    min-height: 3em;
 }
 
-div.puddle
+
+div.branch
+{    
+    color:white;
+    background-size:100% 100%;
+    font-size:1.5em;
+    padding-right:10px;
+}
+
+div.p1 
 {
-    width: 40em;
-    height: 20em;
+background-image: url('images/branch-1.png');
+height:180px;
 }
 
-div.wide
+div.p1 div:first-child {margin-top:32px}
+
+div.p2 
 {
-    width: 45em;
+background-image: url('images/branch-2.png');
+padding-top:50px;
+height:413px;
 }
 
-div.medium
+div.p2 div 
 {
-    width: 35em;
+margin-top:320px;
+margin-right:30px;
+font-weight:bold;
+color:#404A42;
 }
 
-div.mediumsmall
+div.p3 
 {
-    width: 25em;
+background-image: url('images/branch-3.png');
+height:100px;
 }
 
+div.p3 div 
+{
+margin-top:55px;
+margin-right:411px;
+}
 /* Chunks */
 
 div.panel div
 {
-    position: relative;
-    float: left;
-    padding: 0.5em;
+    padding: 0.3em;
+}
+
+/* Balloons */
+
+div.כותרת
+{
+    font-size: 1.5em;
+}
+
+div.מאת
+{
+    font-size: 1em;
 }
 
 div.b, div.thought, div.bleft, div.bright
 {
+    position: relative;
     color: #000022;
-    background-color:#ffffafa;
-    margin: 0.5em 1em 0.5em 1em;
-    border: 0.2em solid #9b7c79;
+    padding: 0.3em;
+    margin: 0.3em 0.6em 0.3em 0.6em;
+    border: 0.1em solid #9b7c79;
     -moz-border-radius: 1em;
     -webkit-border-radius: 1em;
     border-radius: 1em;
+    background-color:#ffffafa;
 }
 
 div.thought
@@ -111,34 +129,24 @@ div.bleft:before
 {
    position: absolute;
    content:"";
-   width: 0;
-   height: 0;
+   width: 0em;
+   height: 0em;
    right: 100%;
    top: 10%;
-   border-top: 0.6em solid transparent;
-   border-right: 1em solid #9b7c79;
-   border-bottom: 0.2em solid transparent;
+   border-top: 0.3em solid transparent;
+   border-right: 0.6em solid #9b7c79;
+   border-bottom: 0.1em solid transparent;
 }
 
 div.bright:after
 {
    position: absolute;
    content:"";
-   width: 0;
-   height: 0;
+   width: 0em;
+   height: 0em;
    left: 100%;
    top: 50%;
-   border-top: 0.6em solid transparent;
-   border-left: 1em solid #9b7c79;
-   border-bottom: 0.2em solid transparent;
+   border-top: 0.3em solid transparent;
+   border-left: 0.6em solid #9b7c79;
+   border-bottom: 0.1em solid transparent;
 }
-
-div.panel div.pageoverlay
-{
-    position: absolute;
-    border: 0em solid black;
-    background-color: transparent;
-    left: 25em;
-    width: 12em;
-}
-
