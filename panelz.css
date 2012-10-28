@@ -9,9 +9,12 @@ div#panelz
     background-color: #fff9ef;
     position: relative;
     overflow: hidden;
-    width: 99%;
-    height: 70em;
-    border: 0.2em solid #3a312c;
+    width: 64em;
+    height: 36em;
+    border: 0.5em solid black;
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
     margin: auto;
     margin-top: 1em;
 }
@@ -31,7 +34,7 @@ div.noborder
     min-height: 1em !important;
     padding: 0em !important;
     margin: 0em !important;
-    border: 0em solid #9b7c79 !important;
+    border: 0em solid black !important;
 }
 
 div.noborder > div
@@ -55,31 +58,34 @@ div.panel
 
 div.page
 {
-    border: 0.5em solid black;
+    border: 0em solid black;
     background-color: #fff9ef;
-    width: 50em;
-    height: 80em;
+    width: 64em;
+    height: 36em;
 }
 
 div.puddle
 {
-    width: 40em;
-    height: 20em;
+    width: 24em;
+    height: 13.5em;
 }
 
 div.wide
 {
     width: 45em;
+    min-height: 1em;
 }
 
 div.medium
 {
     width: 35em;
+    min-height: 1em;
 }
 
 div.mediumsmall
 {
     width: 25em;
+    min-height: 1em;
 }
 
 /* Chunks */
