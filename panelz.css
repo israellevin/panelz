@@ -9,9 +9,12 @@ div#panelz
     background-color: #e1dfda;
     position: relative;
     overflow: hidden;
-    width: 90%;
-    height: 50em;
-    border: 1em solid #3a312c;
+    width: 64em;
+    height: 36em;
+    border: 0.5em solid black;
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
     margin: auto;
     margin-top: 2em;
 }
@@ -30,10 +33,13 @@ div.canvas
 
 div.panel
 {
-    direction: rtl;
-    position: absolute;
-    min-width: 25em;
-    min-height: 5em;
+    width: auto !important;
+    height: auto !important;
+    min-width: 1em !important;
+    min-height: 1em !important;
+    padding: 0em !important;
+    margin: 0em !important;
+    border: 0em solid black !important;
 }
 
 div.noborder
@@ -56,37 +62,36 @@ div.branch
 
 div.p1 
 {
-background-image: url('images/branch-1.png');
-height:180px;
+    border: 0em solid black;
+    background-color: #fff9ef;
+    width: 64em;
+    height: 36em;
 }
 
 div.p1 div:first-child {margin-top:32px}
 
 div.p2 
 {
-background-image: url('images/branch-2.png');
-padding-top:50px;
-height:413px;
+    width: 24em;
+    height: 13.5em;
 }
 
 div.p2 div 
 {
-margin-top:320px;
-margin-right:30px;
-font-weight:bold;
-color:#404A42;
+    width: 45em;
+    min-height: 1em;
 }
 
 div.p3 
 {
-background-image: url('images/branch-3.png');
-height:100px;
+    width: 35em;
+    min-height: 1em;
 }
 
 div.p3 div 
 {
-margin-top:55px;
-margin-right:411px;
+    width: 25em;
+    min-height: 1em;
 }
 /* Chunks */
 
