@@ -88,6 +88,12 @@ div.mediumsmall
     min-height: 1em;
 }
 
+div.small
+{
+    min-height: 1em;
+    min-width: 1em;
+}
+
 /* Chunks */
 
 div.panel div
