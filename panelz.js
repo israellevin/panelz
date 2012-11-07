@@ -105,15 +105,15 @@
         // And a dictionary of labeled panels, which can be referenced later for all sorts of cool stuff.
         labels: {},
 
-        // The Canvas creates and draws panels (that can create and draw chunks of text) with this function. It takes a string of space separated classes, which defines how the panel looks, and an array of up to four numbers which determines where it will be drawn (x offset, y offset, origin and destination).
+        // Now we can create and draw panels (that can create and draw chunks of text). The parameters for this are a string of space separated classes (which define the look of the panes) and an array of up to four numbers which determines where it will be drawn (x offset, y offset, origin on anchor and destination on target - this will be made clearer later. I hope).
         panel: function(labl, clss, posi, ancr){
 
             // The panel is a jquery div which we extend
-            var p = $('<div class="panel ' + clss + '"/>').extend({
+            var p = $('<div class="panel"/>').extend({
                 // with a reference to its predecessor
                 prev: this.cur
             // and append to the Canvas.
-            }).appendTo(this);
+            }).addClass(clss).appendTo(this);
 
             // If it is labeled, we should keep it in the dictionary.
             if('undefined' !== typeof labl) {this.labels[labl] = p;}
@@ -230,37 +230,46 @@
             return (this.cur = p);
         },
 
-        // We keep our location in the Story
+        // We have a bookmark with the index of the current line (set to -1 as we haven't even started)
         bookmark: -1,
-        // so that we can advance or rewind it till the next (or previous) stop command. Since these two functions are so similar they share a single function with the direction specified as either 1 (forward) or -1 (backward).
+        // and an undo stack
+        backstack: [],
+        // so that we can advance the story with go(1) or rewind it with go(-1). TODO In the future, we will accept greater numbers as arguments!
         go: function(dir){
-
             var
-                // We keep a flag that sets when pans occur. If none were explicitly stated, we will center the current panel as a default effect.
+                // We keep a flag that sets when a pans occurs, so that if none occur till the next stop command we center the current panel (at that time) as a default effect.
                 pan = false,
-                // And we define a variable for the current line
+
+                // We also define a variable for the current line
                 l,
                 // and one for searching objects.
                 o;
 
-            // We are currently on a stop command, so we move away from it and keep getting lines till the next (or previous) stop command.
+            // We are currently, by definition, on a stop command, so we move away from it and keep going forward or backward till the next stop command.
             this.bookmark += dir;
             while('undefined' !== typeof (l = Story.line(this.bookmark))){
                 this.bookmark += dir;
 
+                // If we are heading back, all we have to do is run the topmost function at the backstack.
+                if(-1 === dir){
+                    // Note how we pop the double bubble at the end there!
+                    this.backstack.pop()();
+                    continue;
+                }
+                // Otherwise we have some work.
+
                 // If it's a panel,
                 if('panel' === l.type){
                     // create it
-                    if(1 === dir){
-                        this.panel(l.labl, l.clss, l.posi, l.ancr);
-                    // or destroy it.
-                    }else if(-1 === dir){
+                    this.panel(l.labl, l.clss, l.posi, l.ancr);
+                    // and push a function that removes it to the backstack.
+                    this.backstack.push(function(){
 
-                        // We remove the panel
-                        this.cur.remove();
+                        // Remove the panel
+                        Canvas.cur.remove();
                         // and set the previous panel as current.
-                        this.cur = this.cur.prev;
-                    }
+                        Canvas.cur = Canvas.cur.prev;
+                    });
 
                 // If it's a chunk,
                 }else if('chunk' === l.type){
@@ -280,27 +289,28 @@
                     // If it's a new chunk,
                     if('undefined' === typeof o){
                         // create it
-                        if(1 === dir){
-                            this.cur.chunk(l.clss, l.text);
-                        // or destroy it
-                        }else if(-1 === dir){
+                        this.cur.chunk(l.clss, l.text);
+                        // and push a function that removes it to the backstack.
+                        this.backstack.push(function(){
 
-                            // We remove the chunk
-                            this.cur.cur.remove();
+                            // Remove the chunk
+                            Canvas.cur.cur.remove();
                             // and set the previous chunk as current.
-                            this.cur.cur = this.cur.cur.prev;
-                        }
+                            Canvas.cur.cur = Canvas.cur.cur.prev;
+                        });
 
                     // if it's an appendage,
                     }else{
-                        // append it with all the new classes
-                        if(1 === dir){
-                            o.addClass(l.clss).append(l.text);
-                        // or chop it off,
-                        }else if(-1 === dir){
-                            o.text(o.text().slice(0, -1 * l.text.length));
-                        }
-                        // and in any event, reset o.
+                        // get the current classes of the apendee before we override them,
+                        o.origclss = o.attr('class');
+                        // append the appendage with its potentially new classes,
+                        o.addClass(l.clss).append(l.text);
+                        // push a closured function that chops it off with the classes it came on
+                        this.backstack.push(function(o, l){ return function(){
+                            o.attr('class', o.origclss).text(o.text().slice(0, -1 * l.text.length));
+                        // (check out the closurification - JS doesn't HAVE to be ugly. It's a choice I make)
+                        };}(o, l));
+                        // and reset o.
                         o = undefined;
                     }
 
@@ -310,16 +320,23 @@
                 // and if it's an effect, execute it.
                 }else if('effect' === l.type){
 
-                    // An empty string means no effect,
-                    if('' === l.comm){
-                        ;
-                    // 'pan' with two numbers pans the Canvas
-                    }else if('pan' === l.comm){
-                        this.pan(l.args[0], l.args[1]);
-                    // and 'center' centers a panel.
-                    }else if('center' === l.comm){
-                        this.center(l.args[0]);
+                    // If we are going backwards, we can pop the top of the effects stack which we will have prepared in advance (time is an illusion, execution time doubly so),
+                    if(-1 === dir){
+                    // otherwise we have to parse it and prepare aforementioned stack.
+                    }else if(1 === dir){
+
+                        // An empty string means no effect,
+                        if('' === l.comm){
+                            ;
+                        // 'pan' with two numbers pans the Canvas
+                        }else if('pan' === l.comm){
+                            this.pan(l.args[0], l.args[1]);
+                        // and 'center' centers a panel.
+                        }else if('center' === l.comm){
+                            this.center(l.args[0]);
+                        }
                     }
+
                     // Oh, and don't forget to set the flag.
                     pan = true;
                 }
@@ -428,10 +445,9 @@
             // and split its text into an array of lines.
             text().split("\n");
 
-    // Lastly we forward the story to a hard coded bookmark, so we don't have to page from the beginning every time. TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea. Maybe it will even get its own global object.
+    // Lastly we forward the story to a hard coded bookmark, so we don't have to page from the beginning every time, TODO In the future, this value will be taken from a cookie, or the cursor position in the textarea. Maybe it will even get its own global object.
     for(var x = 0; x < 1; (x++)) Canvas.go(1);
-
-    // And we bind the keyboard driven interface.
+    // and bind the keyboard driven interface.
     }).keydown(function(e){
 
         // Right arrow and space go forward.
@@ -452,7 +468,7 @@
         return false;
     });
 
-    // Export the Canvas for debuging FIXME
+    // FIXME DEBUG export the Canvas
     window.Canvas = Canvas;
 
 // Then we call the anonymous function we just declared and everything should just run. Simple and fun.
