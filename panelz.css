@@ -9,11 +9,14 @@ div#panelz
     background-color: #fff9ef;
     position: relative;
     overflow: hidden;
-    width: 90%;
-    height: 800px;
-    border: 10px solid #3a312c;
+    width: 64em;
+    height: 36em;
+    border: 0.5em solid black;
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
     margin: auto;
-    margin-top: 20px;
+    margin-top: 1em;
 }
 
 div.canvas
@@ -23,6 +26,22 @@ div.canvas
     height: 100%;
 }
 
+div.noborder
+{
+    width: auto !important;
+    height: auto !important;
+    min-width: 1em !important;
+    min-height: 1em !important;
+    padding: 0em !important;
+    margin: 0em !important;
+    border: 0em solid black !important;
+}
+
+div.noborder > div
+{
+    margin: 0em !important;
+}
+
 /* Panels */
 
 div.panel
@@ -30,10 +49,10 @@ div.panel
     position: absolute;
     width: 15em;
     min-height: 5em;
-    border: 0.3em solid #9b7c79;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
+    border: 0.2em solid #9b7c79;
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
     background-color:#ffffff;
 }
 
@@ -41,7 +60,9 @@ div.panel
 
 div.panel div
 {
-    padding: 5px;
+    position: relative;
+    float: left;
+    padding: 0.5em;
 }
 
 div.d
@@ -95,9 +116,9 @@ div.bleft:before
    height: 0;
    right: 100%;
    top: 10%;
-   border-top: 6px solid transparent;
-   border-right: 10px solid #9b7c79;
-   border-bottom: 2px solid transparent;
+   border-top: 0.6em solid transparent;
+   border-right: 1em solid #9b7c79;
+   border-bottom: 0.2em solid transparent;
 }
 
 div.bright:after
@@ -108,9 +129,9 @@ div.bright:after
    height: 0;
    left: 100%;
    top: 50%;
-   border-top: 6px solid transparent;
-   border-left: 10px solid #9b7c79;
-   border-bottom: 2px solid transparent;
+   border-top: 0.6em solid transparent;
+   border-left: 1em solid #9b7c79;
+   border-bottom: 0.2em solid transparent;
 }
 
 div.Six

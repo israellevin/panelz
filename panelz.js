@@ -305,9 +305,13 @@
                         o.origclss = o.attr('class');
                         // append the appendage with its potentially new classes,
                         o.addClass(l.clss).append(l.text);
-                        // push a closured function that chops it off with the classes it came on
+                        // and replace the current panel.
+                        Canvas.cur.place();
+
+                        // Also push a closured function that chops it off with the classes it came on
                         this.backstack.push(function(o, l){ return function(){
                             o.attr('class', o.origclss).text(o.text().slice(0, -1 * l.text.length));
+                            Canvas.cur.place();
                         // (check out the closurification - JS doesn't HAVE to be ugly. It's a choice I make)
                         };}(o, l));
                         // and reset o.
