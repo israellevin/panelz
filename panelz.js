@@ -242,18 +242,18 @@
 
                 // We also define a variable for the current line
                 l,
-                // and one for searching objects.
+                // and one for chunks that are to be appended to
                 o;
 
             // We are currently, by definition, on a stop command, so we move away from it and keep going forward or backward till the next stop command.
-            this.bookmark += dir;
-            while('undefined' !== typeof (l = Story.line(this.bookmark))){
-                this.bookmark += dir;
+            for(this.bookmark = Math.min(Math.max(this.bookmark + dir, 0), Story.lines.length - 1);
+                'undefined' !== typeof (l = Story.line(this.bookmark));
+                this.bookmark += dir){
 
                 // If we are heading back, all we have to do is run the topmost function at the backstack.
                 if(-1 === dir){
                     // Note how we pop the double bubble at the end there!
-                    this.backstack.pop()();
+                    this.backstack.length > 0 && this.backstack.pop()();
                     continue;
                 }
                 // Otherwise we have some work.
@@ -301,16 +301,18 @@
 
                     // if it's an appendage,
                     }else{
-                        // get the current classes of the apendee before we override them,
-                        o.origclss = o.attr('class');
-                        // append the appendage with its potentially new classes,
+                        // we make sure we have a stack to save the original CSS classes of the apendee
+                        if('undefined' === typeof o.origclss) o.origclss = [];
+                        // and push them into it before we override them.
+                        o.origclss.push(o.attr('class'));
+                        // Then we append the appendage with its potentially new classes,
                         o.addClass(l.clss).append(l.text);
-                        // and replace the current panel.
+                        // and re-place the current panel.
                         Canvas.cur.place();
 
-                        // Also push a closured function that chops it off with the classes it came on
+                        // We do not forget to push a closured function that chops it off with the classes it came on
                         this.backstack.push(function(o, l){ return function(){
-                            o.attr('class', o.origclss).text(o.text().slice(0, -1 * l.text.length));
+                            o.attr('class', o.origclss.pop()).text(o.text().slice(0, -1 * l.text.length));
                             Canvas.cur.place();
                         // (check out the closurification - JS doesn't HAVE to be ugly. It's a choice I make)
                         };}(o, l));
@@ -364,8 +366,8 @@
                 difft = Math.abs(startt - t);
 
             // The duration of the pan is a function of its magnitude, with safe minimum and maximum durations.
-            diffl = Math.min(Math.max(diffl, 5000), 500) / 2000;
-            difft = Math.min(Math.max(difft, 5000), 500) / 2000;
+            diffl = Math.min(Math.max(diffl, 500), 5000) / 2000;
+            difft = Math.min(Math.max(difft, 500), 5000) / 2000;
 
             // I'd love to use jquery's animate here, but jquery does not handle zoomed webkit windows very well, so I found jstween. TODO if I have jstween, instructions can come in ems, no?
             this.tween({
