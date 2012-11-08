@@ -242,7 +242,7 @@
 
                 // We also define a variable for the current line
                 l,
-                // and one for chunks that are to be appended to
+                // and one for chunks that are to be appended to.
                 o;
 
             // We are currently, by definition, on a stop command, so we move away from it and keep going forward or backward till the next stop command.
@@ -301,27 +301,27 @@
 
                     // if it's an appendage,
                     }else{
-                        // we make sure we have a stack to save the original CSS classes of the apendee
-                        if('undefined' === typeof o.origclss) o.origclss = [];
-                        // and push them into it before we override them.
-                        o.origclss.push(o.attr('class'));
-                        // Then we append the appendage with its potentially new classes,
-                        o.addClass(l.clss).append(l.text);
-                        // and re-place the current panel.
-                        Canvas.cur.place();
+                        // we know it might change the class attribute of whatever chunk it will be appended to, so we start by pushing a closured function that will chops the it off along with the classes it rode to town on.
+                        this.backstack.push(function(o, l, origclss){ return function(){
+                            o.attr('class', origclss).text(o.text().slice(0, -1 * l.text.length));
+                        // (check out the closurification of the current o and its class attribute - JS doesn't HAVE to be ugly. It's a choice I make)
+                        };}(o, l, o.attr('class')));
 
-                        // We do not forget to push a closured function that chops it off with the classes it came on
-                        this.backstack.push(function(o, l){ return function(){
-                            o.attr('class', o.origclss.pop()).text(o.text().slice(0, -1 * l.text.length));
-                            Canvas.cur.place();
-                        // (check out the closurification - JS doesn't HAVE to be ugly. It's a choice I make)
-                        };}(o, l));
-                        // and reset o.
+                        // Only then do we append the appendage with its potentially new classes.
+                        o.addClass(l.clss).append(l.text);
+
+                        // And reset o.
                         o = undefined;
                     }
 
-                    // After adding and removing chunks we tell the containing panel to reposition itself. TODO This should probably be propagated to a chain of buoy panels, maybe also on some resize event.
+                    // After adding chunks we tell the containing panel to reposition itself. TODO This should probably be propagated to a chain of buoy panels, maybe also on some resize event.
                     this.cur.place();
+                    // but the same is true also after removing chunks and appendages, so we need to add that to the last item in the backstack.
+                    this.backstack.push(function(){
+                        Canvas.backstack.pop()();
+                        Canvas.cur.place();
+                    });
+
 
                 // and if it's an effect, execute it.
                 }else if('effect' === l.type){
