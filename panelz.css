@@ -64,6 +64,12 @@ div.page
     height: 36em;
 }
 
+div.starts
+{
+    background-image: url('starts.png');
+    background-size: 100% 100%;
+}
+
 div.puddle
 {
     width: 24em;
