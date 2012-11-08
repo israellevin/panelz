@@ -26,6 +26,20 @@ div.canvas
     height: 100%;
 }
 
+/* Panels */
+
+div.panel
+{
+    position: absolute;
+    width: 15em;
+    min-height: 5em;
+    border: 0.2em solid #9b7c79;
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
+    background-color:#ffffff;
+}
+
 div.noborder
 {
     width: auto !important;
@@ -42,20 +56,6 @@ div.noborder > div
     margin: 0em !important;
 }
 
-/* Panels */
-
-div.panel
-{
-    position: absolute;
-    width: 15em;
-    min-height: 5em;
-    border: 0.2em solid #9b7c79;
-    -moz-border-radius: 1em;
-    -webkit-border-radius: 1em;
-    border-radius: 1em;
-    background-color:#ffffff;
-}
-
 /* Chunks */
 
 div.panel div
@@ -65,32 +65,9 @@ div.panel div
     padding: 0.5em;
 }
 
-div.d
-{
-    color: #3a312c;
-    padding: 2px;
-}
-
-div.d-invert
-{
-    background-color: #3a312c;
-    color:#ffffff;
-}
-
-div.big
-{
-    font-size: 1.1em;
-}
-
-div.CLI
-{
-    border-color: green;
-    font-family: monospace;
-}
-
 /* Balloons */
 
-div.b, div.thought, div.bleft, div.bright, div.Six, div.Julia, div.Velcro, div.Andrew
+div.b, div.thought, div.bleft, div.bright
 {
     position: relative;
     color: #000022;
@@ -108,6 +85,11 @@ div.thought
     border: 0.1em dashed #222244;
 }
 
+div.bleft
+{
+    margin-left: 1em;
+}
+
 div.bleft:before
 {
    position: absolute;
@@ -119,6 +101,11 @@ div.bleft:before
    border-top: 0.6em solid transparent;
    border-right: 1em solid #9b7c79;
    border-bottom: 0.2em solid transparent;
+}
+
+div.bleft
+{
+    margin-right: 1em;
 }
 
 div.bright:after
@@ -134,34 +121,14 @@ div.bright:after
    border-bottom: 0.2em solid transparent;
 }
 
-div.Six
+/* Chunks */
+
+div.big
 {
-    border-color:#f4b7b4;
-    color: #550000;
+    font-size: 2em;
 }
 
-div.Six.bright:after, div.Six.bleft:after
+div.green
 {
-    border-left: 10px solid #f4b7b4;
-}
-
-div.Six.bright:before, div.Six.bleft:before
-{
-    border-right: 10px solid #f4b7b4;
-}
-
-div.Julia
-{
-    color: #005500;
-}
-
-div.Velcro
-{
-    color: #000055;
-}
-
-div.Andrew
-{
-    background-color: #3a312c;
-    color:#ffffff;
+    color: green;
 }
