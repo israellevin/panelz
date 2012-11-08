@@ -318,8 +318,8 @@
                     }else{
                         // we know it might change the class attribute of whatever chunk it will be appended to, so we start by pushing a closured function that will chops the it off along with the classes it rode to town on.
                         this.undo(function(d){
-                            d.o.attr('class', d.clss).text(d.o.text().slice(0, -1 * d.l.text.length));
-                        },{o: o, l: l, clss: o.attr('class')});
+                            d.o.attr('class', d.clss).text(d.txt);
+                        },{o: o, clss: o.attr('class'), txt: o.text()});
 
                         // Only then do we append the appendage with its potentially new classes.
                         o.addClass(l.clss).append(l.text);
