@@ -9,8 +9,8 @@ div#panelz
     background-color: #fff9ef;
     position: relative;
     overflow: hidden;
-    width: 64em;
-    height: 36em;
+    width: 80em;
+    height: 45em;
     border: 0.5em solid black;
     -moz-border-radius: 1em;
     -webkit-border-radius: 1em;
@@ -24,6 +24,20 @@ div.canvas
     position: relative;
     width: 100%;
     height: 100%;
+}
+
+/* Panels */
+
+div.panel
+{
+    position: absolute;
+    width: 15em;
+    min-height: 5em;
+    border: 0.2em solid #9b7c79;
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
+    background-color:#ffffff;
 }
 
 div.noborder
@@ -40,20 +54,6 @@ div.noborder
 div.noborder > div
 {
     margin: 0em !important;
-}
-
-/* Panels */
-
-div.panel
-{
-    position: absolute;
-    width: 15em;
-    min-height: 5em;
-    border: 0.2em solid #9b7c79;
-    -moz-border-radius: 1em;
-    -webkit-border-radius: 1em;
-    border-radius: 1em;
-    background-color:#ffffff;
 }
 
 /* Chunks */
@@ -79,7 +79,7 @@ div.d-invert
 
 div.big
 {
-    font-size: 1.1em;
+    font-size: 1.2em;
 }
 
 div.CLI
@@ -108,6 +108,11 @@ div.thought
     border: 0.1em dashed #222244;
 }
 
+div.bleft
+{
+    margin-left: 1em;
+}
+
 div.bleft:before
 {
    position: absolute;
@@ -119,6 +124,11 @@ div.bleft:before
    border-top: 0.6em solid transparent;
    border-right: 1em solid #9b7c79;
    border-bottom: 0.2em solid transparent;
+}
+
+div.bleft
+{
+    margin-right: 1em;
 }
 
 div.bright:after
