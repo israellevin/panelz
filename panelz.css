@@ -66,7 +66,25 @@ div.page
 
 div.starts
 {
-    background-image: url('starts.png');
+    background-image: url('../fall/starts.png');
+    background-size: 100% 100%;
+}
+
+div.tearing
+{
+    background-image: url('../fall/tearing.png');
+    background-size: 100% 100%;
+}
+
+div.fallen
+{
+    background-image: url('../fall/fallen.png');
+    background-size: 100% 100%;
+}
+
+div.pinned
+{
+    background-image: url('../fall/pinned.png');
     background-size: 100% 100%;
 }
 
@@ -74,6 +92,11 @@ div.puddle
 {
     width: 24em;
     height: 13.5em;
+}
+
+div.tall
+{
+    min-height: 23em;
 }
 
 div.wide
