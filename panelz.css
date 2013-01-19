@@ -9,8 +9,8 @@ div#panelz
     background-color: #fff9ef;
     position: relative;
     overflow: hidden;
-    width: 80em;
-    height: 45em;
+    width: 64em;
+    height: 36em;
     border: 0.5em solid black;
     -moz-border-radius: 1em;
     -webkit-border-radius: 1em;
@@ -94,13 +94,12 @@ div.b, div.thought, div.bleft, div.bright, div.Six, div.Julia, div.Velcro, div.A
 {
     position: relative;
     color: #000022;
-    padding: 5px;
-    margin: 5px 10px 5px 10px;
-    border: 2px solid #9b7c79;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
     background-color:#ffffafa;
+    margin: 0.5em 1em 0.5em 1em;
+    border: 0.2em solid #9b7c79;
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
 }
 
 div.thought
