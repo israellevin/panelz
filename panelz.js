@@ -228,7 +228,7 @@
                 // In case you forgot, if a class is prefixed with a plus sign, we will try to append the text to a previous chunk of the same class.
 
                 // The chunk is a jquery div which we extend
-                var c = $('<div class="' + clss + '"/>').text(text).extend({
+                var c = $('<div class="' + clss + '"/>').html(text).extend({
                     // with a reference to its containing panel
                     panel: p,
                     // and the chunk that preceded it,
@@ -372,8 +372,8 @@
         pan: function(l, t, undo){
             var
                 // So we get the starting (current) position of the Canvas
-                startl = parseFloat(this.css('left').slice(0, -2), 10),
-                startt = parseFloat(this.css('top').slice(0, -2), 10),
+                startl = this.position().left,
+                startt = this.position().top,
                 // and figure out how far it has to go.
                 diffl = Math.abs(startl - l),
                 difft = Math.abs(startt - t);
