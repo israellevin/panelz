@@ -372,8 +372,8 @@
         pan: function(l, t, undo){
             var
                 // So we get the starting (current) position of the Canvas
-                startl = parseFloat(this.css('left').slice(0, -2), 10),
-                startt = parseFloat(this.css('top').slice(0, -2), 10),
+                startl = parseFloat(this.css('left').slice(0, -2), 10) || 0,
+                startt = parseFloat(this.css('top').slice(0, -2), 10) || 0,
                 // and figure out how far it has to go.
                 diffl = Math.abs(startl - l),
                 difft = Math.abs(startt - t);
