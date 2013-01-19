@@ -228,7 +228,7 @@
                 // In case you forgot, if a class is prefixed with a plus sign, we will try to append the text to a previous chunk of the same class.
 
                 // The chunk is a jquery div which we extend
-                var c = $('<div class="' + clss + '"/>').text(text).extend({
+                var c = $('<div class="' + clss + '"/>').html(text).extend({
                     // with a reference to its containing panel
                     panel: p,
                     // and the chunk that preceded it,
