@@ -71,13 +71,12 @@ div.b, div.thought, div.bleft, div.bright
 {
     position: relative;
     color: #000022;
-    padding: 5px;
-    margin: 5px 10px 5px 10px;
-    border: 2px solid #9b7c79;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
     background-color:#ffffafa;
+    margin: 0.5em 1em 0.5em 1em;
+    border: 0.2em solid #9b7c79;
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
 }
 
 div.thought
@@ -121,7 +120,7 @@ div.bright:after
    border-bottom: 0.2em solid transparent;
 }
 
-/* Chunks */
+/* Text */
 
 div.big
 {
