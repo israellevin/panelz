@@ -316,10 +316,10 @@
 
                     // if it's an appendage,
                     }else{
-                        // we know it might change the class attribute of whatever chunk it will be appended to, so we start by pushing a closured function that will chops the it off along with the classes it rode to town on.
+                        // we know it might change the class attribute of whatever chunk it will be appended to, so we start by pushing a closured function that will chops the it off along with the classes it rode to town on. Note that we are using the html() function, as the text of the chunk may very well be.
                         this.undo(function(d){
-                            d.o.attr('class', d.clss).text(d.o.text().slice(0, -1 * d.l.text.length));
-                        },{o: o, l: l, clss: o.attr('class')});
+                            d.o.attr('class', d.clss).html(d.txt);
+                        },{o: o, clss: o.attr('class'), txt: o.html()});
 
                         // Only then do we append the appendage with its potentially new classes.
                         o.addClass(l.clss).append(l.text);
@@ -368,11 +368,10 @@
 
         // This is where we keep the built-in effects of the Canvas. TODO One day this might accept plugins, but ATM if you want your own effects you write them here and parse them above, in the effects section of the go function.
 
-        // The most basic effect is sliding the Canvas to a new position (given as left and top CSS properties - the Canvas is relatively positioned within the Frame). I'd love to use jquery's animate for this, but jquery in general does not handle zoomed webkit windows very well, so I found jstween.
-        pan: function(l, t){
+        // The most basic effect is sliding the Canvas to a new position (given as left and top CSS properties - the Canvas is relatively positioned within the Frame).
+        pan: function(l, t, undo){
             var
                 // So we get the starting (current) position of the Canvas
-
                 startl = parseFloat(this.css('left').slice(0, -2), 10),
                 startt = parseFloat(this.css('top').slice(0, -2), 10),
                 // and figure out how far it has to go.
@@ -388,36 +387,30 @@
                 left: {
                     start: startl,
                     stop: l,
+                    time: 0,
                     duration: diffl,
                     effect: 'easeInOut'
                 },
                 top: {
                     start: startt,
                     stop: t,
+                    time: 0,
                     duration: difft,
                     effect: 'easeInOut'
+                },
+                // The whole undo system is entirely asynchronic and it is entirely possible to call pan while another pan is running, with deterministically reproducible results (for javascript compatible values of deterministically), but in most cases this will only confuse the linear minded masses and should be handled with a queue or something. To make this easier we maintain the busy flag.
+                onStart: function(){
+                    Canvas.busy = true;
+                },
+                onStop: function(){
+                    Canvas.busy = false;
                 }
-            });
+            }).play();
 
-            // Before actually playing the animation, we push its undo into the backstack.
-            this.undo(function(d){
-                Canvas.tween({
-                    left: {
-                        start: d.startl,
-                        stop: d.l,
-                        duration: d.diffl,
-                        effect: 'easeInOut'
-                    },
-                    top: {
-                        start: d.startt,
-                        stop: d.t,
-                        duration: d.difft,
-                        effect: 'easeInOut'
-                    }
-                });
-                Canvas.play();
-            }, {startl: l, l: startl, diffl: diffl, startt: t, t: startt, difft: difft});
-            Canvas.play();
+            // If this isn't already an undo, we push an undo pan to the undo stack.
+            if(true !== undo) this.undo(function(d){
+                Canvas.pan(d.l, d.t, true);
+            }, {l: startl, t: startt});
         },
 
         // Only slightly more complex is this animation, which centers a panel (it defaults to the current panel, and centering it is the default effect).
@@ -457,8 +450,8 @@
                 startx = e.pageX,
                 starty = e.pageY,
                 cob = Canvas.get(0),
-                l = parseFloat(cob.style.left.slice(0, -2), 10),
-                t = parseFloat(cob.style.top.slice(0, -2), 10);
+                l = parseFloat(cob.style.left.slice(0, -2), 10) || 0,
+                t = parseFloat(cob.style.top.slice(0, -2), 10) || 0;
 
             // Then we bind a function so that when the mouse moves we calculate how much it moved since the drag started and modify the top and left CSS properties of the Canvas to move it along with the pointer.
             Frame.mousemove(function(e){
@@ -489,6 +482,9 @@
     // and bind the keyboard driven interface.
     }).keydown(function(e){
 
+        // For now, we ignore keypresses when the Canvas is busy. TODO In the future we will do something cleverer, like a queue or acceleration.
+        if(Canvas.busy) return true;
+
         // Right arrow and space go forward.
         if(39 === e.which || 32 === e.which){
             Canvas.go(1);
@@ -506,6 +502,8 @@
         // If the keystroke was recognized as a command and handled, we return false, to stop propagation.
         return false;
     });
+
+    window.Canvas = Canvas;
 
 // Then we call the anonymous function we just declared and everything should just run. Simple and fun.
 }());
