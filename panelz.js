@@ -29,7 +29,7 @@
             return;
         },
 
-        // And here we hide the actual parser, which involves regular expressions and is not for the weak of heart or gentle of pallet.
+        // And here we hide the actual parser, which involves regular expressions and is not for the weak of heart or gentle of palate.
         parse: function(l){
 
             // First of all, we test for a line that has nothing but white-spaces, which separates blocks of commands.
