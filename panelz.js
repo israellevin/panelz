@@ -427,6 +427,7 @@
                     }
                 }
 
+                // Otherwise, it's just a chunk.
                 return{
                     type: 'chunk',
                     clss: m[1],
@@ -443,9 +444,9 @@
         load: function(framee, script, bookmark){
 
             // To protect the original frame from harm, we save it
-            var orige = $(framee);
-            // and plant the Canvas in an emptied clone of it,
-            Frame = orige.clone().empty().append(Canvas).
+            framee = $(framee);
+            // and plant an empty Canvas in an emptied clone of it,
+            Frame = framee.clone().empty().append(Canvas).
             // to which we bind events to pan the Canvas on on mouse drag. Note that we return false on all the related events (mousedown, mousemove and mouseup) to make sure they do not propagate and, e.g., select and highlight pieces of the page.
             mousedown(function(e){
 
@@ -473,13 +474,23 @@
                 return false;
             });
 
-            // Then we initialize the Story with the lines of the script
+            // Then we initialize the Story with the lines of the script,
             Story.lines = script.split("\n");
-            // and switch the current frame with the pimped up clone
-            orige.replaceWith(Frame);
+            Story.cache = [];
+            // set the bookmark to the beginning
+            Canvas.bookmark = -1;
+            // and insert the pimped up clone after the original,
+            Frame.insertAfter(framee);
+            // which we promptly detach (replaceWith would destroy the events).
+            framee = framee.detach();
 
-            // All this puts us at a perfect position to create the unload function.
-            this.unload = function(){Frame.replaceWith(orige);};
+            // This puts us at a perfect position to create the unload function
+            this.unload = function(){
+
+                // Here it's OK to use replaceWith (we don't mind losing our own events), but not before emptying the Canvas, reseting it and getting it ready for a new show.
+                Canvas.empty().pan(0,0);
+                Frame.replaceWith(framee);
+            };
         },
 
         // We expose the go function

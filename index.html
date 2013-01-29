@@ -6,44 +6,79 @@
         <title>panelz</title>
         <link rel="stylesheet" type="text/css" href="normalize.css" />
         <link rel="stylesheet" type="text/css" href="panelz.css" />
-        <script src="jquery.min.js"></script>
-        <script src="jstween-1.1.min.js"></script>
-        <script src="panelz.js"></script>
-        <script>
+        <script type="text/javascript" src="jquery.min.js"></script>
+        <script type="text/javascript" src="jstween-1.1.min.js"></script>
+        <script type="text/javascript" src="panelz.js"></script>
+        <script type="text/javascript">
 
-// DOM is ready
+// When the DOM is ready
 $(function(){
-    panelz.load($('#panelz'), $('textarea').text());
-    for(var x = 0; x < 1; (x++)) Canvas.go(1);
-// Keyboard driven interface
-}).keydown(function(e){
+    // we bind the file input
+    $('#fileSel').change(function(e){
+        var fileReader = new FileReader();
+        // to set the textarea,
+        fileReader.onload = function(e){
+            $('#scriptArea').val(e.target.result);
+        };
+        fileReader.readAsText(e.target.files[0], "UTF-8");
+    });
+    // and the run button.
+    $('#runBtn').click(function(e){
 
-    // For now, we ignore key presses when the Canvas is busy. TODO In the future we will do something cleverer, like a queue or acceleration.
-    if(panelz.busy) return true;
+        // Before we do anything rash, we collect some data
+        var area = $('#scriptArea');
+        var script = area.val();
+        var cursor = area.get(0).selectionStart;
+        // so we can figure out how many go commands (empty lines) are before the cursor (if you are using a supportive browser).
+        var gos = cursor ? script.substr(0, cursor).match(/[^\n]*\n\n[^\n]*/gi) : false;
+        gos = gos ? 1 + gos.length : 1;
 
-    // Right arrow and space go forward.
-    if(39 === e.which || 32 === e.which){
-        panelz.go(1);
+        // Now we can init panelz inside the #panelz div with the script in the textarea,
+        panelz.load($('#panelz'), $('#scriptArea').val());
+        // and forward the Story to the cursor's line
+        for(var x = 0; x < gos; (x++)) Canvas.go(1);
+        // and bind the keys for the UI
+        $(document).keydown(function(e){
 
-    // Left arrow goes back.
-    }else if(37 === e.which){
-        panelz.go(-1);
+            // For now, we ignore key presses when the Canvas is busy. TODO In the future we will do something cleverer, like a queue or acceleration.
+            if(panelz.busy) return true;
 
-    // Anything else will log itself, to make it easier for me to bind new keys to new functions, and return true so that someone else will handle it.
-    }else{
-        console.log('unknown key', e.which);
-        return true;
-    }
+            // Right arrow and space go forward.
+            if(39 === e.which || 32 === e.which){
+                panelz.go(1);
 
-    // If the keystroke was recognized as a command and handled, we return false, to stop propagation.
-    return false;
+            // Left arrow goes back.
+            }else if(37 === e.which){
+                panelz.go(-1);
+
+            // 'q' quits the show
+            }else if(81 === e.which){
+                panelz.unload();
+                // and unbinds the UI
+                $(document).off('keypress');
+
+            // Anything else will log itself, to make it easier for me to bind new keys to new functions, and return true so that someone else will handle it.
+            }else{
+                console.log('unknown key', e.which);
+                return true;
+            }
+
+            // If the keystroke was recognized as a command and handled, we return false, to stop propagation.
+            return false;
+        });
+    });
 });
         </script>
     </head>
     <body>
         <a href="https://github.com/israellevin/panelz"><img style="position: absolute; top: 0; right: 0; border: 0; z-index:100;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Panelz on GitHub"></a>
         <div id="panelz">
-            <textarea>
+            <div style="position: absolute; bottom: 0px; right: 0px; text-align: center;">
+                Load:
+                <input id="fileSel" type="file">
+                <input id="runBtn" type="button" value="Run">
+            </div>
+            <textarea id="scriptArea" style="width: 100%; height: 100%;">
 ]noborder
 :<h3>Welcome to the <a href="http://github.com/israellevin/panelz">Panelz</a> showcase</h3>
 ]noborder:0 0 3 0
@@ -96,7 +131,7 @@ bright: It will!
 +thought big:
 
 +thought bleft: And back as well!
-           </textarea>
+            </textarea>
         </div>
     </body>
 </html>
