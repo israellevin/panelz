@@ -9,6 +9,36 @@
         <script src="jquery.min.js"></script>
         <script src="jstween-1.1.min.js"></script>
         <script src="panelz.js"></script>
+        <script>
+
+// DOM is ready
+$(function(){
+    panelz.load($('#panelz'), $('textarea').text());
+    for(var x = 0; x < 1; (x++)) Canvas.go(1);
+// Keyboard driven interface
+}).keydown(function(e){
+
+    // For now, we ignore key presses when the Canvas is busy. TODO In the future we will do something cleverer, like a queue or acceleration.
+    if(panelz.busy) return true;
+
+    // Right arrow and space go forward.
+    if(39 === e.which || 32 === e.which){
+        panelz.go(1);
+
+    // Left arrow goes back.
+    }else if(37 === e.which){
+        panelz.go(-1);
+
+    // Anything else will log itself, to make it easier for me to bind new keys to new functions, and return true so that someone else will handle it.
+    }else{
+        console.log('unknown key', e.which);
+        return true;
+    }
+
+    // If the keystroke was recognized as a command and handled, we return false, to stop propagation.
+    return false;
+});
+        </script>
     </head>
     <body>
         <a href="https://github.com/israellevin/panelz"><img style="position: absolute; top: 0; right: 0; border: 0; z-index:100;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Panelz on GitHub"></a>
