@@ -10,7 +10,7 @@
         <script type="text/javascript" src="jstween-1.1.min.js"></script>
         <script type="text/javascript" src="panelz.js"></script>
         <script type="text/javascript">
-
+var AUTORUN = true;
 // When the DOM is ready
 $(function(){
     // we bind the file input
@@ -67,6 +67,9 @@ $(function(){
             return false;
         });
     });
+
+    // (which we click if AUTORUN is enabled)
+    (true === AUTORUN) && $('#runBtn').click();
 });
         </script>
     </head>

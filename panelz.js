@@ -42,12 +42,10 @@
         // and we are ready to create and draw panels (that can create and draw chunks of text). The parameters for this are a string of space separated CSS classes (which define the look of the panes) and an array of up to four numbers which determines where it will be drawn (x offset, y offset, origin on anchor and destination on target - this will be made clearer later. I hope).
         panel: function(labl, clss, posi, ancr){
 
-            // The panel is a jquery div which we extend
-            var p = $('<div class="panel"/>').extend({
-                // with a reference to its predecessor
-                prev: Canvas.cur
-            // and append to the Canvas.
-            }).addClass(clss).appendTo(Canvas);
+            // The panel is a jquery div which we append to the Canvas and extend with a reference to its predecessor
+            var p = $('<div class="panel"/>').addClass(clss).appendTo(Canvas).extend({
+                prev: Canvas.cur,
+            });
 
             // If it is labeled, we should keep it in the dictionary.
             if('undefined' !== typeof labl) {Canvas.labels[labl] = p;}
