@@ -10,7 +10,6 @@
         <script type="text/javascript" src="jstween-1.1.min.js"></script>
         <script type="text/javascript" src="panelz.js"></script>
         <script type="text/javascript">
-var AUTORUN = true;
 // When the DOM is ready
 $(function(){
     // we bind the file input
@@ -34,7 +33,7 @@ $(function(){
         gos = gos ? 1 + gos.length : 1;
 
         // Now we can init panelz inside the #panelz div with the script in the textarea,
-        panelz.load($('#panelz'), $('#scriptArea').val());
+        panelz.load($('#panelz'), script);
         // and forward the Story to the cursor's line
         for(var x = 0; x < gos; (x++)) Canvas.go(1);
         // and bind the keys for the UI
@@ -55,7 +54,7 @@ $(function(){
             }else if(81 === e.which){
                 panelz.unload();
                 // and unbinds the UI
-                $(document).off('keypress');
+                $(document).off('keydown');
 
             // Anything else will log itself, to make it easier for me to bind new keys to new functions, and return true so that someone else will handle it.
             }else{
@@ -68,8 +67,13 @@ $(function(){
         });
     });
 
-    // (which we click if AUTORUN is enabled)
-    (true === AUTORUN) && $('#runBtn').click();
+    // Now we try to load the default script to the textarea,
+    $.get('script.txt', function(script){
+        $('#scriptArea').val(script);
+    // and click the button to run the show
+    }).always(function(){
+        $('#runBtn').click();
+    });
 });
         </script>
     </head>
