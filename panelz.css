@@ -82,9 +82,34 @@ div.fallen
     background-size: 100% 100%;
 }
 
+
 div.pinned
 {
     background-image: url('../fall/pinned.png');
+    background-size: 100% 100%;
+}
+
+div.chunga
+{
+    background-image: url('../fall/chunga.png');
+    background-size: 100% 100%;
+}
+
+div.chunga2
+{
+    background-image: url('../fall/chunga2.png');
+    background-size: 100% 100%;
+}
+
+div.no-air
+{
+    background-image: url('../fall/no-air.png');
+    background-size: 100% 100%;
+}
+
+div.lifeless
+{
+    background-image: url('../fall/lifeless.png');
     background-size: 100% 100%;
 }
 
