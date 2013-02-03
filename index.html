@@ -34,13 +34,13 @@ $(function(){
 
         // Now we can init panelz inside the #panelz div with the script in the textarea,
         panelz.load($('#panelz'), script);
-        // and forward the Story to the cursor's line
-        for(var x = 0; x < gos; (x++)) Canvas.go(1);
+        // forward the Story to the cursor's line
+        Canvas.go(gos);
         // and bind the keys for the UI
         $(document).keydown(function(e){
 
             // For now, we ignore key presses when the Canvas is busy. TODO In the future we will do something cleverer, like a queue or acceleration.
-            if(panelz.busy) return true;
+            if(panelz.isbusy()) return true;
 
             // Right arrow and space go forward.
             if(39 === e.which || 32 === e.which){
@@ -67,9 +67,10 @@ $(function(){
         });
     });
 
-    // Now we try to load the default script to the textarea,
+    // Now we try to load the default script
     $.get('script.txt', function(script){
-        $('#scriptArea').val(script);
+        // and put it in the textarea, while moving the cursor to its beginning (for supportive browsers),
+        $('#scriptArea').val(script).get(0).setSelectionRange(0, 0);
     // and click the button to run the show
     }).always(function(){
         $('#runBtn').click();

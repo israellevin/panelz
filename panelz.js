@@ -21,11 +21,11 @@
         // We also have an internal bookmark to keep the index of the current line (set to -1 as we haven't even started)
         bookmark: -1,
         // and an undo stack
-        backstack: [],
+        undostack: [],
         // with its own undo function. This can be invoked with a function to store and an optional data object for that function (both will be closured) or empty, to execute the top of the stack.
         undo: function(f, d){
             if('function' === typeof f){
-                Canvas.backstack.push(
+                Canvas.undostack.push(
                     function(f, d){
                         return function(){f(d);};
                     }(f, d)
@@ -33,7 +33,7 @@
             }else{
 
                 // Note how we pop the double bubble at the end there.
-                if(0 < Canvas.backstack.length) Canvas.backstack.pop()();
+                if(Canvas.undostack.length > 0) Canvas.undostack.pop()();
             }
         },
 
@@ -44,14 +44,14 @@
 
             // The panel is a jquery div which we append to the Canvas and extend with a reference to its predecessor
             var p = $('<div class="panel"/>').addClass(clss).appendTo(Canvas).extend({
-                prev: Canvas.cur,
+                prv: Canvas.cur,
             });
 
             // If it is labeled, we should keep it in the dictionary.
             if('undefined' !== typeof labl) {Canvas.labels[labl] = p;}
 
             // Panels are positioned relative to an anchor panel. By default this is the previous one.
-            p.anchor = (ancr && Canvas.labels[ancr]) || p.prev;
+            p.anchor = (ancr && Canvas.labels[ancr]) || p.prv;
 
             // But the anchor doesn't have to be the top-left corner of the panel (as is the CSS default). Instead, the corners are numbered clockwise from 0 to 3 starting at the top-left. Fractions are used to refer to points between the corners and all negative numbers refer to the center of the panel, just in case you ever wanna go there. Since this corner annotation is used both on the anchor panel and on the panel that is anchored to it (AKA "buoy panel"), we supply the panel with a function that translates it into CSS compatible coordinates.
             p.point = function(corner) {
@@ -139,17 +139,13 @@
             // The panel creates and draws chunks of text with this function. It takes a string of space separated classes, which define how the chunk looks, and a string of text.
             p.chunk = function(clss, text){
 
-                // In case you forgot, if a class is prefixed with a plus sign, we will try to append the text to a previous chunk of the same class.
-
-                // The chunk is a jquery div which we extend
-                var c = $('<div class="' + clss + '"/>').html(text).extend({
+                // The chunk is a jquery div which we append to the panel and extend
+                var c = $('<div class="' + clss + '"/>').html(text).appendTo(p).extend({
                     // with a reference to its containing panel
                     panel: p,
                     // and the chunk that preceded it,
-                    prev: p.cur
-                // and append to the panel.
-                }).appendTo(p);
-
+                    prv: p.cur
+                });
                 // Once the chunk has been appended, we tell the containing panel to reposition itself. TODO This should probably be propagated to a chain of buoy panels.
 
                 p.place();
@@ -162,120 +158,132 @@
             return (Canvas.cur = p);
         },
 
-        // Now we can advance the story with go(1) or rewind it with go(-1). TODO In the future, we will accept greater numbers as arguments!
-        go: function(dir){
-            var
-                // We keep a flag that sets when a scripted effect takes place, so that if none occur till the next stop command we center the current panel (at that time) as a default effect.
-                center = true,
+        // So if you give us a line, we can make it happen on the Canvas, and prepare the undo stack.
+        drawline: function(l){
 
-                // We also define a variable for the current line
+            // We need a variable for chuncks, if we run into them
+            var o;
+
+            // Now we check the line. If it's a panel,
+            if('panel' === l.type){
+                // create it
+                Canvas.panel(l.labl, l.clss, l.posi, l.ancr);
+                // and push an undo function that removes it
+                Canvas.undo(function(){
+                    // by removing the panel
+                    Canvas.cur.remove();
+                    // and setting the previous panel as current.
+                    Canvas.cur = Canvas.cur.prv;
+                });
+
+            // If it's a chunk,
+            }else if('chunk' === l.type){
+                // check if it's meant to be appended to an old chunk,
+                if(true === l.apnd){
+                    // in which case we go back through the chain of chunks, hoping to find one that shares the first class in the classes list with the chunk we want to add.
+                    o = Canvas.cur.cur;
+                    while('undefined' !== typeof o){
+                        if(o.hasClass(l.clss.split(' ')[0])){
+                            break;
+                        }else{
+                            o = o.prv;
+                        }
+                    }
+                }
+
+                // If it's a new chunk,
+                if('undefined' === typeof o){
+                    // create it
+                    Canvas.cur.chunk(l.clss, l.text);
+                    // and push an undo function that removes it
+                    Canvas.undo(function(){
+                        // by removing the chunk
+                        Canvas.cur.cur.remove();
+                        // and setting the previous chunk as current.
+                        Canvas.cur.cur = Canvas.cur.cur.prv;
+                    });
+
+                // and if it's an appendage,
+                }else{
+                    // we know it might change the class attribute of whatever chunk it will be appended to, so we start by pushing a closured function that will chop it off along with the classes it rode to town on. Note that we are using the html() function, as the text of the chunk may very well be.
+                    Canvas.undo(function(d){
+                        d.o.attr('class', d.clss).html(d.txt);
+                    },{o: o, clss: o.attr('class'), txt: o.html()});
+
+                    // Only then do we append the appendage with its potentially new classes.
+                    o.addClass(l.clss).append(l.text);
+
+                    // And reset o.
+                    o = undefined;
+                }
+
+                // After adding chunks we tell the containing panel to reposition itself. TODO This should probably be propagated to a chain of buoy panels, maybe also on some resize event.
+                Canvas.cur.place();
+                // The same is true also after removing chunks and appendages, so we need to add that to the last item in the undo stack. Closure again.
+                Canvas.undo(function(o){
+                    o();
+                    Canvas.cur.place();
+                }, Canvas.undostack.pop());
+
+            // and if it's an effect, execute it. No need to worry about the undo stack, the effects take care of it themselves (or at least should).
+            }else if('effect' === l.type){
+
+                // An empty string means no effect,
+                if('' === l.comm){
+                    // which doesn't mean it's not counted by the undo stack, dammit!
+                    Canvas.undo(function(){;});
+                // 'pan' with two numbers pans the Canvas
+                }else if('pan' === l.comm){
+                    Canvas.pan(l.args[0], l.args[1]);
+                // and 'center' centers a panel.
+                }else if('center' === l.comm){
+                    Canvas.center(l.args[0]);
+                }
+            }
+        },
+
+        // Now we can advance the story with a positive number of steps or rewind it with a negative number.
+        go: function(steps){
+            var
+
+                // We isolate the direction in which we are heading, which will be useful later on,
+                dir = (steps < 0) ? -1 : 1,
+                // and define variables for the current line,
                 l,
-                // and one for chunks that are to be appended to.
-                o;
+                // and a flag that sets when a scripted effect takes place, so that if none occur till the next stop command we center the current panel (at that time) as a default effect.
+                center;
 
             // If we are told to go off the story borders, we do not go there. It is a silly place.
             if((Canvas.bookmark + dir) < 0 || (Canvas.bookmark + dir) >= Story.lines.length) return;
 
-            // We are currently, by definition, on a stop command, so we move away from it and keep going forward or backward till the next stop command.
-            for(Canvas.bookmark += dir;
-                'undefined' !== typeof (l = Story.line(Canvas.bookmark));
-                Canvas.bookmark += dir){
+            // Otherwise, we take the required steps.
+            for(; steps !== 0; steps -= dir){
 
-                // If we are heading back, all we have to do is call undo to pop the top of the backstack and execute the function which we will have prepared in advance (time is an illusion, execution time doubly so).
-                if(-1 === dir){
-                    Canvas.undo();
+                // We are currently, by definition, on a stop command, so we set the flag and move away from it and keep going till the next stop command.
+                center = true;
+                for(Canvas.bookmark += dir;
+                    'undefined' !== typeof (l = Story.line(Canvas.bookmark));
+                    Canvas.bookmark += dir){
+
+                    // We do not autocenter if we encounter an effect.
                     if('effect' === l.type) center = false;
-                    continue;
-                }
-                // Otherwise we have some work.
 
-                // If it's a panel,
-                if('panel' === l.type){
-                    // create it
-                    Canvas.panel(l.labl, l.clss, l.posi, l.ancr);
-                    // and push an undo function that removes it
-                    Canvas.undo(function(){
-                        // by removing the panel
-                        Canvas.cur.remove();
-                        // and setting the previous panel as current.
-                        Canvas.cur = Canvas.cur.prev;
-                    });
-
-                // If it's a chunk,
-                }else if('chunk' === l.type){
-
-                    // If the chunk is meant to be appended, we go back through the chain of chunks, hoping to find one that shares the first class in the classes list with the chunk we want to add.
-                    if(true === l.apnd){
-                        o = Canvas.cur.cur;
-                        while('undefined' !== typeof o){
-                            if(o.hasClass(l.clss.split(' ')[0])){
-                                break;
-                            }else{
-                                o = o.prev;
-                            }
-                        }
-                    }
-
-                    // If it's a new chunk,
-                    if('undefined' === typeof o){
-                        // create it
-                        Canvas.cur.chunk(l.clss, l.text);
-                        // and push an undo function that removes it
-                        Canvas.undo(function(){
-                            // by removing the chunk
-                            Canvas.cur.cur.remove();
-                            // and setting the previous chunk as current.
-                            Canvas.cur.cur = Canvas.cur.cur.prev;
-                        });
-
-                    // if it's an appendage,
+                    // If we are heading back, all we have to do is call undo to pop the top of the undo stack and execute the function which we will have prepared in advance (time is an illusion, execution time doubly so).
+                    if(steps < 1){
+                        Canvas.undo();
+                    // If we are not heading back, we draw the line (and prepare said undo stack).
                     }else{
-                        // we know it might change the class attribute of whatever chunk it will be appended to, so we start by pushing a closured function that will chops the it off along with the classes it rode to town on. Note that we are using the html() function, as the text of the chunk may very well be.
-                        Canvas.undo(function(d){
-                            d.o.attr('class', d.clss).html(d.txt);
-                        },{o: o, clss: o.attr('class'), txt: o.html()});
-
-                        // Only then do we append the appendage with its potentially new classes.
-                        o.addClass(l.clss).append(l.text);
-
-                        // And reset o.
-                        o = undefined;
+                        Canvas.drawline(l);
                     }
-
-                    // After adding chunks we tell the containing panel to reposition itself. TODO This should probably be propagated to a chain of buoy panels, maybe also on some resize event.
-                    Canvas.cur.place();
-                    // The same is true also after removing chunks and appendages, so we need to add that to the last item in the backstack. Closure again.
-                    Canvas.undo(function(o){
-                        o();
-                        Canvas.cur.place();
-                    }, Canvas.backstack.pop());
-
-                // and if it's an effect, execute it. No need to worry about the backstack, the effects take care of it themselves (or at least should).
-                }else if('effect' === l.type){
-
-                    // An empty string means no effect,
-                    if('' === l.comm){
-                        // which doesn't mean it's not counted by the undo backstack, dammit!
-                        Canvas.undo(function(){;});
-                    // 'pan' with two numbers pans the Canvas
-                    }else if('pan' === l.comm){
-                        Canvas.pan(l.args[0], l.args[1]);
-                    // and 'center' centers a panel.
-                    }else if('center' === l.comm){
-                        Canvas.center(l.args[0]);
-                    }
-
-                    // Oh, and since we had an effect we don't need to auto center.
-                    center = false;
                 }
-            }
 
-            // If no effects were used, we either center the current panel, or, if we are heading backward, undo the centering we did when we came by forward.
-            if(true === center){
-                if(0 < dir){
-                    Canvas.center();
-                }else{
-                    Canvas.undo();
+                // If no effects were used, we either center the current panel, or, if we are heading backward, undo the centering we did when we came by forward.
+                if(true === center){
+                    if(dir > 0){
+                        Canvas.center();
+                    }else{
+                        Canvas.undo();
+                    }
                 }
             }
         },
@@ -493,10 +501,9 @@
 
         // We expose the go function
         go: Canvas.go,
-        // and the busy flag
-        busy: Canvas.busy,
-        // and for the bookkeeping, we give read only access to the bookmark
-        getbookmark: function(){return 0 + Canvas.bookmark;}
+        // and we give read only access to the bookmark and the busy flag, for bookkeeping.
+        getbookmark: function(){return 0 + Canvas.bookmark;},
+        isbusy: function(){return (true === Canvas.busy);}
     };
 
     // DEBUG
