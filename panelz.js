@@ -18,7 +18,7 @@
             chunk: function(clss, text){return Canvas.panel('','','',[]).chunk(clss, text);}
         },
 
-        // We also have an internal bookmark to keep the index of the current line (set to -1 as we haven't even started)
+        // We also have an internal bookmark to keep the index of the current line (set to -1 as we haven't even started),
         bookmark: -1,
         // and an undo stack
         undostack: [],
@@ -37,9 +37,12 @@
             }
         },
 
-        // Now we need a dictionary of labeled panels, which can be referenced later for all sorts of cool stuff
+        // Now we need a dictionary of labeled panels, which can be referenced later for all sorts of cool stuff,
         labels: {},
-        // and we are ready to create and draw panels (that can create and draw chunks of text). The parameters for this are a string of space separated CSS classes (which define the look of the panes) and an array of up to four numbers which determines where it will be drawn (x offset, y offset, origin on anchor and destination on target - this will be made clearer later. I hope).
+        // and the scripted position. Note that this does not have to be the real position. Users can scroll, animations can be stopped, and who knows what the UI is doing, but the scripted position disregards all this nonsense and pretends he lives in a perfect world. That why we need it and can't make do with position().
+        pos: {left: 0, top: 0},
+
+        // With this we can create and draw panels (that can create and draw chunks of text). The parameters for a new panel are a string of space separated CSS classes (which define the look of the panes) and an array of up to four numbers which determines where it will be drawn (x offset, y offset, origin on anchor and destination on target - this will be made clearer later. I hope).
         panel: function(labl, clss, posi, ancr){
 
             // The panel is a jquery div which we append to the Canvas and extend with a reference to its predecessor
@@ -161,7 +164,7 @@
         // So if you give us a line, we can make it happen on the Canvas, and prepare the undo stack.
         drawline: function(l){
 
-            // We need a variable for chuncks, if we run into them
+            //We define a variable for chuncks, just in case we run into them later on
             var o;
 
             // Now we check the line. If it's a panel,
@@ -248,10 +251,17 @@
 
                 // We isolate the direction in which we are heading, which will be useful later on,
                 dir = (steps < 0) ? -1 : 1,
+                // get the current position of the Canvas, in case it needs correction,
+                pos = Canvas.position(),
                 // and define variables for the current line,
                 l,
                 // and a flag that sets when a scripted effect takes place, so that if none occur till the next stop command we center the current panel (at that time) as a default effect.
                 center;
+
+            // If we are not currently at the right spot, the least we can do is hurry there.
+            if(Canvas.pos.left !== pos.left || Canvas.pos.top !== pos.top){
+                Canvas.pan(Canvas.pos.left, Canvas.pos.top, true);
+            }
 
             // If we are told to go off the story borders, we do not go there. It is a silly place.
             if((Canvas.bookmark + dir) < 0 || (Canvas.bookmark + dir) >= Story.lines.length) return;
@@ -286,12 +296,14 @@
                     }
                 }
             }
+            // And start the animation queue.
+            Canvas.dequeue('pan');
         },
 
         // This is where we keep the built-in effects of the Canvas. TODO One day this might accept plugins, but ATM if you want your own effects you write them here and parse them above, in the effects section of the go function.
 
         // The most basic effect is sliding the Canvas to a new position (given as left and top CSS properties - the Canvas is relatively positioned within the Frame).
-        pan: function(l, t, undo){
+        pan: function(l, t, isundo){
             var
                 // So we get the starting (current) position of the Canvas
                 startl = Canvas.position().left,
@@ -304,35 +316,23 @@
             diffl = Math.min(Math.max(diffl, 500), 5000) / 2000;
             difft = Math.min(Math.max(difft, 500), 5000) / 2000;
 
-            // I'd love to use jquery's animate here, but jquery does not handle zoomed webkit windows very well, so I found jstween. TODO if I have jstween, instructions can come in ems, no?
-            Canvas.tween({
-                left: {
-                    start: startl,
-                    stop: l,
-                    time: 0,
-                    duration: diffl,
-                    effect: 'easeInOut'
-                },
-                top: {
-                    start: startt,
-                    stop: t,
-                    time: 0,
-                    duration: difft,
-                    effect: 'easeInOut'
-                },
-                // The whole undo system is entirely asynchronic and it is entirely possible to call pan while another pan is running, with deterministically reproducible results (for javascript compatible values of deterministically), but in most cases this will only confuse the linear minded masses and should be handled by the UI with a queue or something. To make this easier we maintain the busy flag.
-                onStart: function(){
-                    Canvas.busy = true;
-                },
-                onStop: function(){
-                    Canvas.busy = false;
-                }
-            }).play();
-
-            // If this isn't already an undo, we push an undo pan to the undo stack.
-            if(true !== undo) Canvas.undo(function(d){
+            // If this isn't already an undo, we push an undo pan to the undo stack, using the scripted position,
+            if(true !== isundo) Canvas.undo(function(d){
                 Canvas.pan(d.l, d.t, true);
-            }, {l: startl, t: startt});
+            }, {l: Canvas.pos.left, t: Canvas.pos.top});
+            // and change the scripted position.
+            Canvas.pos = {left: l, top: t};
+
+            // Jquery does not handle zoomed webkit windows very well, so I'm using a fake properties here. TODO Instructions can come in ems, no?
+            Canvas.animate({
+                lleft: l,
+                ttop: t
+            },{
+                step: function(x, fx){
+                    Canvas.css(fx.prop.slice(1), x);
+                },
+                queue: 'pan'
+            });
         },
 
         // Only slightly more complex is this animation, which centers a panel (it defaults to the current panel, and centering it is the default effect).
