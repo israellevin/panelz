@@ -258,16 +258,19 @@
                 // and a flag that sets when a scripted effect takes place, so that if none occur till the next stop command we center the current panel (at that time) as a default effect.
                 center;
 
-            // If we are not currently at the right spot, the least we can do is hurry there.
-            if(Canvas.pos.left !== pos.left || Canvas.pos.top !== pos.top){
-                Canvas.pan(Canvas.pos.left, Canvas.pos.top, true);
-            }
-
             // If we are told to go off the story borders, we do not go there. It is a silly place.
             if((Canvas.bookmark + dir) < 0 || (Canvas.bookmark + dir) >= Story.lines.length) return;
 
             // Otherwise, we take the required steps.
             for(; steps !== 0; steps -= dir){
+
+                // If we are currently playing a pan animation, we should finish it.
+                Canvas.finish('pan');
+
+                // If we are not currently at the right spot, we should hurry there.
+                if((Canvas.pos.left !== pos.left || Canvas.pos.top !== pos.top) && ! Canvas.is(':animated')){
+                    Canvas.pan(Canvas.pos.left, Canvas.pos.top, true);
+                }
 
                 // We are currently, by definition, on a stop command, so we set the flag and move away from it and keep going till the next stop command.
                 center = true;
@@ -296,7 +299,7 @@
                     }
                 }
             }
-            // And start the animation queue.
+            // And start the animation.
             Canvas.dequeue('pan');
         },
 
@@ -501,9 +504,8 @@
 
         // We expose the go function
         go: Canvas.go,
-        // and we give read only access to the bookmark and the busy flag, for bookkeeping.
-        getbookmark: function(){return 0 + Canvas.bookmark;},
-        isbusy: function(){return (true === Canvas.busy);}
+        // and we give read only access to the bookmark, for bookkeeping.
+        getbookmark: function(){return 0 + Canvas.bookmark;}
     };
 
     // DEBUG

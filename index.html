@@ -39,9 +39,6 @@ $(function(){
         // and bind the keys for the UI
         $(document).keydown(function(e){
 
-            // For now, we ignore key presses when the Canvas is busy. TODO In the future we will do something cleverer, like a queue or acceleration.
-            if(panelz.isbusy()) return true;
-
             // Right arrow and space go forward.
             if(39 === e.which || 32 === e.which){
                 panelz.go(1);
