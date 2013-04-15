@@ -362,7 +362,7 @@
         }
     }),
 
-    // And finally there is the Story, which turns an array of script lines into indexed instructions.
+    // And finally there is the Story, which turns an array of script lines into indexed instructions. TODO It should be rather easy for someone to implement their own Story, which is not dependant on my invented syntax.
     Story = {
 
         // Before using the story, we are expected to fill this array with the lines of the script.
@@ -449,8 +449,8 @@
 
     // Now we can put the parts together to create our API:
     window.panelz = {
-        // Give us a script and a DOM element to use as a Frame and we will set up the show.
-        load: function(framee, script, bookmark){
+        // Give us a string with a script and a DOM element to use as a Frame and we will set up the show.
+        load: function(framee, scriptstr, bookmark){
 
             // To protect the original frame from harm, we save it
             framee = $(framee);
@@ -484,7 +484,7 @@
             });
 
             // Then we initialize the Story with the lines of the script,
-            Story.lines = script.split("\n");
+            Story.lines = scriptstr.split("\n");
             Story.cache = [];
             // set the bookmark to the beginning
             Canvas.bookmark = -1;

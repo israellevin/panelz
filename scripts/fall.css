@@ -1,0 +1,109 @@
+/* Panels */
+
+div.panel
+{
+    background-color:#ffffff;
+}
+
+div.page
+{
+    border: 0em solid black;
+    background-color: #fff9ef;
+    width: 64em;
+    height: 36em;
+}
+
+div.starts
+{
+    background-image: url('../fall/starts.png');
+    background-size: 100% 100%;
+}
+
+div.tearing
+{
+    background-image: url('../fall/tearing.png');
+    background-size: 100% 100%;
+}
+
+div.fallen
+{
+    background-image: url('../fall/fallen.png');
+    background-size: 100% 100%;
+}
+
+
+div.pinned
+{
+    background-image: url('../fall/pinned.png');
+    background-size: 100% 100%;
+}
+
+div.chunga
+{
+    background-image: url('../fall/chunga.png');
+    background-size: 100% 100%;
+}
+
+div.chunga2
+{
+    background-image: url('../fall/chunga2.png');
+    background-size: 100% 100%;
+}
+
+div.no-air
+{
+    background-image: url('../fall/no-air.png');
+    background-size: 100% 100%;
+}
+
+div.lifeless
+{
+    background-image: url('../fall/lifeless.png');
+    background-size: 100% 100%;
+}
+
+div.puddle
+{
+    width: 24em;
+    height: 13.5em;
+}
+
+div.tall
+{
+    min-height: 23em;
+}
+
+div.wide
+{
+    width: 45em;
+    min-height: 1em;
+}
+
+div.medium
+{
+    width: 35em;
+    min-height: 1em;
+}
+
+div.mediumsmall
+{
+    width: 25em;
+    min-height: 1em;
+}
+
+div.small
+{
+    min-height: 1em;
+    min-width: 1em;
+}
+
+/* Chunks */
+
+div.panel div.pageoverlay
+{
+    position: absolute;
+    border: 0em solid black;
+    background-color: transparent;
+    left: 25em;
+    width: 12em;
+}

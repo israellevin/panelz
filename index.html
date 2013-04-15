@@ -10,6 +10,7 @@
         <script type="text/javascript" src="jstween-1.1.min.js"></script>
         <script type="text/javascript" src="panelz.js"></script>
         <script type="text/javascript">
+
 // When the DOM is ready
 $(function(){
     // we bind the file input
@@ -64,11 +65,16 @@ $(function(){
         });
     });
 
-    // Now we try to load the default script
-    $.get('script.txt', function(script){
+
+    // Now we look for a script name it in the querystring (defaulting to "welcome")
+    var name = window.location.search.substr(1).match(/\w*/)[0] || 'welcome';
+    // and try to load it
+    $.get('scripts/' + name + '.txt', function(script){
         // and put it in the textarea, while moving the cursor to its beginning (for supportive browsers),
         $('#scriptArea').val(script).get(0).setSelectionRange(0, 0);
-    // and click the button to run the show
+        // and add its CSS
+        $('head').append($('<link rel="stylesheet" type="text/css">').attr('href', 'scripts/' + name + '.css'));
+    // before we click the button to run the show
     }).always(function(){
         $('#runBtn').click();
     });
@@ -84,58 +90,7 @@ $(function(){
                 <input id="runBtn" type="button" value="Run">
             </div>
             <textarea id="scriptArea" style="width: 100%; height: 100%;">
-]noborder
-:<h3>Welcome to the <a href="http://github.com/israellevin/panelz">Panelz</a> showcase</h3>
-]noborder:0 0 3 0
-Panelz is a brave new way to tell stories, mostly influenced by comics.
-:Hit the space key for a more in depth explanation, or check out works in progress below.
-]wide:100 100 3 0
-:Works in progress:
-<br>
-<ul>
-    <li><a href="six/index.html">Six</a> - documenting a one-on-one role-playing game</li>
-    <li><a href="smadar/index.html">Smadar</a> - trying to spread a Hebrew poem on Panelz</li>
-    <li><a href="fall/index.html">The Fall</a> - Persephone goes to the underworls</li>
-</ul>
-~
-
-]:1000 0 1 0
-:Sweet. You just learned the most important thing about Panelz: hitting the space key. Try it again.
-
-]
-:See? Every time you hit space the story advances.
-
-]
-:And this time you did it all on your own.
-
-]
-:The right arrow works as well.
-
-]
-:And you'll never guess what the left arrow does.
-
-]
-:That's all I have for now. I suggest you use that left arrow to go back and check the samples at the beginning.
-
-]
-:Really, from here on it's just random tests that might, one day, turn into our test suite.
-
-]
-Testing panelz
-]:0 0 2.5 0.5
-appendages
-
-thought: Will it work?
-
-bleft: It might.
-
-bright: It will!
-
-+thought green: It does.
-
-+thought big:
-
-+thought bleft: And back as well!
+You seem to be requesting a nonexistent script. Either you are running locally, or someone mistyped the URI. Press 'q' to access the editor and load local scripts.
             </textarea>
         </div>
     </body>
