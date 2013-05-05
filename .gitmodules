@@ -1,9 +1,0 @@
-[submodule "smadar"]
-	path = smadar
-	url = http://github.com/israellevin/panelz
-[submodule "six"]
-	path = six
-	url = http://github.com/israellevin/panelz
-[submodule "fall"]
-	path = fall
-	url = http://github.com/israellevin/panelz
