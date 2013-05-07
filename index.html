@@ -32,11 +32,14 @@ $(function(){
         var gos = cursor ? script.substr(0, cursor).match(/[^\n]*\n\n[^\n]*/gi) : false;
         gos = gos ? 1 + gos.length : 1;
 
-        // Now we can init panelz inside the #panelz div with the script in the textarea,
-        panelz.load($('#panelz'), script);
-        // forward the Story to the cursor's line
-        Canvas.go(gos);
-        // and bind the keys for the UI
+        // Now we can init panelz inside the #panelz div with the script in the textarea, and get the new frame
+        panelz.load($('#panelz'), script).
+        // to which we bind the mouse click.
+        click(function(e){
+            panelz.go(1);
+        });
+
+        // Then we bind the keys for the advanced UI
         $(document).keydown(function(e){
 
             // Right arrow and space go forward.
@@ -62,6 +65,8 @@ $(function(){
             // If the keystroke was recognized as a command and handled, we return false, to stop propagation.
             return false;
         });
+        // and forward the Story to the cursor's line
+        Canvas.go(gos);
     });
 
 

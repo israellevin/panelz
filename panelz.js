@@ -454,34 +454,8 @@
 
             // To protect the original frame from harm, we save it
             framee = $(framee);
-            // and plant an empty Canvas in an emptied clone of it,
-            Frame = framee.clone().empty().append(Canvas).
-            // to which we bind events to pan the Canvas on on mouse drag. Note that we return false on all the related events (mousedown, mousemove and mouseup) to make sure they do not propagate and, e.g., select and highlight pieces of the page.
-            mousedown(function(e){
-
-                // First we save the starting position of the mouse drag and the starting position of the Canvas (I'm trying to avoid jquery here, because, like I said, it is buggy with offset of zoomed pages).
-                var
-                    startx = e.pageX,
-                    starty = e.pageY,
-                    cob = Canvas.get(0),
-                    l = parseFloat(cob.style.left.slice(0, -2), 10) || 0,
-                    t = parseFloat(cob.style.top.slice(0, -2), 10) || 0;
-
-                // Then we bind a function so that when the mouse moves we calculate how much it moved since the drag started and modify the top and left CSS properties of the Canvas to move it along with the pointer.
-                Frame.mousemove(function(e){
-                    Canvas.css({
-                        left: parseFloat(l + (e.pageX - startx), 10) + 'px',
-                        top: parseFloat(t + (e.pageY - starty), 10) + 'px'
-                    });
-                    return false;
-
-                // Once the drag ends, we unbind the mouse move function.
-                }).one('mouseup', function(e){
-                    Frame.off('mousemove');
-                    return false;
-                });
-                return false;
-            });
+            // and plant an empty Canvas in an emptied clone of it.
+            Frame = framee.clone().empty().append(Canvas);
 
             // Then we initialize the Story with the lines of the script,
             Story.lines = scriptstr.split("\n");
@@ -499,7 +473,12 @@
                 // Here it's OK to use replaceWith (we don't mind losing our own events), but not before emptying the Canvas, reseting it and getting it ready for a new show.
                 Canvas.empty().pan(0,0);
                 Frame.replaceWith(framee);
+
+                // And to prove we kept it from harm, we even return the untouched framee.
+                return framee;
             };
+            // and return the new frame, so whoever is calling us can bind stuff to it.
+            return Frame;
         },
 
         // We expose the go function

@@ -2,7 +2,7 @@
 :<h3>Welcome to the <a href="http://github.com/israellevin/panelz">Panelz</a> showcase</h3>
 ]noborder:0 0 3 0
 Panelz is a brave new way to tell stories, mostly influenced by comics.
-:Hit the space key for a more in depth explanation, or check out works in progress below.
+:Hit the space key (or click the canvas) for a more in depth explanation, or check out works in progress below.
 ]wide:100 100 3 0
 :Works in progress:
 <br>
