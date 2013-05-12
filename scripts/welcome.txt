@@ -3,7 +3,7 @@
 ]noborder:0 0 3 0
 Panelz is a brave new way to tell stories, mostly influenced by comics.
 :Hit the space key (or click the canvas) for a more in depth explanation, or check out works in progress below.
-]wide:100 100 3 0
+]wide:6 6 3 0
 :Works in progress:
 <br>
 <ul>
@@ -13,7 +13,7 @@ Panelz is a brave new way to tell stories, mostly influenced by comics.
 </ul>
 ~
 
-]:1000 0 1 0
+]:60 0 1 0
 :Sweet. You just learned the most important thing about Panelz: hitting the space key. Try it again.
 
 ]

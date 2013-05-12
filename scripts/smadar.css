@@ -13,10 +13,10 @@ div#panelz
 div.canvas
 {
     position: absolute;
-    left: 0px;
-    top: 0px;
-    width: 4000px;
-    height: 4000px;
+    left: 0em;
+    top: 0em;
+    width: 250em;
+    height: 250em;
     background-image: url('images/tree.png');
 }
 
@@ -38,28 +38,28 @@ div.branch
     color:white;
     background-size:100% 100%;
     font-size:1.5em;
-    padding-right:10px;
+    padding-right:0.625em;
 }
 
 div.p1
 {
     background-image: url('images/branch-1.png');
-    height:180px;
+    height:11.25em;
 }
 
-div.p1 div:first-child {margin-top:32px}
+div.p1 div:first-child {margin-top:2em}
 
 div.p2 
 {
     background-image: url('images/branch-2.png');
-    padding-top:50px;
-    height:413px;
+    padding-top:3.125em;
+    height:25.8125em;
 }
 
 div.p2 div 
 {
-    margin-top:320px;
-    margin-right:30px;
+    margin-top:20em;
+    margin-right:1.875em;
     font-weight:bold;
     color:#404A42;
 }
@@ -67,13 +67,13 @@ div.p2 div
 div.p3 
 {
     background-image: url('images/branch-3.png');
-    height:100px;
+    height:6.25em;
 }
 
 div.p3 div 
 {
-    margin-top:55px;
-    margin-right:411px;
+    margin-top:3.4375em;
+    margin-right:25.6875em;
 }
 /* Chunks */
 

@@ -11,7 +11,7 @@
 
         // We always maintain a reference to the current panel. At this early point, the reference is initialized to a dummy panel that always returns position and size of 0 (so that we have a starting position) and can even automagically create the first panel for you if you try to add a chunk of text to it.
         cur: {
-            position: function(){return {left: 0, top: 0};},
+            get: function(){return {style: {left: '0em', top: '0em'}};},
             outerWidth: function(){return 0;},
             outerHeight: function(){return 0;},
             point: function(){return {left: 0, top: 0};},
@@ -59,10 +59,10 @@
             // But the anchor doesn't have to be the top-left corner of the panel (as is the CSS default). Instead, the corners are numbered clockwise from 0 to 3 starting at the top-left. Fractions are used to refer to points between the corners and all negative numbers refer to the center of the panel, just in case you ever wanna go there. Since this corner annotation is used both on the anchor panel and on the panel that is anchored to it (AKA "buoy panel"), we supply the panel with a function that translates it into CSS compatible coordinates.
             p.point = function(corner) {
 
-                // First we need the size of the panel.
+                // First we need the size of the panel, in ems.
                 var
-                    w = p.outerWidth(),
-                    h = p.outerHeight(),
+                    w = p.get(0).offsetWidth / Canvas.fontsize,
+                    h = p.get(0).offsetHeight / Canvas.fontsize,
 
                 // Now we start with the base CSS location (top-left corner, which we call 0) and work from there.
                     o = {left: 0, top: 0};
@@ -97,8 +97,8 @@
                 return o;
             };
 
-            // By default, the new panel will be 5 pixels to the left of the anchor point
-            p.left = 5;
+            // By default, the new panel will be 1 em to the left of the anchor point
+            p.left = 1;
             // while keeping the same height.
             p.top = 0;
             // The default anchor point is 1, which is the top-right corner,
@@ -123,18 +123,24 @@
             // Now we can calculate the desired left and top properties of the panel. This is a function because we will do it again every time the involved panels change, but don't worry, we will also call it as soon as we finish defining it.
             p.place = function(){
 
-                // We get some basic numbers:
+                // We start with basic measurements.
                 var
-                    // The position of the anchor panel,
-                    o = p.anchor.position(),
-                    // the position on that panel
-                    a = p.anchor.point(p.o),
-                    // and the offset between the destination point and the 0 point (top-left corner) of the new panel.
-                    d = p.point(p.d);
-                // and we set the position of the panel.
+                    // The anchor element,
+                    anchor = p.anchor.get(0),
+                    // the origin point on the anchor
+                    origin = p.anchor.point(p.o),
+                    // and the destination point on the current panel.
+                    destin = p.point(p.d);
+
+                // Then we get the anchor's top left in ems (look ma no jquery),
+                anchor = {
+                    top: parseFloat(anchor.style.top.slice(0, -2), 10),
+                    left: parseFloat(anchor.style.left.slice(0, -2), 10)
+                };
+                // and set the position of the panel.
                 p.css({
-                    'left': ((o.left + a.left + p.left - d.left) / Canvas.fontsize) + 'em',
-                    'top': ((o.top + a.top + p.top - d.top) / Canvas.fontsize) + 'em'
+                    'left': (anchor.left + origin.left + p.left - destin.left) + 'em',
+                    'top': (anchor.top + origin.top + p.top - destin.top) + 'em'
                 });
             };
             p.place();
@@ -307,6 +313,7 @@
 
         // The most basic effect is sliding the Canvas to a new position (given as left and top CSS properties - the Canvas is relatively positioned within the Frame).
         pan: function(l, t, isundo){
+            console.log(l, t);
             var
                 // So we get the starting (current) position of the Canvas
                 startl = Canvas.position().left,
@@ -455,7 +462,7 @@
             // To protect the original frame from harm, we save it,
             framee = $(framee);
             // measure its (and the future Canvas's) computed font size so we can convert pixels to ems,
-            Canvas.fontsize = parseFloat(framee.css('fontSize').slice(0, -2), 10),
+            Canvas.fontsize = parseFloat(framee.css('fontSize').slice(0, -2), 10);
             // and plant the Canvas in an emptied clone of it.
             Frame = framee.clone().empty().append(Canvas);
 

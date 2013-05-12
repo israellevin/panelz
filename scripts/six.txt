@@ -12,7 +12,7 @@ d: and the drugs are making it hard to think straight.
 ]
 d: But it's becoming clear that she needs to quit this job.
 
-second row]:5 0 2 3[start
+second row]:0.3125 0 2 3[start
 d: And this damn coat is driving her mad.
 
 ]:
@@ -24,17 +24,17 @@ d: but it just won't come off.
 Six bleft: Help me get THIS THING OFF!
 bright: Stay away from me you crazy bitch!
 
-]:0 5 3 0[second row
+]:0 0.3125 3 0[second row
 d: The coat seems to tighten around her like a constrictor snake. Her breath becomes laboured as she desperately searches for something to cut the coat of herself.
 
 d: And then her eyes fall on a pair of scissors.
 
-]:5 0 2 3
+]:0.3125 0 2 3
 Six bleft: Just get *gasp* out of the *gasp* way!
 
 bright: What the fuck is wrong with you?!
 
-]:6 0 2 3
+]:0.375 0 2 3
 d: She pushes the asshole away, across the room, knocking over a big coat rack.
 
 ouch]:12
@@ -43,16 +43,16 @@ Six bleft: If I just get the blade between the coat and my skin...
 
 +Six big: *ouch!*
 
-]:24 0 2 3
+]:1.5 0 2 3
 d: And as her blood touches the coat, everything
 
-]:48 0 2 3
+]:3 0 2 3
 d: slows
 
-]:96 0 1.5 3.5
+]:6 0 1.5 3.5
 d: down
 
-]:0 30 3 0
+]:0 1.875 3 0
 d: The coat rack the asshole knocked over is just about to hit the floor.
 
 d: The asshole himself is rolling slowly next to it.
@@ -84,7 +84,7 @@ Six thought: This has to be some kind of dream.
 ]
 Six thought: And in my dreams, I can...
 
-]:50 -1500 0 3
+]:3.125 -93.75 0 3
 Six thought: FLY!
 
 ]
@@ -103,7 +103,7 @@ d: Calling her back.
 
 d: Calling her down.
 
-]:0 300 3 0[ouch
+]:0 18.75 3 0[ouch
 Wakes up in the arms of a weird woman who gives her herbed up water.
 
 ]
@@ -153,11 +153,11 @@ Along the tracks, up the tunnel.
 ]
 ...and into the open air (upper west, above ground) just in front of a coming train and up.
 
-]:-20 -500
+]:-1.25 -31.25
 up...
-]:-20 -500
+]:-1.25 -31.25
 up...
-]:-20 -500
+]:-1.25 -31.25
 up...
 
 And a cooler head.
@@ -165,11 +165,11 @@ And a cooler head.
 ]
 Hurt tentacle og the Squid that's fighting with the Whale.
 
-]:-20 500
+]:-1.25 31.25
 Down...
-]:-20 500
+]:-1.25 31.25
 Down...
-]:-20 500
+]:-1.25 31.25
 Down, heating up, screaming and burning her attacker and his friends.
 
 ]
@@ -419,7 +419,7 @@ Andrew bleft:...
 
 d: And Six rises high and flies away
 
-]:100 -1500 0 3
+]:6.25 -93.75 0 3
 Up she goes.
 
 She can see the The squid.
@@ -430,10 +430,10 @@ But she cant see them both yet.
 
 They are ENORMOUS.
 
-]:100 -2000 0 3
+]:6.25 -125 0 3
 So she goes higher
 
-]:100 -2500 0 3
+]:6.25 -156.25 0 3
 And higher
 
 Until she can see them both. Embraced in a fight.
@@ -442,7 +442,7 @@ The tail of the Leviathan, she notice, is a very different thing from the head.
 
 And behind the squid and the Leviathan's parts there is something more.
 
-]:100 -5000 0 3
+]:6.25 -312.5 0 3
 She goes up higher and higher to see the Leviathan's trunk more clearly.
 
 It's a huge brain like complex of thoughts and things.
@@ -451,31 +451,31 @@ It is clear to her how impossible this experience would be to those not as stron
 
 But she is just fine, so she stays a little and just watches this wonder.
 
-]:100 4000 0 3
+]:6.25 250 0 3
 Eventually, she descends.
 
-]:100 2700 0 3
+]:6.25 168.75 0 3
 She tries to be cautious.
 
-]:100 1400 0 3
+]:6.25 87.5 0 3
 To Slow down
 
-]:100 1000 0 3
+]:6.25 62.5 0 3
 before getting too close to reality.
 
-]:100 700 0 3
+]:6.25 43.75 0 3
 Not shake it too hard.
 
-]:100 500 0 3
+]:6.25 31.25 0 3
 She enters the house she sleeps at
 
-]:100 350 0 3
+]:6.25 21.875 0 3
 the room she sleeps at
 
-]:100 250 0 3
+]:6.25 15.625 0 3
 her bed
 
-]:100 120 0 3
+]:6.25 7.5 0 3
 her body
 
 ]
@@ -1764,98 +1764,98 @@ Six calls Boby to find out whther
 
 
 
-]:1000 1000
+]:62.5 62.5
 Hierogamy
 
-Rome]:0 -5 .5 2.5
+Rome]:0 -0.3125 .5 2.5
 d: Rome.
 
 d: One of Andrew's safe houses.
 
-Andrew]:15 -5 .5 2[Rome
+Andrew]:0.9375 -0.3125 .5 2[Rome
 d: He is sitting on the edge of the bed.
 
-Six]:-15 -35 .5 3[Rome
+Six]:-0.9375 -2.1875 .5 3[Rome
 d: She is straddled on top of him
 ~
 
 +d:, slowly swaying her pelvis.
 
-SixGrab]:-10 -25 .5 2.5[Six
+SixGrab]:-0.625 -1.5625 .5 2.5[Six
 d: She reaches down, grabs his ass and pulls him tightly to her.
 ~
 
 
-AndrewGrab]:10 -45 .5 2.5[Andrew
+AndrewGrab]:0.625 -2.8125 .5 2.5[Andrew
 d: He reaches behind her neck and draws her face to his.
 
-SixLook]:-10 -2 .5 2.5[SixGrab
+SixLook]:-0.625 -0.125 .5 2.5[SixGrab
 d: Her lips flutter down his face
 ~
 
-AndrewLook]:10 -15 .5 2.5[AndrewGrab
+AndrewLook]:0.625 -0.9375 .5 2.5[AndrewGrab
 d: till her eyes reflect endlessly in his
 ~
 
-]:-20 -2 .5 2.5[SixGrab
+]:-1.25 -0.125 .5 2.5[SixGrab
 d: His lips flutter down his face
 d: And she sinks
 ~
 
-AndrewLook]:20 -15 .5 2.5[AndrewGrab
+AndrewLook]:1.25 -0.9375 .5 2.5[AndrewGrab
 d: till her eyes reflect endlessly in his eyes reflected endlessly in hers.
 ~
 
-]:-30 -2 .5 2.5[SixGrab
+]:-1.875 -0.125 .5 2.5[SixGrab
 d: Her lips flutter down her face
 d: And she sinks
 d: And he falls
 ~
 
-AndrewLook]:30 -15 .5 2.5[AndrewGrab
+AndrewLook]:1.875 -0.9375 .5 2.5[AndrewGrab
 d: till her eyes reflect endlessly in his eyes reflected endlessly in hers.
 d: And they touch.
 ~
 
-Andrew3]:-5 -15 0 2[AndrewLook
+Andrew3]:-0.3125 -0.9375 0 2[AndrewLook
 Invitation to Dance
-Six3]:5 -55 1 3[SixLook
+Six3]:0.3125 -3.4375 1 3[SixLook
 Meadow Under the Stars
-Screw4]:-40 -2 .5 2.5[SixGrab
+Screw4]:-2.5 -0.125 .5 2.5[SixGrab
 d: His lips flutter down her face
 d: And he sinks
 d: And she falls
 d: And they touch.
 
-Screw3]:0 -25 .3 2.5
+Screw3]:0 -1.5625 .3 2.5
 Everyone are going to Haifa!
-Andrew2]:0 -15 .5 2.5[Andrew3
+Andrew2]:0 -0.9375 .5 2.5[Andrew3
 Invitation to Dance
-Six2]:0 -15 .5 2.5[Six3
+Six2]:0 -0.9375 .5 2.5[Six3
 Meadow Under the Stars
 ~center Screw3
 
-Andrew1]:0 -15 .5 2.5[Andrew2
+Andrew1]:0 -0.9375 .5 2.5[Andrew2
 Invitation to Dance
-Six1]:0 -15 .5 2.5[Six2
+Six1]:0 -0.9375 .5 2.5[Six2
 Meadow Under the Stars
-Screw2]:0 -25 .5 2.5[Screw3
+Screw2]:0 -1.5625 .5 2.5[Screw3
 Everyone are going to Haifa!
 
-Andrew0]:0 -15 .5 2.5[Andrew1
+Andrew0]:0 -0.9375 .5 2.5[Andrew1
 Invitation to Dance
-Six0]:0 -15 .5 2.5[Six1
+Six0]:0 -0.9375 .5 2.5[Six1
 Meadow Under the Stars
-Screw0]:0 -25 .5 2.5[Screw2
+Screw0]:0 -1.5625 .5 2.5[Screw2
 Everyone are going to Haifa!
 
-]:0 -25 .5 2.5
+]:0 -1.5625 .5 2.5
 Everyone are in to Haifa! Mazeltof!
 
-]:1000 1000
+]:62.5 62.5
 Boby's message
 
-]CLI:0 10 2.5 .5
+]CLI:0 0.625 2.5 .5
 CLI:Organized religion has a lot to answer for
 
 ]CLI
@@ -1878,7 +1878,7 @@ CLI:and fun
 ]CLI
 CLI:and brainwash people into believing it's somehow fundamentally wrong.
 
-]CLI:0 10 2.5 .5[they
+]CLI:0 0.625 2.5 .5[they
 CLI:They take one of the most powerful and vital elements of the human psyche and twist it in order to further their control of our minds
 
 +CLI:, and in so doing they mess us all up.
@@ -1894,18 +1894,18 @@ CLI:Psychological problems that not only cause immeasurable pain to innumerable 
 ]CLI
 CLI:...
 
-]CLI:5 0 1.5 3
+]CLI:0.3125 0 1.5 3
 CLI:Tonight we say "no more".
 
-]CLI:0 -5 .9 2.9
+]CLI:0 -0.3125 .9 2.9
 CLI:Tonight, as a show of intent, we take on the Holy See in Vatican City, being a chief supporter and perpetrator of this sin against human kind.
 
-]CLI:0 -5 .8 2.8
+]CLI:0 -0.3125 .8 2.8
 CLI:We mourn the loss of the architectural beauty
 
 +CLI:,
-]CLI:0 -5 .6 2.6
+]CLI:0 -0.3125 .6 2.6
 CLI:but feel it is a small price to pay for losing the emotional baggage.
 
-]CLI:0 -5 .6 2.6
+]CLI:0 -0.3125 .6 2.6
 CLI:If you agree with this and wish to support our goal, click the link below to have really great sex tonight.

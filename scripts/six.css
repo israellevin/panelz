@@ -17,7 +17,7 @@ div.panel div
 div.d
 {
     color: #3a312c;
-    padding: 2px;
+    padding: 0.125em;
 }
 
 div.d-invert
@@ -69,12 +69,12 @@ div.Six
 
 div.Six.bright:after, div.Six.bleft:after
 {
-    border-left: 10px solid #f4b7b4;
+    border-left: 0.625em solid #f4b7b4;
 }
 
 div.Six.bright:before, div.Six.bleft:before
 {
-    border-right: 10px solid #f4b7b4;
+    border-right: 0.625em solid #f4b7b4;
 }
 
 div.Julia
