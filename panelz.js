@@ -18,11 +18,16 @@
             chunk: function(clss, text){return Canvas.panel('','','',[]).chunk(clss, text);}
         },
 
-        // We also have an internal bookmark to keep the index of the current line (set to -1 as we haven't even started),
+        // We also hold a dictionary of labeled panels, which can be referenced later for all sorts of cool stuff,
+        labels: {},
+        // an internal bookmark to keep the index of the current line (set to -1 as we haven't even started),
         bookmark: -1,
-        // and an undo stack
+        // and the scripted position. Note that this does not have to be the real position. Users can scroll, animations can be stopped, and who knows what the UI is doing, but the scripted position disregards all this nonsense and pretends it lives in a perfect world. That why we need it and can't make do with position().
+        pos: {left: 0, top: 0},
+
+        // Now, all we need is an undo stack
         undostack: [],
-        // with its own undo function. This can be invoked with a function to store and an optional data object for that function (both will be closured) or empty, to execute the top of the stack.
+        // with its own undo function that can either be invoked with a function to store and an optional data object (both will be closured), or with no arguments to execute the top of the stack.
         undo: function(f, d){
             if('function' === typeof f){
                 Canvas.undostack.push(
@@ -36,11 +41,6 @@
                 if(Canvas.undostack.length > 0) Canvas.undostack.pop()();
             }
         },
-
-        // Now we need a dictionary of labeled panels, which can be referenced later for all sorts of cool stuff,
-        labels: {},
-        // and the scripted position. Note that this does not have to be the real position. Users can scroll, animations can be stopped, and who knows what the UI is doing, but the scripted position disregards all this nonsense and pretends he lives in a perfect world. That why we need it and can't make do with position().
-        pos: {left: 0, top: 0},
 
         // With this we can create and draw panels (that can create and draw chunks of text). The parameters for a new panel are a string of space separated CSS classes (which define the look of the panes) and an array of up to four numbers which determines where it will be drawn (x offset, y offset, origin on anchor and destination on target - this will be made clearer later. I hope).
         panel: function(labl, clss, posi, ancr){
@@ -133,8 +133,8 @@
                     d = p.point(p.d);
                 // and we set the position of the panel.
                 p.css({
-                    'left': (o.left + a.left + p.left - d.left) + 'px',
-                    'top': (o.top + a.top + p.top - d.top) + 'px'
+                    'left': ((o.left + a.left + p.left - d.left) / Canvas.fontsize) + 'em',
+                    'top': ((o.top + a.top + p.top - d.top) / Canvas.fontsize) + 'em'
                 });
             };
             p.place();
@@ -452,9 +452,11 @@
         // Give us a string with a script and a DOM element to use as a Frame and we will set up the show.
         load: function(framee, scriptstr, bookmark){
 
-            // To protect the original frame from harm, we save it
+            // To protect the original frame from harm, we save it,
             framee = $(framee);
-            // and plant an empty Canvas in an emptied clone of it.
+            // measure its (and the future Canvas's) computed font size so we can convert pixels to ems,
+            Canvas.fontsize = parseFloat(framee.css('fontSize').slice(0, -2), 10),
+            // and plant the Canvas in an emptied clone of it.
             Frame = framee.clone().empty().append(Canvas);
 
             // Then we initialize the Story with the lines of the script,

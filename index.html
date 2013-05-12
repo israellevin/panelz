@@ -74,7 +74,6 @@ $(function(){
     var name = window.location.search.substr(1).match(/\w*/)[0] || 'welcome';
     // and try to load it
     $.get('scripts/' + name + '.txt', function(script){
-        console.log(script);
         // and put it in the textarea, while moving the cursor to its beginning (for supportive browsers),
         $('#scriptArea').val(script).get(0).setSelectionRange(0, 0);
         // and add its CSS
