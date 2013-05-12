@@ -313,7 +313,6 @@
 
         // The most basic effect is sliding the Canvas to a new position (given as left and top CSS properties - the Canvas is relatively positioned within the Frame).
         pan: function(l, t, isundo){
-            console.log(l, t);
             var
                 // So we get the starting (current) position of the Canvas
                 startl = Canvas.position().left,
