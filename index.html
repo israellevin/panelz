@@ -71,15 +71,19 @@ $(function(){
 
 
     // Now we look for a script name it in the querystring (defaulting to "welcome")
-    var name = window.location.search.substr(1).match(/\w*/)[0] || 'welcome';
+    var name = window.location.search.substr(1).match(/\w*/)[0] || 'welcome',
     // and try to load it
-    $.get('scripts/' + name + '.txt', function(script){
+    scrget = $.get('scripts/' + name + '.txt', function(scr){
         // and put it in the textarea, while moving the cursor to its beginning (for supportive browsers),
-        $('#scriptArea').val(script).get(0).setSelectionRange(0, 0);
-        // and add its CSS
-        $('head').append($('<link rel="stylesheet" type="text/css">').attr('href', 'scripts/' + name + '.css'));
+        $('#scriptArea').val(scr).get(0).setSelectionRange(0, 0);
+    }),
+    // and its CSS
+    cssget = $.get('scripts/' + name + '.css', function(css){
+        // which we plant in the head
+        $("<style type=\"text/css\">" + css + "</style>").appendTo(document.head);
+    });
     // before we click the button to run the show
-    }).always(function(){
+    $.when(scrget, cssget).always(function(){
         $('#runBtn').click();
     });
 });

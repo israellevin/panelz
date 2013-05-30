@@ -11,7 +11,13 @@
 
         // We always maintain a reference to the current panel. At this early point, the reference is initialized to a dummy panel that always returns position and size of 0 (so that we have a starting position) and can even automagically create the first panel for you if you try to add a chunk of text to it.
         cur: {
-            get: function(){return {style: {left: '0em', top: '0em'}};},
+            pos: {left: '0em', top: '0em'},
+            get: function(){return {
+                style: this.pos,
+                offsetWidth: 0,
+                offsetHeight: 0
+            };},
+            position: function(){return this.pos;},
             outerWidth: function(){return 0;},
             outerHeight: function(){return 0;},
             point: function(){return {left: 0, top: 0};},
@@ -148,34 +154,31 @@
             // The panel creates and draws chunks of text with this function. It takes a string of space separated classes, which define how the chunk looks, and a string of text.
             p.chunk = function(clss, text){
 
-                // The chunk is a jquery div which we append to the panel and extend
+                // The chunk is a jquery div which we append to the panel and extend.
                 var c = $('<div class="' + clss + '"/>').html(text).appendTo(p).extend({
                     // with a reference to its containing panel
                     panel: p,
                     // and the chunk that preceded it,
                     prv: p.cur
                 });
-                // Once the chunk has been appended, we tell the containing panel to reposition itself. TODO This should probably be propagated to a chain of buoy panels.
 
-                p.place();
-
-                // And all that remains it to set the new chunk as the current and return it.
+                // Then we set the new chunk as the current and return it.
                 return (p.cur = c);
             };
 
-            // And all that remains it to set the new panel as the current and return it.
+            // Then we set the new panel as the current and return it.
             return (Canvas.cur = p);
         },
 
         // So if you give us a line, we can make it happen on the Canvas, and prepare the undo stack.
         drawline: function(l){
 
-            //We define a variable for chuncks, just in case we run into them later on
+            //We define a variable for chunks, just in case we run into them later on.
             var o;
 
-            // Now we check the line. If it's a panel,
+            // Now we check the line. It might be a panel,
             if('panel' === l.type){
-                // create it
+                // and then we create it
                 Canvas.panel(l.labl, l.clss, l.posi, l.ancr);
                 // and push an undo function that removes it
                 Canvas.undo(function(){
@@ -184,10 +187,9 @@
                     // and setting the previous panel as current.
                     Canvas.cur = Canvas.cur.prv;
                 });
-
-            // If it's a chunk,
+            // it might be a chunk,
             }else if('chunk' === l.type){
-                // check if it's meant to be appended to an old chunk,
+                // and then we check if it's meant to be appended to an old chunk.
                 if(true === l.apnd){
                     // in which case we go back through the chain of chunks, hoping to find one that shares the first class in the classes list with the chunk we want to add.
                     o = Canvas.cur.cur;
@@ -200,11 +202,11 @@
                     }
                 }
 
-                // If it's a new chunk,
+                // New chunks are easy:
                 if('undefined' === typeof o){
                     // create it
                     Canvas.cur.chunk(l.clss, l.text);
-                    // and push an undo function that removes it
+                    // and push an undo function that removes it.
                     Canvas.undo(function(){
                         // by removing the chunk
                         Canvas.cur.cur.remove();
@@ -212,7 +214,7 @@
                         Canvas.cur.cur = Canvas.cur.cur.prv;
                     });
 
-                // and if it's an appendage,
+                // Appendages are a little trickier:
                 }else{
                     // we know it might change the class attribute of whatever chunk it will be appended to, so we start by pushing a closured function that will chop it off along with the classes it rode to town on. Note that we are using the html() function, as the text of the chunk may very well be.
                     Canvas.undo(function(d){
@@ -228,13 +230,12 @@
 
                 // After adding chunks we tell the containing panel to reposition itself. TODO This should probably be propagated to a chain of buoy panels, maybe also on some resize event.
                 Canvas.cur.place();
-                // The same is true also after removing chunks and appendages, so we need to add that to the last item in the undo stack. Closure again.
+                // The same is true also after removing chunks and appendages, so we need to pop out the last item in the undo stack and append a place command.
                 Canvas.undo(function(o){
                     o();
                     Canvas.cur.place();
                 }, Canvas.undostack.pop());
-
-            // and if it's an effect, execute it. No need to worry about the undo stack, the effects take care of it themselves (or at least should).
+            // or else it's an effect, in which case we execute it. No need to worry about the undo stack here, the effects should take care of it themselves.
             }else if('effect' === l.type){
 
                 // An empty string means no effect,
@@ -246,7 +247,7 @@
                     Canvas.pan(l.args[0], l.args[1]);
                 // and 'center' centers a panel.
                 }else if('center' === l.comm){
-                    Canvas.center(l.args[0]);
+                    Canvas.center(l.args && l.args[0]);
                 }
             }
         },
@@ -332,7 +333,7 @@
             // and change the scripted position.
             Canvas.pos = {left: l, top: t};
 
-            // Jquery does not handle zoomed webkit windows very well, so I'm using a fake properties here. TODO Instructions can come in ems, no?
+            // Jquery does not handle zoomed webkit windows very well, so I'm using a fake properties here.
             Canvas.animate({
                 lleft: l,
                 ttop: t
@@ -359,8 +360,8 @@
             // We obtain the position of the anchor in the Frame
             var
                 p = anchor.position(),
-                l = p.left,
-                t = p.top;
+                t = p.top,
+                l = p.left;
             // and subtract it from half a Frame minus half the anchor.
             l = (0.5 * (Frame.innerWidth() - anchor.outerWidth())) - l;
             t = (0.5 * (Frame.innerHeight() - anchor.outerHeight())) - t;
@@ -423,7 +424,7 @@
                     type: 'effect',
                     comm: m[1],
                     args: m[2] && m[2].split(/\s+/)
-            };
+                };
             }
 
             // Anything else is considered a chunk of text to be printed in the panel, optionally preceded by a space separated, comma terminated list of classes that apply to it.
