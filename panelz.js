@@ -9,31 +9,38 @@
     // but quickly gets extended with all the properties and functions that it needs to become the dynamic drawing area we crave.
     extend({
 
-        // We always maintain a reference to the current panel. At this early point, the reference is initialized to a dummy panel that always returns position and size of 0 (so that we have a starting position) and can even automagically create the first panel for you if you try to add a chunk of text to it.
-        cur: {
-            pos: {left: '0em', top: '0em'},
-            get: function(){return {
-                style: this.pos,
-                offsetWidth: 0,
-                offsetHeight: 0
-            };},
-            position: function(){return this.pos;},
-            outerWidth: function(){return 0;},
-            outerHeight: function(){return 0;},
-            point: function(){return {left: 0, top: 0};},
-            chunk: function(clss, text){return Canvas.panel('','','',[]).chunk(clss, text);}
+        // First we need to initialize a few basic properties.
+        init: function(){
+
+            // We always maintain a reference to the current panel. At this early point, the reference is initialized to a dummy panel that always returns position and size of 0 (so that we have a starting position) and can even automagically create the first panel for you if you try to add a chunk of text to it.
+            Canvas.cur = {
+                pos: {left: '0em', top: '0em'},
+                get: function(){return {
+                    style: this.pos,
+                    offsetWidth: 0,
+                    offsetHeight: 0
+                };},
+                position: function(){return this.pos;},
+                outerWidth: function(){return 0;},
+                outerHeight: function(){return 0;},
+                point: function(){return {left: 0, top: 0};},
+                chunk: function(clss, text){return Canvas.panel('','','',[]).chunk(clss, text);}
+            };
+
+            // We also hold an undo stack,
+            Canvas.undostack = [];
+            // a dictionary of labeled panels, which can be referenced later for all sorts of cool stuff,
+            Canvas.labels = {};
+            // an internal bookmark to keep the index of the current line (set to -1 as we haven't even started),
+            Canvas.bookmark = -1;
+            // and the scripted position. Note that this does not have to be the real position. Users can scroll, animations can be stopped, and who knows what the UI is doing, but the scripted position disregards all this nonsense and pretends it lives in a perfect world. That why we need it and can't make do with position().
+            Canvas.pos = {left: 0, top: 0};
+
+            // Now we can return a blank Canvas.
+            return Canvas.empty();
         },
 
-        // We also hold a dictionary of labeled panels, which can be referenced later for all sorts of cool stuff,
-        labels: {},
-        // an internal bookmark to keep the index of the current line (set to -1 as we haven't even started),
-        bookmark: -1,
-        // and the scripted position. Note that this does not have to be the real position. Users can scroll, animations can be stopped, and who knows what the UI is doing, but the scripted position disregards all this nonsense and pretends it lives in a perfect world. That why we need it and can't make do with position().
-        pos: {left: 0, top: 0},
-
-        // Now, all we need is an undo stack
-        undostack: [],
-        // with its own undo function that can either be invoked with a function to store and an optional data object (both will be closured), or with no arguments to execute the top of the stack.
+        // Then we define an undo function that can either be invoked with a function to store and an optional data object (both will be closured), or with no arguments to execute the top of the stack.
         undo: function(f, d){
             if('function' === typeof f){
                 Canvas.undostack.push(
@@ -375,7 +382,7 @@
         // Before using the story, we are expected to fill this array with the lines of the script.
         lines: [],
 
-        // And we initialize a cache that will fill up lazily, as the lines are parsed.
+        // And we have a cache that will fill up lazily, as the lines are parsed. This needs to be cleaned if and when we switch stories.
         cache: [],
 
         // Then we can get a specific line.
@@ -463,15 +470,16 @@
             framee = $(framee);
             // measure its (and the future Canvas's) computed font size so we can convert pixels to ems,
             Canvas.fontsize = parseFloat(framee.css('fontSize').slice(0, -2), 10);
-            // and plant the Canvas in an emptied clone of it.
-            Frame = framee.clone().empty().append(Canvas);
+            // and plant an initialized Canvas in an emptied clone of it.
+            Frame = framee.clone().empty().append(Canvas.init());
 
             // Then we initialize the Story with the lines of the script,
             Story.lines = scriptstr.split("\n");
+            // clear its cache,
             Story.cache = [];
             // set the bookmark to the beginning
             Canvas.bookmark = -1;
-            // and insert the pimped up clone after the original,
+            // and insert the pimped up clone after the original;
             Frame.insertAfter(framee);
             // which we promptly detach (replaceWith would destroy the events).
             framee = framee.detach();
@@ -479,8 +487,7 @@
             // This puts us at a perfect position to create the unload function
             this.unload = function(){
 
-                // Here it's OK to use replaceWith (we don't mind losing our own events), but not before emptying the Canvas, reseting it and getting it ready for a new show.
-                Canvas.empty().pan(0,0);
+                // Here it's OK to use replaceWith (we don't mind losing our own events).
                 Frame.replaceWith(framee);
 
                 // And to prove we kept it from harm, we even return the untouched framee.
