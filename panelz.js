@@ -33,7 +33,7 @@
             Canvas.labels = {};
             // an internal bookmark to keep the index of the current line (set to -1 as we haven't even started),
             Canvas.bookmark = -1;
-            // and the scripted position. Note that this does not have to be the real position. Users can scroll, animations can be stopped, and who knows what the UI is doing, but the scripted position disregards all this nonsense and pretends it lives in a perfect world. That why we need it and can't make do with position().
+            // and the scripted position. Note that this does not have to be the real position. Users can scroll, animations can be stopped, and who knows what the UI is doing, but the scripted position disregards all this nonsense and pretends it lives in a perfect world.
             Canvas.pos = {left: 0, top: 0};
 
             // Now we can return a blank Canvas.
@@ -304,12 +304,27 @@
                     }
                 }
 
-                // If no effects were used, we either center the current panel, or, if we are heading backward, undo the centering we did when we came by forward.
+                // If no effects were used, we make sure the current panel is visible
                 if(true === center){
-                    if(dir > 0){
-                        Canvas.center();
-                    }else{
-                        Canvas.undo();
+                    var
+                        cnvsw = Frame.innerWidth(),
+                        cnvsh = Frame.innerHeight(),
+                        panlw = Canvas.cur.outerWidth(),
+                        panlh = Canvas.cur.outerHeight(),
+                        // (not forgetting that the Canvas and the panel are going in opposite directions)
+                        xoff = Canvas.cur.position().left + Canvas.pos.left,
+                        yoff = Canvas.cur.position().top + Canvas.pos.top;
+                    // and if it isn't,
+                    if(
+                        xoff > (cnvsw - panlw) || xoff < 0 ||
+                        yoff > (cnvsh - panlh) || yoff < 0
+                      ){
+                        //we either center the current panel, or, if we are heading backward, undo the centering we did when we came by forward;
+                        if(dir > 0){
+                            Canvas.center();
+                        }else{
+                            Canvas.undo();
+                        }
                     }
                 }
             }
@@ -506,6 +521,7 @@
     // DEBUG
     window.Canvas = Canvas;
     window.Story = Story;
+    window.Frame = Frame;
 
 // Then we call the anonymous function we just declared and everything should just run. Simple and fun.
 }());
