@@ -5,8 +5,8 @@
         <meta charset="utf-8">
         <title>panelz</title>
         <meta name="description" content="panelz machine">
-        <link rel="stylesheet" type="text/css" href="normalize.min.css">
         <link rel="stylesheet" type="text/css" href="panelz.css">
+        <link rel="stylesheet" type="text/css" href="normalize.css">
         <script type="text/javascript" src="jquery.min.js"></script>
         <script type="text/javascript" src="panelz.js"></script>
         <script type="text/javascript">
@@ -29,12 +29,12 @@ $(function(){
         var area = $('#scriptArea');
         var script = area.val();
         var cursor = area.get(0).selectionStart;
-        // so we can figure out how many go commands (empty lines) are before the cursor (if you are using a supportive browser).
-        var gos = cursor ? script.substr(0, cursor).match(/[^\n]*\n\n[^\n]*/gi) : false;
-        gos = gos ? 1 + gos.length : 1;
+        // so we can figure out how many lines are before the cursor (if you are using a supportive browser).
+        var gos = cursor ? script.substr(0, cursor).match(/\n/g) : false;
+        gos = gos ? gos.length : 1;
 
         // Now we can init panelz inside the #panelz div with the script in the textarea, and get the new frame
-        panelz.load($('#panelz'), script).
+        panelz(script, $('#panelz')).
         // to which we bind the mouse click.
         click(function(e){
             panelz.go(1);
@@ -46,52 +46,59 @@ $(function(){
             // Right arrow and space go forward.
             if(39 === e.which || 32 === e.which){
                 panelz.go(1);
-
             // Left arrow goes back.
             }else if(37 === e.which){
                 panelz.go(-1);
-
-            // 'q' quits the show
+            // 'q' quits the show.
             }else if(81 === e.which){
                 panelz.unload();
-                // and unbinds the UI
-                $(document).off('keydown');
+                // Try to get the position in the text from the current bookmark and put the cursor there (for supportive browsers).
+                for(
+                    var idx = 0, line = 0, lines = $('#scriptArea').val().split("\n");
+                    line < panelz.bookmark;
+                    idx += lines[line].length + 1, line++
+                );
+                $('#scriptArea').focus().get(0).setSelectionRange(idx, idx);
 
+                // and unbinds the UI.
+                $(document).off('keydown');
             // Anything else will log itself, to make it easier for me to bind new keys to new functions, and return true so that someone else will handle it.
             }else{
                 console.log('unknown key', e.which);
                 return true;
             }
-
             // If the keystroke was recognized as a command and handled, we return false, to stop propagation.
             return false;
         });
         // and forward the Story to the cursor's line
-        Canvas.go(gos);
+        while(panelz.bookmark < gos) panelz.go(1);
     });
-
 
     // Now we look for a script name it in the querystring (defaulting to "welcome")
     var name = window.location.search.substr(1).match(/\w*/)[0] || 'welcome',
     // and try to load it
     scrget = $.get('scripts/' + name + '.txt', function(scr){
         // and put it in the textarea, while moving the cursor to its beginning (for supportive browsers),
-        $('#scriptArea').val(scr).get(0).setSelectionRange(0, 0);
+        $('#scriptArea').val(scr).focus().get(0).setSelectionRange(0, 0);
     }),
     // and its CSS
     cssget = $.get('scripts/' + name + '.css', function(css){
         // which we plant in the head
         $("<style type=\"text/css\">" + css + "</style>").appendTo(document.head);
     });
-    // before we click the button to run the show
+    // before we click the button to run the show.
     $.when(scrget, cssget).always(function(){
         $('#runBtn').click();
     });
+
+    // And finally, we remove the noscript warning and hope for the best.
+    $('#noscript').remove();
 });
         </script>
     </head>
     <body>
         <a href="https://github.com/israellevin/panelz"><img style="position: absolute; top: 0; right: 0; border: 0; z-index:100;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Panelz on GitHub"></a>
+        <div id="noscript" style="position: absolute; z-index: 100; background-color: red; color: white;">Either you have javascript disabled, or I have a bug. One of us should do something about it.</div>
         <div id="panelz">
             <div style="position: absolute; bottom: 0px; right: 0px; text-align: center;">
                 Load:
@@ -99,7 +106,8 @@ $(function(){
                 <input id="runBtn" type="button" value="Run">
             </div>
             <textarea id="scriptArea" style="width: 100%; height: 100%;">
-You seem to be requesting a nonexistent script. Either you are running locally, or someone mistyped the URI. Press 'q' to access the editor and load local scripts.
+]
+:You seem to be requesting a nonexistent script. Either you are running locally, or someone mistyped the URI. Press 'q' to access the editor and load local scripts.
             </textarea>
         </div>
     </body>

@@ -11,16 +11,18 @@ Panelz is a brave new way to tell stories, mostly influenced by comics.
     <li><a href="?smadar">Smadar</a> - trying to spread a Hebrew poem on Panelz</li>
     <li><a href="?fall">The Fall</a> - Persephone goes to the underworls</li>
 </ul>
-~
 
 ]:60 0 1 0
+~center
 :Sweet. You just learned the most important thing about Panelz: hitting the space key. Try it again.
 
 ]
 :See? Every time you hit space the story advances.
+~
 
 ]
 :And this time you did it all on your own.
+~
 
 ]
 :The right arrow works as well.
@@ -35,7 +37,16 @@ Panelz is a brave new way to tell stories, mostly influenced by comics.
 :Really, from here on it's just random tests that might, one day, turn into our test suite.
 
 ]
-Testing panelz
+effects
+~center
+~pan -3000 -50
+Watch me do the rectangle.
+
+~pan -3000 50
+~pan -2800 50
+~pan -2800 -50
+~pan -3000 -50
+
 ]:0 0 2.5 0.5
 appendages
 
@@ -50,3 +61,5 @@ bright: It will!
 +thought big:
 
 +thought bleft: And back as well!
+
+THE END

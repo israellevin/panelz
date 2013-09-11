@@ -47,9 +47,11 @@ Six bleft: If I just get the blade between the coat and my skin...
 d: And as her blood touches the coat, everything
 
 ]:3 0 2 3
+~center
 d: slows
 
 ]:6 0 1.5 3.5
+~center
 d: down
 
 ]:0 1.875 3 0
@@ -85,6 +87,7 @@ Six thought: This has to be some kind of dream.
 Six thought: And in my dreams, I can...
 
 ]:3.125 -93.75 0 3
+~center
 Six thought: FLY!
 
 ]
@@ -104,6 +107,7 @@ d: Calling her back.
 d: Calling her down.
 
 ]:0 18.75 3 0[ouch
+~center
 Wakes up in the arms of a weird woman who gives her herbed up water.
 
 ]
@@ -1777,13 +1781,11 @@ d: He is sitting on the edge of the bed.
 
 Six]:-0.9375 -2.1875 .5 3[Rome
 d: She is straddled on top of him
-~
 
 +d:, slowly swaying her pelvis.
 
 SixGrab]:-0.625 -1.5625 .5 2.5[Six
 d: She reaches down, grabs his ass and pulls him tightly to her.
-~
 
 
 AndrewGrab]:0.625 -2.8125 .5 2.5[Andrew
@@ -1791,31 +1793,25 @@ d: He reaches behind her neck and draws her face to his.
 
 SixLook]:-0.625 -0.125 .5 2.5[SixGrab
 d: Her lips flutter down his face
-~
 
 AndrewLook]:0.625 -0.9375 .5 2.5[AndrewGrab
 d: till her eyes reflect endlessly in his
-~
 
 ]:-1.25 -0.125 .5 2.5[SixGrab
 d: His lips flutter down his face
 d: And she sinks
-~
 
 AndrewLook]:1.25 -0.9375 .5 2.5[AndrewGrab
 d: till her eyes reflect endlessly in his eyes reflected endlessly in hers.
-~
 
 ]:-1.875 -0.125 .5 2.5[SixGrab
 d: Her lips flutter down her face
 d: And she sinks
 d: And he falls
-~
 
 AndrewLook]:1.875 -0.9375 .5 2.5[AndrewGrab
 d: till her eyes reflect endlessly in his eyes reflected endlessly in hers.
 d: And they touch.
-~
 
 Andrew3]:-0.3125 -0.9375 0 2[AndrewLook
 Invitation to Dance

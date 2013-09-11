@@ -17,7 +17,7 @@ div.canvas
     top: 0em;
     width: 250em;
     height: 250em;
-    background-image: url('images/tree.png');
+    background-image: url('scripts/images/tree.png');
 }
 
 /* Panels */
@@ -43,7 +43,7 @@ div.branch
 
 div.p1
 {
-    background-image: url('images/branch-1.png');
+    background-image: url('scripts/images/branch-1.png');
     height:11.25em;
 }
 
@@ -51,7 +51,7 @@ div.p1 div:first-child {margin-top:2em}
 
 div.p2 
 {
-    background-image: url('images/branch-2.png');
+    background-image: url('scripts/images/branch-2.png');
     padding-top:3.125em;
     height:25.8125em;
 }
@@ -66,7 +66,7 @@ div.p2 div
 
 div.p3 
 {
-    background-image: url('images/branch-3.png');
+    background-image: url('scripts/images/branch-3.png');
     height:6.25em;
 }
 
