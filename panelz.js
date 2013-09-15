@@ -549,7 +549,7 @@
         };
 
         // The unload function is actually the Frame's.
-        Artist.unload = Frame.unload;
+        Artist.unload = function(){return Frame.unload()};
 
         // And, lastly, the Artist can move the Canvas (e.g. for dragging) and view its position.
         Artist.canvasPosition = function(left, top){

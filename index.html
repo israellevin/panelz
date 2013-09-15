@@ -12,19 +12,19 @@
         <script type="text/javascript" src="panelz.js"></script>
         <script type="text/javascript">
 // Wait for the DOM to be ready.
-$(function(){var
-    // Get the textarea, its element and its range setter,
-    textArea = $('#scriptArea'),
-    textAreaElement = textArea.get(0),
-    selectRange =  textAreaElement.setSelectionRange,
-    // and define a function that gets and sets its cursor position (in supportive browsers).
-    cursor = textArea.cursor = function(position){
-        if('undefined' === position) return textAreaElement.selectionStart;
-        else if('function' === selectRange) selectRange(position, position);
-    },
+$(function(){
+    var
+        // Get the textarea, its element and its range setter,
+        textArea = $('#scriptArea'),
+        textAreaElement = textArea.get(0),
+        // and define a function that gets and sets its cursor position (in supportive browsers).
+        cursor = textArea.cursor = function(position){
+            if('undefined' === typeof position) return textAreaElement.selectionStart;
+            else if('function' === typeof textAreaElement.setSelectionRange) textAreaElement.setSelectionRange(position, position);
+        },
 
-    // Get the script name from the querystring (defaulting to "welcome").
-    name = window.location.search.substr(1).match(/\w*/)[0] || 'welcome';
+        // Get the script name from the querystring (defaulting to "welcome").
+        name = window.location.search.substr(1).match(/\w*/)[0] || 'welcome';
 
     // Bind the file input to load a script into the textarea,
     $('#fileSel').change(function(e){
