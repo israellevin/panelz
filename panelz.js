@@ -129,11 +129,12 @@
         // and the scripted position of the div. Note that this does not have to be the real position. Users can scroll, animations can be stopped, and who knows what the UI is doing; but the scripted position disregards all this nonsense and pretends it lives in a perfect world.
         Canvas.pos = {left: 0, top: 0};
 
-        // We also write a function that makes sure the Canvas is at the scripted position.
+        // We also create a function that makes sure the Canvas is at the scripted position.
         Canvas.place = function(){
-            // This is the real position
+
+            // We get the real position of the Canvas
             var pos = Canvas.div.position();
-            // which we compare to the scripted one.
+            // and compare it with the scripted position.
             if(Canvas.pos.left !== pos.left || Canvas.pos.top !== pos.top){
                 Canvas.div.css({left: Canvas.pos.left, top: Canvas.pos.top});
             }
@@ -381,7 +382,7 @@
         };
 
         // So if you give us an instruction (which the Story is pretty good at), we can make it happen on the Canvas, and we will make sure the callback gets called when it's done.
-        Canvas.draw = function(i){
+        Canvas.draw = function(instruction){
 
             // We define a variable for chunks that the current chunk might need to be appended to and one for rewind functions, just in case we run into them later on,
             var appendee, rewind;
@@ -392,12 +393,12 @@
             //TODO what's I'd really love to do is to tell the Canvas to speed up the animation, not just jump to the last 'frame'.
 
             // Don't bother with anything else unless you get specific instructions.
-            if('undefined' === typeof i) return;
+            if('undefined' === typeof instruction) return;
 
             // Now we check the instruction. It might be a panel,
-            if('panel' === i.type){
+            if('panel' === instruction.type){
                 // and then we create it
-                Canvas.panel(i.labl, i.clss, i.posi, i.ancr);
+                Canvas.panel(instruction.labl, instruction.clss, instruction.posi, instruction.ancr);
                 // and return to the callback with the rewind function (no closure required).
                 return Canvas.done(function(){
 
@@ -409,13 +410,13 @@
                     Canvas.done(true);
                 });
             // it might be a chunk,
-            }else if('chunk' === i.type){
+            }else if('chunk' === instruction.type){
                 // and then we check if it's meant to be appended to an old chunk.
-                if(true === i.apnd){
+                if(true === instruction.apnd){
                     // in which case we go back through the chain of chunks, hoping to find one that shares the first class in the classes list with the chunk we want to add.
                     appendee = Canvas.cur.cur;
                     while('undefined' !== typeof appendee){
-                        if(appendee.hasClass(i.clss.split(' ')[0])){
+                        if(appendee.hasClass(instruction.clss.split(' ')[0])){
                             break;
                         }else{
                             appendee = appendee.prv;
@@ -426,7 +427,7 @@
                 // New chunks are easy:
                 if('undefined' === typeof appendee){
                     // create it
-                    Canvas.cur.chunk(i.clss, i.text);
+                    Canvas.cur.chunk(instruction.clss, instruction.text);
                     // and create a rewind function that removes it.
                     rewind = function(){
                         Canvas.cur.cur.remove();
@@ -441,7 +442,7 @@
                     },{appendee: appendee, clss: appendee.attr('class'), txt: appendee.html()});
 
                     // Only then do we append the appendage with its potentially new classes.
-                    appendee.addClass(i.clss).append(i.text);
+                    appendee.addClass(instruction.clss).append(instruction.text);
                 }
 
                 // After adding chunks we tell the containing panel to reposition itself. TODO This should probably be propagated to a chain of buoy panels, maybe also on some resize event.
@@ -453,8 +454,8 @@
                     Canvas.done(true);
                 }, rewind));
             // or else it's an effect, in which case we send it to the effects dispatcher.
-            }else if('effect' === i.type){
-                return Canvas.fx(i.cmd, i.args);
+            }else if('effect' === instruction.type){
+                return Canvas.fx(instruction.cmd, instruction.args);
             }
         };
 
@@ -481,7 +482,7 @@
         // a stack to keep track of unscripted operation (currently just auto centering),
         Artist.unscripted = [];
         // and something small to hold the current instruction.
-        Artist.i = {};
+        Artist.instruction = {};
 
         // Now you can give us a positive number to advance the Story and a negative number to rewind it. This function also doubles as the callback we give to the Canvas, with which it tells us it is done and to which it passes the rewind functions (or true, when called from a rewind function).
         Artist.go = function(dir){
@@ -515,13 +516,13 @@
             }
 
             // Only then can we advance or rewind the bookmark to get the instruction for the appropriate line.
-            Artist.i = Story.line(Artist.bookmark = Artist.bookmark + Artist.dir);
+            Artist.instruction = Story.line(Artist.bookmark = Artist.bookmark + Artist.dir);
 
             // If the Story gives us an instruction, we follow it.
-            if('undefined' !== typeof Artist.i){
+            if('undefined' !== typeof Artist.instruction){
 
                 // We either draw a line if we are headed forward,
-                if(1 === Artist.dir) return Canvas.draw(Artist.i);
+                if(1 === Artist.dir) return Canvas.draw(Artist.instruction);
                 // or rewind a line (using a stacked rewind function) if we are headed back. Note how we pop the double bubble at the end there :)
                 else return Artist.rewinds.pop()();
             // Otherwise, we have arrived at a stop command.
@@ -545,10 +546,19 @@
             Story(scriptstr.split("\n"));
             // then we initialize the Frame and return our new DOM element, so the UI can use its events, to which we append the Canvas with Artist.go() as a callback.
             return Frame(frame).append(Canvas(Artist.go));
-        },
+        };
 
-        // And the unload function is even simpler.
-        Artist.unload = function(){return Frame.unload()};
+        // The unload function is actually the Frame's.
+        Artist.unload = Frame.unload;
+
+        // And, lastly, the Artist can move the Canvas (e.g. for dragging) and view its position.
+        Artist.canvasPosition = function(left, top){
+            if(
+                ! isNaN(left = parseFloat(left)) &&
+                ! isNaN(top = parseFloat(top))
+            ) Canvas.div.css({left: left, top: top});
+            return Canvas.div.position();
+        };
 
         // The only reason for someone to get here is if he is trying to load the Artist.
         return Artist.load(scriptstr, frame);

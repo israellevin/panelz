@@ -5,93 +5,118 @@
         <meta charset="utf-8">
         <title>panelz</title>
         <meta name="description" content="panelz machine">
+        <link rel="stylesheet" type="text/css" href="//necolas.github.io/normalize.css/2.1.3/normalize.css">
         <link rel="stylesheet" type="text/css" href="panelz.css">
-        <link rel="stylesheet" type="text/css" href="normalize.css">
-        <script type="text/javascript" src="jquery.min.js"></script>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script type="text/javascript" src="//eightmedia.github.io/hammer.js/dist/jquery.hammer.min.js"></script>
         <script type="text/javascript" src="panelz.js"></script>
         <script type="text/javascript">
+// Wait for the DOM to be ready.
+$(function(){var
+    // Get the textarea, its element and its range setter,
+    textArea = $('#scriptArea'),
+    textAreaElement = textArea.get(0),
+    selectRange =  textAreaElement.setSelectionRange,
+    // and define a function that gets and sets its cursor position (in supportive browsers).
+    cursor = textArea.cursor = function(position){
+        if('undefined' === position) return textAreaElement.selectionStart;
+        else if('function' === selectRange) selectRange(position, position);
+    },
 
-// When the DOM is ready
-$(function(){
-    // we bind the file input
+    // Get the script name from the querystring (defaulting to "welcome").
+    name = window.location.search.substr(1).match(/\w*/)[0] || 'welcome';
+
+    // Bind the file input to load a script into the textarea,
     $('#fileSel').change(function(e){
         var fileReader = new FileReader();
-        // to set the textarea,
         fileReader.onload = function(e){
-            $('#scriptArea').val(e.target.result);
+            textArea.val(e.target.result);
         };
         fileReader.readAsText(e.target.files[0], "UTF-8");
     });
-    // and the run button.
+    // and the run button to run the script that's in it.
     $('#runBtn').click(function(e){
 
-        // Before we do anything rash, we collect some data
-        var area = $('#scriptArea');
-        var script = area.val();
-        var cursor = area.get(0).selectionStart;
-        // so we can figure out how many lines are before the cursor (if you are using a supportive browser).
-        var gos = cursor ? script.substr(0, cursor).match(/\n/g) : false;
-        gos = gos ? gos.length : 1;
+        // Define Canvas position for dragging.
+        var pos;
 
-        // Now we can init panelz inside the #panelz div with the script in the textarea, and get the new frame
+        // Get the script and the cursor position from the textarea,
+        var
+            script = textArea.val(),
+            position = textArea.cursor();
+        // and figure out how many lines are before it.
+        position = position ? script.substr(0, position).match(/\n/g).length : false;
+
+        // Initialize panelz with the #panelz div and the script,
         panelz(script, $('#panelz')).
-        // to which we bind the mouse click.
-        click(function(e){
-            panelz.go(1);
+        // which returns the new frame to which we bind hammer events.
+        hammer().on('tap swipe touch drag', function(e){
+            e.gesture.preventDefault();
+            e.gesture.stopPropagation();
+
+            if('tap' == e.type) panelz.go(1);
+            else if('swipe' === e.type){
+                if('right' === e.gesture.direction) panelz.go(-1);
+                else panelz.go(1);
+            }else{
+                if('touch' === e.type){
+                    pos = panelz.canvasPosition();
+                // This has to be a drag event
+                }else{
+                    panelz.canvasPosition(pos.left + e.gesture.deltaX, pos.top + e.gesture.deltaY);
+                }
+            }
+            return false;
         });
 
-        // Then we bind the keys for the advanced UI
+        // Bind the keys.
         $(document).keydown(function(e){
 
-            // Right arrow and space go forward.
-            if(39 === e.which || 32 === e.which){
-                panelz.go(1);
-            // Left arrow goes back.
-            }else if(37 === e.which){
-                panelz.go(-1);
-            // 'q' quits the show.
-            }else if(81 === e.which){
+            // Right arrow and space go forward,
+            if(39 === e.which || 32 === e.which) panelz.go(1);
+            // left arrow goes back,
+            else if(37 === e.which) panelz.go(-1);
+            // and 'q' quits the show.
+            else if(81 === e.which){
                 panelz.unload();
-                // Try to get the position in the text from the current bookmark and put the cursor there (for supportive browsers).
+                // Get the position in the script from the current bookmark,
                 for(
-                    var idx = 0, line = 0, lines = $('#scriptArea').val().split("\n");
+                    var idx = 0, line = 0, lines = textArea.val().split("\n");
                     line < panelz.bookmark;
                     idx += lines[line].length + 1, line++
                 );
-                $('#scriptArea').focus().get(0).setSelectionRange(idx, idx);
-
+                // put the cursor there (if the browser supports it),
+                textArea.focus().cursor(idx);
                 // and unbinds the UI.
                 $(document).off('keydown');
-            // Anything else will log itself, to make it easier for me to bind new keys to new functions, and return true so that someone else will handle it.
+
+            // Anything else logs itself, to make it easier for me to bind new keys, and returns true so that someone else will handle it,
             }else{
                 console.log('unknown key', e.which);
                 return true;
             }
-            // If the keystroke was recognized as a command and handled, we return false, to stop propagation.
+
+            // Handled commands return false to stop propagation.
             return false;
         });
         // and forward the Story to the cursor's line
-        while(panelz.bookmark < gos) panelz.go(1);
+        while(panelz.bookmark < position) panelz.go(1);
     });
 
-    // Now we look for a script name it in the querystring (defaulting to "welcome")
-    var name = window.location.search.substr(1).match(/\w*/)[0] || 'welcome',
-    // and try to load it
-    scrget = $.get('scripts/' + name + '.txt', function(scr){
-        // and put it in the textarea, while moving the cursor to its beginning (for supportive browsers),
-        $('#scriptArea').val(scr).focus().get(0).setSelectionRange(0, 0);
-    }),
-    // and its CSS
-    cssget = $.get('scripts/' + name + '.css', function(css){
-        // which we plant in the head
-        $("<style type=\"text/css\">" + css + "</style>").appendTo(document.head);
-    });
-    // before we click the button to run the show.
-    $.when(scrget, cssget).always(function(){
+    // Load the requested script into the textarea and its CSS into the head tag,
+    $.when(
+        $.get('scripts/' + name + '.txt', function(script){
+            textArea.val(script).focus().cursor(0);
+        }),
+        $.get('scripts/' + name + '.css', function(css){
+            $("<style type=\"text/css\">" + css + "</style>").appendTo(document.head);
+        })
+    // and click the run button when done.
+    ).always(function(){
         $('#runBtn').click();
     });
 
-    // And finally, we remove the noscript warning and hope for the best.
+    // And finally, remove the noscript warning and hope for the best.
     $('#noscript').remove();
 });
         </script>
