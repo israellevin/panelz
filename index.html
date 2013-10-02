@@ -3,54 +3,56 @@
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
         <meta charset="utf-8">
-        <title>panelz</title>
-        <meta name="description" content="panelz machine">
+        <title>Sherman's Hole</title>
+        <meta name="description" content="panelz">
         <link rel="stylesheet" type="text/css" href="//necolas.github.io/normalize.css/2.1.3/normalize.css">
         <link rel="stylesheet" type="text/css" href="panelz.css">
         <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script type="text/javascript" src="//eightmedia.github.io/hammer.js/dist/jquery.hammer.min.js"></script>
-        <script type="text/javascript" src="panelz.js"></script>
+        <script type="text/javascript" src="//israellevin.github.io/panelz/panelz.js"></script>
         <script type="text/javascript">
-// Wait for the DOM to be ready.
-$(function(){
-    var
-        // Get the textarea, its element and its range setter,
-        textArea = $('#scriptArea'),
-        textAreaElement = textArea.get(0),
-        // and define a function that gets and sets its cursor position (in supportive browsers).
-        cursor = textArea.cursor = function(position){
-            if('undefined' === typeof position) return textAreaElement.selectionStart;
-            else if('function' === typeof textAreaElement.setSelectionRange) textAreaElement.setSelectionRange(position, position);
-        },
+$(function(){var
+    win = $(window),
+    screen = $('#panelz'),
+    // 0 = loading, 1 = running panelz
+    state = -1,
+    // For loading
+    winWidth, winHeight, screenWidth, screenHeight, ratio, script,
+    // For dragging
+    pos,
+    // For editing
+    textArea = $('#scriptArea'),
+    textAreaElement = textArea.get(0),
+    cursor = textArea.cursor = function(pos){
+        if('undefined' === typeof pos) return textAreaElement.selectionStart;
+        else if('function' === typeof textAreaElement.setSelectionRange) textAreaElement.setSelectionRange(pos, pos);
+    };
 
-        // Get the script name from the querystring (defaulting to "welcome").
-        name = window.location.search.substr(1).match(/\w*/)[0] || 'welcome';
+    function load(){
+        if(state > -1) return true;
+        state = 0;
+        winWidth = win.width();
+        winHeight = win.height();
+        screenWidth = screen.innerWidth();
+        screenHeight = screen.innerHeight();
+        ratio = (screenWidth / screenHeight > winWidth / winHeight) ?
+            winWidth / screenWidth :
+            winHeight / screenHeight;
 
-    // Bind the file input to load a script into the textarea,
-    $('#fileSel').change(function(e){
-        var fileReader = new FileReader();
-        fileReader.onload = function(e){
-            textArea.val(e.target.result);
-        };
-        fileReader.readAsText(e.target.files[0], "UTF-8");
-    });
-    // and the run button to run the script that's in it.
-    $('#runBtn').click(function(e){
+        script = textArea.val();
+        pos = textArea.cursor();
+        pos = pos ? script.substr(0, pos).match(/\n/g).length : false;
 
-        // Define Canvas position for dragging.
-        var pos;
+        screen.css({
+            width: '100%',
+            height: winHeight,
+            fontSize: (ratio * parseInt(screen.css('fontSize').slice(0, -2), 10)) + 'px',
+            lineHeight: (ratio * parseInt(screen.css('lineHeight').slice(0, -2), 10)) + 'px'
+        });
 
-        // Get the script and the cursor position from the textarea,
-        var
-            script = textArea.val(),
-            position = textArea.cursor();
-        // and figure out how many lines are before it.
-        position = position ? script.substr(0, position).match(/\n/g).length : false;
-
-        // Initialize panelz with the #panelz div and the script,
-        panelz(script, $('#panelz')).
-        // which returns the new frame to which we bind hammer events.
-        hammer().on('tap swipe touch drag', function(e){
+        // Disable drag
+        // panelz(script, screen).hammer().on('tap swipe touch drag', function(e){
+        panelz(script, screen).hammer().on('tap swipe touch', function(e){
             e.gesture.preventDefault();
             e.gesture.stopPropagation();
 
@@ -68,72 +70,129 @@ $(function(){
             }
             return false;
         });
+        while(panelz.bookmark < pos) panelz.go(1);
+        state = 1;
+    }
 
-        // Bind the keys.
-        $(document).keydown(function(e){
+    $(document).keydown(function(e){
+        // Backtick runs the show in edit mode.
+        if(state < 0 && 192 === e.which) return load() && false;
 
-            // Right arrow and space go forward,
-            if(39 === e.which || 32 === e.which) panelz.go(1);
-            // left arrow goes back,
-            else if(37 === e.which) panelz.go(-1);
-            // and 'q' quits the show.
-            else if(81 === e.which){
-                panelz.unload();
-                // Get the position in the script from the current bookmark,
-                for(
-                    var idx = 0, line = 0, lines = textArea.val().split("\n");
-                    line < panelz.bookmark;
-                    idx += lines[line].length + 1, line++
-                );
-                // put the cursor there (if the browser supports it),
-                textArea.focus().cursor(idx);
-                // and unbinds the UI.
-                $(document).off('keydown');
+        // Running mode.
+        if(state < 1) return true;
+        // Right arrow and space go forward.
+        if(39 === e.which || 32 === e.which) panelz.go(1);
+        // Left arrow goes back.
+        else if(37 === e.which) panelz.go(-1);
+        // 'q' and backtick quit the show.
+        else if(81 === e.which || 192 === e.which){
+            panelz.unload();
+            for(
+                var idx = 0, line = 0, lines = textArea.val().split("\n");
+                line < panelz.bookmark;
+                idx += lines[line].length + 1, line++
+            );
+            textArea.focus().cursor(idx);
+            state = -1;
+        }else{
+            console.log('unknown key', e.which);
+            return true;
+        }
 
-            // Anything else logs itself, to make it easier for me to bind new keys, and returns true so that someone else will handle it,
-            }else{
-                console.log('unknown key', e.which);
-                return true;
-            }
-
-            // Handled commands return false to stop propagation.
-            return false;
-        });
-        // and forward the Story to the cursor's line
-        while(panelz.bookmark < position) panelz.go(1);
+        return false;
     });
 
-    // Load the requested script into the textarea and its CSS into the head tag,
-    $.when(
-        $.get('scripts/' + name + '.txt', function(script){
-            textArea.val(script).focus().cursor(0);
-        }),
-        $.get('scripts/' + name + '.css', function(css){
-            $("<style type=\"text/css\">" + css + "</style>").appendTo(document.head);
-        })
-    // and click the run button when done.
-    ).always(function(){
-        $('#runBtn').click();
-    });
-
-    // And finally, remove the noscript warning and hope for the best.
+    load();
     $('#noscript').remove();
 });
         </script>
     </head>
     <body>
-        <a href="https://github.com/israellevin/panelz"><img style="position: absolute; top: 0; right: 0; border: 0; z-index:100;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Panelz on GitHub"></a>
-        <div id="noscript" style="position: absolute; z-index: 100; background-color: red; color: white;">Either you have javascript disabled, or I have a bug. One of us should do something about it.</div>
+        <div id="noscript" style="position: absolute; z-index: 100; background-color: red; color: white;">Either you have javascript disabled or I have a bug. One of us should do something about it.</div>
         <div id="panelz">
-            <div style="position: absolute; bottom: 0px; right: 0px; text-align: center;">
-                Load:
-                <input id="fileSel" type="file">
-                <input id="runBtn" type="button" value="Run">
-            </div>
-            <textarea id="scriptArea" style="width: 100%; height: 100%;">
-]
-:You seem to be requesting a nonexistent script. Either you are running locally, or someone mistyped the URI. Press 'q' to access the editor and load local scripts.
-            </textarea>
+            <textarea id="scriptArea" style="width: 100%; height: 100%;">]noborder:100 10
+:Click space to advance the story
+]noborder:0 5 2.5 0.5
+~center
+]hinge:0 0 -1 -1
+title: Sherman's Hole
+author: by: <a href="http://guyfogel.com">Guy Fogel</a>
+issue: issue 1
+issue: Jul. 2012
+
+]arrowbox:0 -0.2 2.5 0.5
+~center
+disclaimer: Any resemblance of the characters and events depicted in this comic to reality is purely coincidental, mom.
+
+name]:0 60 2.5 0.5
+sherman: My name is Sherman.
+
+]:0 3 2.5 0.5
+sherman: I want to tell you about a bad week I've had in the summer of 2004.
+
+center]:0 3 2.5 0.5
+sherman: My bicycle got stolen.
+
+]:2 -0.5 2.5 0.5
+sherman: My computer crashed with no backups.
+
+]:-2 -0.5 2.5 0.5
+sherman: My girlfriend dumped me.
+
+]:2 2 2.5 0.5
+sherman: I bombed in the biology test.
+
+]:-2 -0.5 2.5 0.5
+sherman: I failed the driving test.
+
+]:2 -0.5 2.5 0.5
+sherman: No one made it to my going away party.
+
+]:-2 -0.5 2.5 0.5
+sherman: My dog died.
+
+]:0 5 2.5 0.5
+sherman: The week after that I joined the army.
+
+]:20 0[name
+sherman: I know I was in basic training at the artillery corps between July and November 2004.
+
+]:0 3 2.5 0.5
+sherman: Don't remember much, other than dust and sun.
+
+]noborder:0 1 2.5 0.5
+sherman white: And I remember nothing
+
+]noborder:0 1 2.5 0.5
+sherman white: between November
+
+]noborder:0 10 2.5 0.5
+~center
+sherman white: and mid March 2005.
+
+]:0 1 2.5 0.5
+sherman: First thing I do remember is a stormy conversation with the army shrink.
+
+]:3 3 2.5 0.5
+sherman: I begged her not to discharge me on a section 8.
+
+]:-25 9 0 1[name
+sherman: She sent me to the Qirya instead.
+
+]:0 3 2.5 0.5
+sherman: And by May 2005 I had both the clearance and an access card to one of the most classified facilities in the I.D.F.
+
+]:0 3 2.5 0.5
+sherman: I shouldn't have had either of them.
+
+]noborder:10 0
+white: *bleep*
+~center center
+]leftdoor:0 0 -1 1.5[center
+]rightdoor:0 0
+]blackbox:0 -10 -1 -1[center
+chapter:Chapter 1: "Pilot"
+author:Written and illustrated by: <a href="http://guyfogel.com">Guy Fogel</a></textarea>
         </div>
     </body>
 </html>

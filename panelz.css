@@ -1,30 +1,32 @@
 body
 {
-    background-color: #9b7c79;
-    color: #3a312c;
-    font-size: 16px;
+    background: black;
+    margin: 0em;
+    padding: 0em;
+    overflow: hidden;
 }
 
 div#panelz
 {
-    background-color: #fff9ef;
     position: relative;
     overflow: hidden;
-    width: 64em;
-    height: 36em;
-    border: 0.5em solid black;
-    -moz-border-radius: 1em;
-    -webkit-border-radius: 1em;
-    border-radius: 1em;
-    margin: auto;
-    margin-top: 1em;
+    width: 40em;
+    height: 30em;
 }
 
 div.canvas
 {
     position: relative;
-    width: 100%;
-    height: 100%;
+    width: 1000em;
+    height: 150em;
+    background: gray;
+    background: -moz-linear-gradient(top,  gray 20%, #000000 70%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(20%, gray), color-stop(70%, #000000));
+    background: -webkit-linear-gradient(top,  gray 20%, #000000 70%);
+    background: -o-linear-gradient(top,  gray 20%, #000000 70%);
+    background: -ms-linear-gradient(top,  gray 20%, #000000 70%);
+    background: linear-gradient(to bottom,  gray 20%, #000000 70%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='gray', endColorstr='#000000',GradientType=0 );
 }
 
 /* Panels */
@@ -33,12 +35,13 @@ div.panel
 {
     position: absolute;
     width: 15em;
-    min-height: 5em;
-    border: 0.2em solid #9b7c79;
+    min-height: 2em;
+    border: 0.2em solid gray;
     -moz-border-radius: 1em;
     -webkit-border-radius: 1em;
     border-radius: 1em;
-    background-color: #fff9ef;
+    background-color: white;
+    text-align: center;
 }
 
 div.noborder
@@ -50,96 +53,269 @@ div.noborder
     padding: 0em !important;
     margin: 0em !important;
     border: 0em solid black !important;
+    background: transparent !important;
 }
 
-div.noborder > div
+div.hinge
 {
-    margin: 0em !important;
+    animation-duration: 1s;
+    animation-name: hinge;
 }
 
-div.wide
+@keyframes hinge
 {
-    width: 50%;
-}
+    from
+    {
+        transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+    }
 
-div.CLI
+    to
+    {
+        transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+    }
+}
+div.arrowbox
 {
-    border-color: green;
-    font-family: monospace;
+    width: 5em;
+    height: 9em;
+	border: 0.2em solid gray;
+    border-top: 0em solid black;
+    -moz-border-radius: 0em;
+    -webkit-border-radius: 0em;
+    border-radius: 0em;
 }
 
-/* Chunks */
+div.arrowbox:after, div.arrowbox:before
+{
+	top: 100%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+div.arrowbox:after
+{
+	left: 50%;
+	border-color: rgba(0, 0, 0, 0);
+	border-top-color: white;
+	border-width: 5em;
+	margin-left: -5em;
+}
+div.arrowbox:before
+{
+	border-color: rgba(0, 0, 0, 0);
+	border-top-color: gray;
+	border-width: 5.2em;
+	left: 50%;
+	margin-left: -5.2em;
+}
+
+div.rightdoor, div.leftdoor
+{
+    width: 10.3em;
+    height: 30em;
+    background: black;
+    border: 0em solid black;
+    -moz-border-radius: 0em;
+    -webkit-border-radius: 0em;
+    border-radius: 0em;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    animation-duration: 2s;
+}
+
+div.rightdoor
+{
+    background-image: url(right.png);
+    animation-name: slideleft;
+}
+
+@keyframes slideleft
+{
+    from
+    {
+        transform: translate(50em);
+    }
+
+    to
+    {
+        transform: translate(0px);
+    }
+}
+
+div.leftdoor
+{
+    background-image: url(left.png);
+    animation-name: slideright;
+}
+
+@keyframes slideright
+{
+    from
+    {
+        transform: translate(-50em);
+    }
+
+    to
+    {
+        transform: translate(0px);
+    }
+}
+
+div.blackbox
+{
+    -moz-border-radius: 0.2em;
+    -webkit-border-radius: 0.2em;
+    border-radius: 0.2em;
+    background: black;
+    color: white;
+    border: 0em solid black;
+    width: 7em;
+    line-height: 0.9em;
+}
+
+div.blackbox div
+{
+    font-size: 0.7em;
+}
+
+div.blackbox a:link, div.blackbox a:visited
+{
+    color: white;
+}
+
+/* chunks */
 
 div.panel div
 {
     position: relative;
+    padding: 0.1em;
+}
+
+div.title
+{
+    line-height: 3em;
+    font-size: 1.5em;
+    transform: rotate(-10deg);
+    -ms-transform: rotate(-10deg);
+    -webkit-transform: rotate(-10deg);
+}
+
+div.author
+{
     float: left;
-    padding: 0.5em;
+    margin: 1em;
+    font-size: 0.7em;
 }
 
-/* Balloons */
-
-div.b, div.thought, div.bleft, div.bright
+div.issue
 {
-    position: relative;
-    color: #000022;
-    background-color:#ffffafa;
-    margin: 0.5em 1em 0.5em 1em;
-    border: 0.2em solid #9b7c79;
-    -moz-border-radius: 1em;
-    -webkit-border-radius: 1em;
-    border-radius: 1em;
-}
-
-div.thought
-{
-    border: 0.1em dashed #222244;
-}
-
-div.bleft
-{
-    margin-left: 1em;
-}
-
-div.bleft:before
-{
-   position: absolute;
-   content:"";
-   width: 0em;
-   height: 0em;
-   right: 100%;
-   top: 10%;
-   border-top: 0.6em solid transparent;
-   border-right: 1em solid #9b7c79;
-   border-bottom: 0.2em solid transparent;
-}
-
-div.bleft
-{
-    margin-right: 1em;
-}
-
-div.bright:after
-{
-   position: absolute;
-   content:"";
-   width: 0em;
-   height: 0em;
-   left: 100%;
-   top: 50%;
-   border-top: 0.6em solid transparent;
-   border-left: 1em solid #9b7c79;
-   border-bottom: 0.2em solid transparent;
-}
-
-/* Text */
-
-div.big
-{
-    font-size: 2em;
-}
-
-div.green
-{
+    clear: both;
+    float: left;
+    font-size: 0.7em;
     color: green;
+    margin-left: 16em;
 }
+
+div.disclaimer
+{
+    font-size: 0.5em;
+    text-align: left;
+    line-height: 1.5em;
+    margin: 1em;
+}
+
+div.white
+{
+    color: white;
+}
+
+
+*/
+/*div.noborder > div
+/*{
+/*    margin: 0em !important;
+/*}
+/*
+/*div.wide
+/*{
+/*    width: 50%;
+/*}
+/*
+/*div.CLI
+/*{
+/*    border-color: green;
+/*    font-family: monospace;
+/*}
+/*
+/*/* Chunks */
+/*
+/*div.panel div
+/*{
+/*    position: relative;
+/*    float: left;
+/*    padding: 0.5em;
+/*}
+/*
+/*/* Balloons */
+/*
+/*div.b, div.thought, div.bleft, div.bright
+/*{
+/*    position: relative;
+/*    color: #000022;
+/*    background-color:#ffffafa;
+/*    margin: 0.5em 1em 0.5em 1em;
+/*    border: 0.2em solid #9b7c79;
+/*    -moz-border-radius: 1em;
+/*    -webkit-border-radius: 1em;
+/*    border-radius: 1em;
+/*}
+/*
+/*div.thought
+/*{
+/*    border: 0.1em dashed #222244;
+/*}
+/*
+/*div.bleft
+/*{
+/*    margin-left: 1em;
+/*}
+/*
+/*div.bleft:before
+/*{
+/*   position: absolute;
+/*   content:"";
+/*   width: 0em;
+/*   height: 0em;
+/*   right: 100%;
+/*   top: 10%;
+/*   border-top: 0.6em solid transparent;
+/*   border-right: 1em solid #9b7c79;
+/*   border-bottom: 0.2em solid transparent;
+/*}
+/*
+/*div.bleft
+/*{
+/*    margin-right: 1em;
+/*}
+/*
+/*div.bright:after
+/*{
+/*   position: absolute;
+/*   content:"";
+/*   width: 0em;
+/*   height: 0em;
+/*   left: 100%;
+/*   top: 50%;
+/*   border-top: 0.6em solid transparent;
+/*   border-left: 1em solid #9b7c79;
+/*   border-bottom: 0.2em solid transparent;
+/*}
+/*
