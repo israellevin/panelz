@@ -481,6 +481,8 @@
         Artist.rewinds = [];
         // a stack to keep track of unscripted operation (currently just auto centering),
         Artist.unscripted = [];
+        // a flag to remind us not to autocenter panels if there was a scripted pan,
+        Artist.autocenter = true;
         // and something small to hold the current instruction.
         Artist.instruction = {};
 
@@ -521,6 +523,9 @@
             // If the Story gives us an instruction, we follow it.
             if('undefined' !== typeof Artist.instruction){
 
+                // First we check if it's an effect, in which case we will not autocenter.
+                if('effect' === Artist.instruction.type) Artist.autocenter = false;
+
                 // We either draw a line if we are headed forward,
                 if(1 === Artist.dir) return Canvas.draw(Artist.instruction);
                 // or rewind a line (using a stacked rewind function) if we are headed back. Note how we pop the double bubble at the end there :)
@@ -528,12 +533,15 @@
             // Otherwise, we have arrived at a stop command.
             }else{
 
-                // If we are going forward and the current panel is hidden, we center on it, but not before we mark this as an unscripted effect, so we will know to rewind it, and set Artist.dir to zero so we will stop moving.
-                if(1 === Artist.dir && true === Canvas.iscurhidden()){
+                // If we are going forward and the current panel is hidden and there were no effects, we center on it, but not before we mark this as an unscripted effect, so we will know to rewind it, and set Artist.dir to zero so we will stop moving.
+                if(1 === Artist.dir && true === Canvas.iscurhidden() && true === Artist.autocenter){
                     Artist.unscripted.push(Artist.bookmark);
                     Artist.dir = 0;
                     return Canvas.fx('center');
                 }
+
+                // Then we reset the autocenter flag.
+                Artist.autocenter = true;
             }
 
             // And if we made it up to here, we should unset the busy flag.
