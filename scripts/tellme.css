@@ -1,0 +1,73 @@
+/* Panels */
+
+div.wide
+{
+    width: 20em;
+    min-height: 8em;
+}
+
+/* Chunks */
+
+div.panel div
+{
+    clear: both;
+}
+
+div.center
+{
+    text-align: center;
+    float: none;
+}
+
+div.bold
+{
+    font-weight: bold;
+}
+
+div.big
+{
+    font-size: 1.2em;
+}
+
+div.CLI
+{
+    border-color: green;
+    font-family: monospace;
+}
+
+div.transparent
+{
+    opacity: 0.4;
+}
+
+/* Balloons */
+
+div.Balashi
+{
+    color: grey;
+}
+
+div.Ehsan
+{
+    color: black;
+}
+
+div.Ishtar
+{
+    color: red;
+}
+
+div.Nardin
+{
+    color: green;
+}
+
+div.Nirar
+{
+    color: cyan;
+}
+
+div.Timi
+{
+    color: blue;
+}

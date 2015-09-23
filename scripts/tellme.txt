@@ -1,0 +1,237 @@
+] noborder
+big: Dramatis personæ (in alphabetical order)
+personæ] wide:0 1 2.5 0.5
+~center
+] noborder:1 1 0 0 [personæ
+Balashi thought: Balashi
+] noborder:0 1 0.5 0.5 [personæ
+Ehsan thought: Ehsan
+] noborder:-1 1 1 1 [personæ
+Ishtar thought: Ishtar
+] noborder:1 -1 3 3 [personæ
+Nardin thought: Nardin
+] noborder:0 -1 2.5 2.5 [personæ
+Nirar thought: Nirar
+] noborder:-1 -1 2 2 [personæ
+Timi thought: Timi
+] noborder:0 1 2.5 0.5 [personæ
+:Tap, swipe or hit space to continue
+
+] wide:0 1 2.5 0.5 [personæ
+
+Balashi bleft: Nardin, describe in single words only the good things that come into your mind about... your mother.
+
+Nardin bright: Well, I was taken away rather young. Maybe seven or eight. I think I told you that. But I do remember her. She was nice. Used to hug me a lot.
+
+]
+Ishtar bright: What is your greatest fear?
+
+Nardin bleft: You can't ask that. There are so many frightening things...
+
+Ishtar bright: OK, what's the biggest fear you ever conquered?
+
+Nardin bleft: At the beginning, when I joined Lahat's crew. When I was running away. I was frightened half to death the whole time. Took me several weeks to stop fearing the assassins...
+
++Nardin bleft: They came for me at night, you know.
+
+]
+Balashi bleft: Were you a cosmetic product, which cosmetic product would you be?
+
+Nardin bright: ...
+
+Balashi bleft: OK, let me rephrase that. If you were to compare yourself, metaphorically, to a weapon, which weapon would you choose?
+
+Nardin bright: I never wrote poetry, Balashi. Well, once, in school, but I refuse to recite it. What sort of question is this anyway? Which weapon would you be?
+
+]
+Balashi bleft: A knife.
+
+Ehsan bleft: A butcher's knife.
+
+Balashi bleft: Seemingly dull, old, rusty. But only seemingly so.
+
+Ishtar bright: Yeah, it actually cuts at the grip.
+
+Balashi bleft: Why thank you, Ishtar.
+
+]
+Nardin bleft: And you, Ehsan? Which weapon are you?
+
+Ehsan bright: An elegant, gleaming Girgashian halberd, so polished you can see your own reflection in its lethal blade.
+
+Nardin bleft: Oh, cool, then I'll be a cannon. But wait, what about you, Ishtar?
+
+Ishtar bright: A shuriken. Coming from and returning back to the night.
+
+Nirar bleft: Very dramatic! I'd be a persuader troll, naturally. It's this tech that can persuade people of just about anything.
+
+]:0 1 2.5 0.5
+Nardin bleft: OK, I think I understand. I'll be the C2 station of a missile battery. That's what I do.
+
+]
+Ehsan bleft: I have one. You are a vizier. You hold great power. Then a piece of information - hidden, but not hidden well enough to escape your scrutiny - comes into your possession.
+
++Ehsan: It is proof that your direct superior has done something for the good of the population, which will be frowned upon by the heads of the house. If the information reaches them, he will get fired, if not worse, and his plan to benefit the population will be reverted. You have four options:
+
+]:0 1 2.5 0.5
+<ol><li>Pass the information along, using your own name, hurting your superior and earning you a promotion</li> <li>Pass the information anonymously, probably creating a vacuum into which you can slide</li><li>Keep the information safe for future use, while letting the population enjoy the benefits</li><li>Destroy the damning information</li></ol>
+
+]
+Nardin bright: I would betray him in a heartbeat, using my name and winning my promotion and fucking the population over. It's a dog eat dog world.
+
+Ishtar bright: I would do it anonymously. Don't want to get a bad reputation. That won't do at all.
+
+Ehsan bright: Me too, in all likelihood.
+
+Balashi bleft: You are all assholes!
+
+]
+Balashi bleft: Which brings me to the next question. Morally speaking, what act would you find unforgivable?
+
+Nardin bright: I would probably forgive anyone for anything, given enough time. Even Zaklak deUstra, if he catches me on a good day. And even now, I would not take vengeance. If he stays out of my sight, I will not persue him.
+
+Timi bright: I don't hold grudges at all.
+
+married] wide:0 1 2.5 0.5
+] noborder:1 1 0 0 [married
+Ishtar bleft: I would never forgive betrayal.
+] noborder:-1 1 1 1 [married
+Nirar bright: I would never forgive betrayal.
+
+] noborder:0 1 0.5 0.5 [married
+Balashi thought: Aren't they cute together?
+
+]:[married
+Ehsan bright: I would forgive betrayal, but not the harming of the Human. I will not forgive the Forgers.
+
++Ehsan: How about you, Balashi?
+
+Balashi bleft: Oh, I passionately believe in second chances. Nothing is unforgivable. That said, I know my limitations. I will probably not be able to forgive what I perceive - naively - as the harming of innocents. Especially when it involves the robbing of their innocence.
+
++Balashi: And killing them.
+
+]
+Balashi bleft: But you, Nardin, you will actually forgive Zaklak? I am not talking about vengeance. That is a different, often impractical matter. I am talking about emotions. Would you really, in your heart of hearts, be OK with what he did to you? To us?
+
+Nardin bright: Well... No. Not really. If someone hurt me bad, or especially - you will be glad to hear - if someone hurts one of you, or even kills you, I will not forgive them. May not take vengeance, but I will be very angry with them for a long time. Possibly a few decades.
+
+]
+Timi bleft: My turn.
+
++Timi: Nardin, were you ever married?
+
+Nardin bright: Not only was I never married, I never had enough room to get a permit. I had my eye on several potential spouses, of course, but never got around to...
+
+Balashi bleft: Wait, does that mean you are an Unblemished Princess?
+
+Nardin bright: Of course not. I told you, I had my eye on several potential spouses. Just never had enough room for a permit.
+
+]
+Balashi bleft: And I can tell you that we two aren't married either, while these two are.
+
+Nardin bright: Don't even need my eyes to tell who you're pointing at.
+
+]
+Nirar bleft: I have a great question. Assume you are second to the crown. And assume you are not quite as good a ruler as the current one, yet you have an opportunity to overthrow him and take his place. Will you?
+
+Nardin bright: I already answered that question. Of course I would. In a heartbeat.
+
+Balashi bleft: I'd never do something like that. Even had I known I was a better ruler I would do my best to avoid the crown, but eventually I'd probably relent and sacrifice my own comfort for the common good, all noble like and shit.
+
+]
+Nirar bright: I just wouldn't betray my king.
+
+Ishtar bleft: I wouldn't do it either. I was raised to assist. To be #2. In the shadows behind the throne. In the reverse state, which Balashi mentions, I might do it for the good of the people, but only if they are my people. I have no automatic obligation towards people in general.
+
+Timi bright: I don't think that's a relevant question for me.
+
+]
+Ishtar bleft: OK, Nardin, what kind of immortality are you planning on? Since it's obviously on our plate.
+
+Nardin bright: Oh, very interesting. I don't know enough about it, and I'm wary of forms of immortality in which I do not retain memories. But if I can do the Chu trick, taking all my memories with me, I definitely would.
+
+Nirar thought: I'm probably already immortal, or something.
+
+]
+Balashi bleft: Well, I wouldn't do that either. I really like the thought of retiring. I am slightly afraid of being stuck here. Of having things to do, and then deciding I need to get a little extra time for the common good, and being a resourceful kind of guy I'll find a way, and from there it's a slippery slope before I turn into Naomi.
+
+Timi bright: Yeah, immortality sounds boring.
+
+Ishtar bright: But, Balashi, don't you think it is better to think of ways to do it now, instead of being stuck with rotten solutions at the last moment and becoming Naomi?
+
+]
+Ehsan bleft: She has a point. I mean, I do not want to grow old and die. I want to persist. I want do keep experiencing the world and doing my job. I think that's what keeps you human. And maybe after a long time you stop experiencing the world. You feelings become dull. And maybe then I wouldn't mind as much. Right now? I do not want to grow old and die.
+
+Ehsan bleft: But I don't think not dying is really an option for us.
+
+]
+Nardin bright: Hell, I would give up Enki for a good immortality. The more long range plans I see, the more I am afraid of missing out on them by being dead of old age.
+
+Ishtar bleft: How about you, Nardin? Have you a question for yourself?
+
+Nardin bright: For myself? No.
+
+Ehsan bleft: Come on, Nardin, you can do it.
+
+Nardin bright: I can ask Balashi instead.
+
+]
+Nardin bleft: Balashi, if you could have a navel like mine, that lets you communicate with machines, would you like one?
+
+Balashi bright: Sure. I mean, unless there are some downsides I am not aware of.
+
+Nardin bleft: Well, you saw what happens to me if I overdo it.
+
++Nardin transparent: I turn transparent.
+
+]
+Balashi bright: Boo-fucking-hoo. It seems manageable.
+
+Nardin bleft: And I don't sleep.
+
+Balashi bright: Ouch. That's a big bummer.
+
+Nardin bleft: Well, it's not really that I don't sleep, but I am more aware during sleep.
+
+Balashi bright: That's a sacrifice I'm willing to make.
+
+]
+Nirar bleft: So am I.
+
+Timi bleft: Yay, the navel thing sounds sweet.
+
+Timi bright: On the other hand, it will probably weigh me down. I'll pass.
+
+]
+Ishtar bleft: No doubt, it's a very useful tool, but it takes a lot of time to learn to use it, and I'd rather focus on my blood powers.
+
+Ehsan bright: I wouldn't even consider it. Just wouldn't. Never ever ever. It's an abomination - something external that changes the self.
+
+Ishtar bleft: How about blood powers?
+
+Ehsan bright: I'd probably still refuse, for the same reason as you, but I'd certainly consider it. Blood powers are human powers, after all.
+
+]
+Balashi bleft: OK, one last question and we are done.
+
++Balashi: Nardin, you succeed at impressing a person you wished to impress. Describe and elaborate.
+
+Nardin bright: Easy. I'm on the Kalister, talking to some of the folks there, telling them of my plans, and I make such an impression on them that they decide to come and serve me on Enki.
+
+Nirar bleft: Well, I pretty much did this before your very eyes in my last speech.
+
+]
+Nardin bleft: How about you, Ehsan?
+
+Ehsan bright: I don't have anything for that.
+
+Nardin bleft: Come on, Ehsan, you can do it.
+
+Balashi bright: I remember trying to impress Nirar, of all the people in the world, to take me on board. And I remember you, Ehsan, telekinetically tying his shoelaces for him for the very same reason.
+
+Ehsan bleft: Well, I guess you are right.
+
+: Ehsan passes the joint to Balashi.
+
+] noborder:10 0 1.5 3.5
+THE END
