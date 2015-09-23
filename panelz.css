@@ -73,7 +73,6 @@ div.CLI
 div.panel div
 {
     position: relative;
-    float: left;
     padding: 0.5em;
 }
 
@@ -117,6 +116,13 @@ div.bleft:before
 div.bleft
 {
     margin-right: 1em;
+    float: left;
+}
+
+div.bright
+{
+    margin-left: 1em;
+    float: right;
 }
 
 div.bright:after
