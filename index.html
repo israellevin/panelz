@@ -23,8 +23,10 @@ $(function(){
             else if('function' === typeof textAreaElement.setSelectionRange) textAreaElement.setSelectionRange(position, position);
         },
 
-        // Get the script name from the querystring (defaulting to "welcome").
-        name = window.location.search.substr(1).match(/\w*/)[0] || 'welcome';
+        // Get the script name from the querystring (defaulting to "welcome"),
+        name = window.location.search.substr(1).match(/\w*/)[0] || 'welcome',
+        // and the position from the hash (defaulting to false).
+        line = window.location.hash.substr(1) || false;
 
     // Bind the file input to load a script into the textarea,
     $('#fileSel').change(function(e){
@@ -45,7 +47,7 @@ $(function(){
             script = textArea.val(),
             position = textArea.cursor();
         // and figure out how many lines are before it.
-        position = position ? script.substr(0, position).match(/\n/g).length : false;
+        position = position ? script.substr(0, position).match(/\n/g).length : line;
 
         // Initialize panelz with the #panelz div and the script,
         panelz(script, $('#panelz')).
