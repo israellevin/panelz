@@ -4,7 +4,7 @@
 Panelz is a brave new way to tell stories, mostly influenced by comics.
 :Hit the space key (or click the canvas) for a more in depth explanation, or check out works in progress below.
 ]wide:6 6 3 0
-:Works in progress:<br><ul><li><a href="?six">Six</a> - documenting a one-on-one role-playing game</li><li><a href="?smadar">Smadar</a> - trying to spread a Hebrew poem on Panelz</li><li><a href="?fall">The Fall</a> - Persephone goes to the underworls</li><li><a href="?tellme">Let Me Tell You About My Mother</a> - A session of questions from the <a href="http://corky.net/israel/game/seeds/">Seeds RPG</a></li></ul>
+:Works in progress:<br><ul><li><a href="?six">Six</a> - documenting a one-on-one role-playing game</li><li><a href="?smadar">Smadar</a> - trying to spread a Hebrew poem on Panelz</li><li><a href="?fall">The Fall</a> - Persephone goes to the underworls</li><li><a href="?lemmetellya">Let Me Tell You About My Mother</a> - A session of questions from the <a href="http://corky.net/israel/game/seeds/">Seeds RPG</a></li></ul>
 
 ]:60 0 1 0
 ~center
