@@ -1,28 +1,37 @@
 /* Panels */
 
-div.wide
+div.panel
 {
-    width: 20em;
-    min-height: 8em;
-
+    min-width: 24em;
+    min-height: 6em;
 }
 
-.panel:not(.noborder) {padding-left:11em;}
+div.noborder
+{
+    background: none;
+}
 
-
+div.wide
+{
+    min-width: 36em;
+    min-height: 10em;
+}
 
 /* Chunks */
 
+/*
 div.panel div
 {
-    clear: both;
-    min-height:7em
+    min-width: 10em;
+    min-height:4em
+    width: auto;
+    height: auto;
 }
+*/
 
-div.center
+div.big
 {
-    text-align: center;
-    float: none;
+    font-size: 1.2em;
 }
 
 div.bold
@@ -30,15 +39,11 @@ div.bold
     font-weight: bold;
 }
 
-div.big
+div.center
 {
-    font-size: 1.2em;
-}
-
-div.CLI
-{
-    border-color: green;
-    font-family: monospace;
+    text-align: center;
+    float: none;
+    margin: auto;
 }
 
 div.transparent
@@ -48,80 +53,97 @@ div.transparent
 
 /* Balloons */
 
-.bleft::before {padding-right:10.5em;}
-.bright::after {top:10% !important;}
-.bright {left:-11em}
+div.note
+{
+    margin: auto;
+    border: 1px solid black;
+    margin: 1em;
+}
 
+div.left, div.right
+{
+    position: relative;
+    color: #000022;
+    background-color:#ffffafa;
+    margin: 0.5em 1em 0.5em 1em;
+    border: 0.2em solid #222222;
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
+    min-height: 6em;
+}
 
-div.Balashi.bleft::before, div.Balashi.bright::after,div.Balashi.thought::before
+div.left
+{
+    clear: left;
+    margin-left: 12em;
+}
+
+div.right
+{
+    clear: right;
+    margin-right: 12em;
+}
+
+div.left:before
+{
+   position: absolute;
+   width: 11em;
+   height: 5em;
+   right: 100%;
+}
+
+div.right:before
+{
+   position: absolute;
+   content:"";
+   width: 11em;
+   height: 5em;
+   left: 110%;
+}
+
+div.Balashi.left:before, div.Balashi.right:before
 {
     content:url('http://corky.net/israel/game/_media/seeds/bulok_thumb.jpg');
-	
 }
 
-div.Nardin.bleft::before, div.Nardin.bright::after,div.Nardin.thought::before
+div.Nardin.left:before, div.Nardin.right:before
 {
     content:url('http://corky.net/israel/game/_media/seeds/nardin_thumb.jpg');
-	
 }
 
-div.Ehsan.bleft::before, div.Ehsan.bright::after,div.Ehsan.thought::before
+div.Ehsan.left:before, div.Ehsan.right:before
 {
     content:url('http://corky.net/israel/game/_media/seeds/hasan_thumb.jpg');
-	
 }
 
-
-div.Ishtar.bleft::before, div.Ishtar.bright::after,div.Ishtar.thought::before
+div.Ishtar.left:before, div.Ishtar.right:before
 {
     content:url('http://corky.net/israel/game/_media/seeds/ishtar_thumb.jpg');
-	
 }
 
-div.Nirar.bleft::before, div.Nirar.bright::after,div.Nirar.thought::before
+div.Nirar.left:before, div.Nirar.right:before
 {
     content:url('http://corky.net/israel/game/_media/seeds/nirar_thumb.jpg');
-	
 }
 
-
-
-div.Timi.bleft::before, div.Timi.bright::after,div.Timi.thought::before
+div.Timi.left:before, div.Timi.right:before
 {
     content:url('http://corky.net/israel/game/_media/seeds/Timi_thumb.jpg');
-	
 }
 
-
-/*
-
-div.Balashi
+div.Balashi.thought:after
 {
+    content:url('http://corky.net/israel/game/_media/seeds/bulok_thumb.jpg');
+    position: relative;
 
-    color: grey;
 }
 
-div.Ehsan
+div.Nirar.thought:after
 {
-    color: black;
-}
+    content:url('http://corky.net/israel/game/_media/seeds/nirar_thumb.jpg');
+    position: absolute;
+    bottom: 4em;
+    right: 1em;
 
-div.Ishtar
-{
-    color: red;
 }
-
-div.Nardin
-{
-    color: green;
-}
-
-div.Nirar
-{
-    color: cyan;
-}
-
-div.Timi
-{
-    color: blue;
-}*/
