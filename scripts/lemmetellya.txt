@@ -1,18 +1,17 @@
-] noborder
+start] noborder
 big bold: Dramatis personæ (in alphabetical order)
 personæ]:0 0 2.5 0.5
-center bold:<table><tbody><tr><td><img src="http://corky.net/israel/game/_media/seeds/bulok_thumb.jpg" alt="Balashi"><br>Balashi</td><td><img src="http://corky.net/israel/game/_media/seeds/nardin_thumb.jpg" alt="Nardin"><br>Nardin</td><td><img src="http://corky.net/israel/game/_media/seeds/hasan_thumb.jpg" alt="Ehsan"><br>Ehsan</td></tr><tr><td><img src="http://corky.net/israel/game/_media/seeds/ishtar_thumb.jpg" alt="Ishtar"><br>Ishtar</td><td><img src="http://corky.net/israel/game/_media/seeds/nirar_thumb.jpg" alt="Nirar"><br>Nirar</td><td><img src="http://corky.net/israel/game/_media/seeds/Timi_thumb.jpg" alt="Timi"><br>Timi</td></tr></tbody></table>
+center bold:<table><tbody><tr><td><img src="http://corky.net/israel/game/_media/seeds/bulok_thumb.jpg" alt="Balashi"><br>Balashi</td><td><img src="http://corky.net/israel/game/_media/seeds/hasan_thumb.jpg" alt="Ehsan"><br>Ehsan</td><td><img src="http://corky.net/israel/game/_media/seeds/ishtar_thumb.jpg" alt="Ishtar"><br>Ishtar</td></tr><tr><td><img src="http://corky.net/israel/game/_media/seeds/nardin_thumb.jpg" alt="Nardin"><br>Nardin</td><td><img src="http://corky.net/israel/game/_media/seeds/nirar_thumb.jpg" alt="Nirar"><br>Nirar</td><td><img src="http://corky.net/israel/game/_media/seeds/Timi_thumb.jpg" alt="Timi"><br>Timi</td></tr></tbody></table>
 ~center
 ] noborder:0 1 2.5 0.5 [personæ
 :Tap, swipe or hit space to continue
 
-] wide:0 1 2.5 0.5 [personæ
-
+Balashi1] wide:-1 0 0 1 [personæ
 Balashi left: Nardin, describe in single words only the good things that come into your mind about... your mother.
 
 Nardin right: Well, I was taken away rather young. Maybe seven or eight. I think I told you that. But I do remember her. She was nice. Used to hug me a lot.
 
-] wide: 5 0 [personæ
+Ishtar1] wide: 1 0 [personæ
 Ishtar right: What is your greatest fear?
 
 Nardin left: You can't ask that. There are so many frightening things...
@@ -23,7 +22,7 @@ Nardin left: At the beginning, when I joined Lahat's crew. When I was running aw
 
 +Nardin left: They came for me at night, you know.
 
-] wide
+Balashi2] wide:-1 0 0 1 [Balashi1
 Balashi left: Were you a cosmetic product, which cosmetic product would you be?
 
 Nardin right: ...
@@ -32,7 +31,7 @@ Balashi left: OK, let me rephrase that. If you were to compare yourself, metapho
 
 Nardin right: I never wrote poetry, Balashi. Well, once, in school, but I refuse to recite it. What sort of question is this anyway? Which weapon would you be?
 
-]:0 1 2.5 0.5
+] wide:0 1 2.5 0.5
 Balashi left: A knife.
 
 Ehsan left: A butcher's knife.
@@ -43,7 +42,7 @@ Ishtar right: Yeah, it actually cuts at the grip.
 
 Balashi left: Why thank you, Ishtar.
 
-]
+] :-1 0 0 1
 Nardin left: And you, Ehsan? Which weapon are you?
 
 Ehsan right: An elegant, gleaming Girgashian halberd, so polished you can catch your own reflection staring back at you from its deadly blade.
@@ -52,21 +51,21 @@ Nardin left: Oh, cool, then I'll be a cannon.
 
 +Nardin: But wait, what about you, Ishtar?
 
-] wide
+]:0 1 2 1
 Ishtar right: A shuriken. Coming from and returning back to the night.
 
 Nirar left: Most dramatic, your highness! I'd be a persuader troll, naturally. It's this tech that can persuade people of just about anything.
 
 Nardin left: I think I understand. I'll be the C2 station of a missile battery. That's what I do.
 
-] wide:0 1 3 0
+] wide:0 -63 0.5 0.5[start
 Ehsan left: I have one. You are a vizier. You hold great power. Then a piece of information - hidden, but not hidden well enough to escape your scrutiny - comes into your possession.
 
 +Ehsan: It is proof that your direct superior has done something for the good of the population, which will be frowned upon by the heads of the house. If the information reaches them, he will get fired, if not worse, and his plan to benefit the population will be reverted. You have four options:
 
 note: <ol><li>Pass the information along, using your own name, hurting your superior and earning you a promotion</li> <li>Pass the information anonymously, probably creating a vacuum into which you can slide</li><li>Keep the information safe for future use, while letting the population enjoy the benefits</li><li>Destroy the damning information</li></ol>
 
-] wide
+] wide:0 1 2.5 0.5
 Nardin right: I would betray him in a heartbeat, using my name and winning my promotion and fucking the population over. It's a dog eat dog world.
 
 Ishtar right: I would do it anonymously. Don't want to get a bad reputation. That won't do at all.
@@ -74,8 +73,9 @@ Ishtar right: I would do it anonymously. Don't want to get a bad reputation. Tha
 Ehsan right: Me too, in all likelihood.
 
 Balashi left: You are all assholes!
+~center start
 
-]
+]:-40 -40 0 0[Balashi2
 Balashi left: Which brings me to the next question. Morally speaking, what act would you find unforgivable?
 
 Nardin right: I would probably forgive anyone for anything, given enough time. Even Zaklak deUstra, if he catches me on a good day. And even now, I would not take vengeance. If he stays out of my sight, I will not persue him.
@@ -84,14 +84,14 @@ Timi right: I don't hold grudges at all.
 
 married] wide:0 1 2.5 0.5
 ] noborder:12 1 0 0 [married
-Ishtar left: I would never forgive betrayal.
+Ishtar left married: I would never forgive betrayal.
 ] noborder:-11 1 1 1 [married
-Nirar right: I would never forgive betrayal.
+Nirar right married: I would never forgive betrayal.
 
 ] noborder:0 9 0.5 0.5 [married
-Balashi thought: Aren't they cute together?
+Balashi thought married: Aren't they cute together?
 
-]:[married
+]:0 2 2.5 0.5[married
 Ehsan right: I would forgive betrayal, but not the harming of the Human. I will not forgive the Forgers.
 
 +Ehsan: How about you, Balashi?
@@ -100,12 +100,12 @@ Balashi left: Oh, I passionately believe in second chances. Nothing is unforgiva
 
 +Balashi: And killing them.
 
-] wide:0 1 2.5 0.5
+] wide:-1 0 0 1[married
 Balashi left: But you, Nardin, you will actually forgive Zaklak? I am not talking about vengeance. That is a different, often impractical matter. I am talking about emotions. Would you really, in your heart of hearts, be OK with what he did to you? To us?
 
 Nardin right: Well... No. Not really. If someone hurt me bad, or especially - you will be glad to hear - if someone hurts one of you, or even kills you, I will not forgive them. May not take vengeance, but I will be very angry with them for a long time. Possibly a few decades.
 
-]
+]:0 1 2 1[personæ
 Timi left: My turn.
 
 +Timi: Nardin, were you ever married?
@@ -117,19 +117,19 @@ Balashi left: Wait, does that mean you are an Unblemished Princess?
 
 Nardin right: Of course not. I told you, I had my eye on several potential spouses. Just never had enough room for a permit.
 
-]
+]:0 1 2.5 0.5
 Balashi left: And I can tell you that we two aren't married either, while these two are.
 
 Nardin right: Don't even need my eyes to tell who you're pointing at.
 
-] wide
+]:0 1 3 0[Balashi1
 Nirar left: I have a great question. Assume you are second to the crown. And assume you are not quite as good a ruler as the current one, yet you have an opportunity to overthrow him and take his place. Will you?
 
 Nardin right: I already answered that question. Of course I would. In a heartbeat.
 
 Balashi left: I'd never do something like that. Even had I known I was a better ruler I would do my best to avoid the crown, but eventually I'd probably relent and sacrifice my own comfort for the common good, all noble like and shit.
 
-]
+]:0 1 2.5 0.5
 Nirar right: I just wouldn't betray my king.
 
 Ishtar left: I wouldn't do it either. I was raised to assist. To be #2. In the shadows behind the throne. In the reverse state, which Balashi mentions, I might do it for the good of the people, but only if they are my people. I have no automatic obligation towards people in general.
@@ -137,14 +137,14 @@ Ishtar left: I wouldn't do it either. I was raised to assist. To be #2. In the s
 ]:0 1 2.5 0.5
 Timi right: I don't think that's a relevant question for me.
 
-]
+]:1 0 1 0[Ishtar1
 Ishtar left: OK, Nardin, what kind of immortality are you planning on? Since it's obviously on our plate.
 
 Nardin right: Oh, very interesting. I don't know enough about it, and I'm wary of forms of immortality in which I do not retain memories. But if I can do the Chu trick, taking all my memories with me, I definitely would.
 
 Nirar thought: I'm probably already immortal, or something.
 
-] wide:0 1 2.5 0.5
+] wide:0 1 3 0
 Balashi left: Well, I wouldn't go for that at all. I really like the thought of retiring. I am slightly afraid of being stuck here. Of having things to do, and then deciding I need to get a little extra time for the common good, and being a resourceful kind of guy I'll find a way, and from there it's a slippery slope before I turn into Naomi.
 
 Timi right: Yeah, immortality sounds boring.
@@ -159,7 +159,7 @@ Ehsan left: But I don't think not dying is really an option for us.
 ]:0 1 3 0
 Nardin right: Hell, I would give up Enki for a good immortality. The more long range plans I see, the more I am afraid of missing out on them by being dead of old age.
 
-]:-1 0 0 1
+comeon]:-1 0 0 1
 Ishtar left: How about you, Nardin? Have you a question for yourself?
 
 Nardin right: For myself? No.
@@ -185,21 +185,23 @@ Nardin left: And I don't sleep.
 Balashi right: Ouch. That's a big bummer.
 
 timiright]
-Nardin left: Well, it's not really that I don't sleep, but I am more aware during sleep.
+Nardin right: Well, it's not really that I don't sleep, but I am more aware during sleep.
 
 Balashi right: That sounds like a sacrifice I'm willing to make.
 
 Nirar right: So am I.
 
-Timi right: Yay, the navel thing sounds sweet.
+Timi right: Yay! The navel thing sounds sweet!
 ] noborder:-5 -5 2 0
 ~center
 
-]wide:0 -8.6 2.5 0.5[timiright
-Timi left: On the other hand, it will probably weigh me down. I'll pass.
+]:0 -8.6 2.5 0.5[timiright
+Timi flip right: On the other hand, it will probably weigh me down.
+
+Timi left: I'll pass.
 ~
 
-] wide:0 1 2.5 0.5
+] wide
 Ishtar left: No doubt, it's a very useful tool, but it takes a lot of time to learn to use it, and I'd rather focus on my blood powers.
 
 Ehsan right: I wouldn't even consider it. Just wouldn't. Never ever ever. It's an abomination - something external that changes the self.
@@ -208,7 +210,7 @@ Ishtar left: How about blood powers?
 
 Ehsan right: I'd probably still refuse, for the same reason as you, but I'd certainly consider it. Blood powers are human powers, after all.
 
-]
+]:5 -80 1 0[personæ
 Balashi left: OK, one last question and we are done.
 
 +Balashi: Nardin, you succeed at impressing a person you wish to impress.
@@ -219,21 +221,27 @@ Nardin right: Easy. I'm on the Kalister, talking to some of the folks there, tel
 
 Nirar left: Well, I pretty much did this before your very eyes in my last speech.
 
-] wide
+] wide:0 1 3 0
 Nardin right: How about you, Ehsan?
 
 Ehsan left: I don't have anything for that.
 
 Nardin right: Come on, Ehsan, you can do it.
+~center
+~center
+~center comeon
+~center comeon
+~center comeon
+~center
 
-]:0 1 2.5 0.5
+]:0 1 3 0
 Balashi left: I remember trying to impress Nirar, of all the people in the world, to take me on board. And I remember you, Ehsan, telekinetically tying his shoelaces for him for the very same reason.
 
 Ehsan right: Well, I guess you are right.
+~pan -50 200
 
 : Ehsan passes the joint to Balashi.
-] noborder:0 0 2.5 0.5
-~center
+~
 
-] noborder:0 1 2.5 0.5
-:THE END
+] noborder:5 0 1.5 3.5
+big bold:THE END
