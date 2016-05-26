@@ -1,0 +1,37 @@
+home]home rect:0 0
+]noborder:0 0 -1 -1
+~center
+title: WITCH
+
++title black:
+
+oven]rect:-1 1 1 1[home
+THE OVEN
+
+]witchimg:5 0 1.5 -1
+:Witch, contemplating her mistakes
+
+]:-40 -5 0 3[oven
+witch thought: And she knows, in the end, it was the frustration that got her.
+~center
+
+witch thought: All this waiting. All the food and sweets, and the boy just wouldn't grow. And then she just couldn't care anymore. Frustration and greed and rashness.
+
+when]:-10 0 3 2[oven
+witch thought: And when the girl told her she can't fit her hand in the oven she just lost it.
+
+witch: "Here, I'll show you how it's done, you dumb cunt! You just open the door all the way, like this, and then you can squeeze through and reach inside!"
+
+witch thought: "...and then I can come behind you and..."
+~center
+
+]girlimg:-1 0 3 2
+:Fade in girl, closing in, hands reaching for the shove.
+
+]:-4 2 2 0[when
+witch thought:But as the thought crossed her mind, she realized there is no point in keeping it secret. That Gretel knows. That she has nothing left to teach her.
+
+]
+:The witch, sitting, waiting, thinking. The door closed.
+
+witch thought:After all, she could already hear her own screaming.

@@ -1,0 +1,58 @@
+/* Panels */
+
+div#panelz
+{
+    background-color: black;
+    position: relative;
+    overflow: hidden;
+    border: 1em solid grey;
+    margin: auto;
+    margin-top: 2em;
+}
+
+div.panel
+{
+    position: absolute;
+    color: white;
+    border: 0.1em solid white;
+    background-color: transparent;
+    left: 25em;
+    width: 12em;
+}
+
+div.rect
+{
+    border-radius: 0px;
+    -moz-border-radius: 0em;
+    -webkit-border-radius: 0em;
+}
+
+div.home
+{
+    border: 0.2em solid white;
+    width: 60em;
+    height: 30em;
+}
+
+div.title
+{
+    font-size: 3em;
+    font-weight: bold;
+}
+
+div.black
+{
+    color: black;
+}
+
+div.witchimg
+{
+    min-width: 21em !important;
+    min-height: 1em !important;
+}
+
+div.witch
+{
+    color: #ff3333;
+    border-color: grey;
+}
